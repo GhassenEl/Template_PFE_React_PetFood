@@ -1,0 +1,3266 @@
+<!doctype html>
+<html lang="fr" class="light-mode">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetFood Delivery TN - Nourriture fraîche pour vos animaux</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        /* Couleurs mode clair - Thème bleu */
+        --primary-color: #2c5aa0;
+        --primary-light: #4a7bc8;
+        --primary-dark: #1c3a6e;
+        --secondary-color: #4ecdc4;
+        --secondary-light: #6ff7ed;
+        --secondary-dark: #2da49c;
+        --accent-color: #ff6b6b;
+        --light-color: #f8f9fa;
+        --dark-color: #2c3e50;
+        --text-color: #333;
+        --bg-color: #ffffff;
+        --card-bg: #f1f5f9;
+        --sidebar-bg: #1e3a8a;
+        --sidebar-text: #e2e8f0;
+        --footer-bg: #1e293b;
+        --footer-text: #cbd5e1;
+        --shadow: rgba(30, 58, 138, 0.1);
+        --transition: all 0.3s ease;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+        --tunisian-blue: #1e40af;
+        --tunisian-blue-light: #3b82f6;
+      }
+
+      .dark-mode {
+        /* Couleurs mode sombre - Thème bleu */
+        --primary-color: #3b82f6;
+        --primary-light: #60a5fa;
+        --primary-dark: #1d4ed8;
+        --secondary-color: #06d6a0;
+        --secondary-light: #34d399;
+        --secondary-dark: #059669;
+        --accent-color: #f87171;
+        --light-color: #1f2937;
+        --dark-color: #f9fafb;
+        --text-color: #f3f4f6;
+        --bg-color: #111827;
+        --card-bg: #1f2937;
+        --sidebar-bg: #0f172a;
+        --sidebar-text: #cbd5e1;
+        --footer-bg: #0f172a;
+        --footer-text: #94a3b8;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+        --tunisian-blue: #60a5fa;
+        --tunisian-blue-light: #93c5fd;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: var(--transition);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        transition: var(--transition);
+        z-index: 100;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .sidebar-header h2 {
+        font-size: 1.3rem;
+        color: var(--secondary-color);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        margin-right: 10px;
+        color: var(--secondary-color);
+      }
+
+      .logo span {
+        color: white;
+      }
+
+      .slogan {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-style: italic;
+        padding-left: 35px;
+        margin-top: -5px;
+        border-left: 2px solid var(--secondary-color);
+        padding-left: 10px;
+      }
+
+      .menu {
+        padding: 20px 0;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+      }
+
+      .menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-left-color: var(--secondary-color);
+      }
+
+      .menu-item.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-left-color: var(--secondary-color);
+        font-weight: 600;
+      }
+
+      .menu-item i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        padding: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .theme-toggle {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: none;
+        width: 50px;
+        height: 26px;
+        border-radius: 13px;
+        cursor: pointer;
+        position: relative;
+        transition: var(--transition);
+        display: block;
+        margin: 10px auto 0;
+      }
+
+      .theme-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .theme-toggle-circle {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      }
+
+      .dark-mode .theme-toggle-circle {
+        transform: translateX(24px);
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 250px;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 15px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 99;
+        min-height: 80px;
+      }
+
+      .topbar-left {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .topbar-left h1 {
+        font-size: 1.8rem;
+        color: white;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .topbar-slogan {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-style: italic;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .topbar-slogan i {
+        color: var(--secondary-color);
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 8px 15px;
+        border-radius: 30px;
+        transition: var(--transition);
+      }
+
+      .user-profile:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--secondary-dark)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .notifications {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .notifications i {
+        font-size: 1.3rem;
+        color: white;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: var(--accent-color);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      /* Dashboard Content */
+      .dashboard-content {
+        padding: 30px;
+        background-color: var(--light-color);
+        flex: 1;
+      }
+
+      /* Welcome Banner AVEC IMAGE D'ANIMAL EN BACKGROUND */
+      .welcome-banner {
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+        min-height: 220px;
+        animation: fadeIn 1s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .welcome-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(78, 205, 196, 0.3) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        transform: translate(50px, -50px);
+      }
+
+      .welcome-banner::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+          circle,
+          rgba(44, 90, 160, 0.2) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        transform: translate(-50px, 50px);
+      }
+
+      .welcome-banner-content {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+      }
+
+      .welcome-banner-content h2 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: #ffffff !important;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .welcome-banner-content p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        max-width: 700px;
+        line-height: 1.7;
+        color: #ffffff !important;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+        margin-bottom: 20px;
+      }
+
+      .welcome-banner-icon {
+        font-size: 4.5rem;
+        color: #ffffff !important;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+        animation: float 3s ease-in-out infinite;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      /* Progress bar pour l'objectif mensuel */
+      .progress-container {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        max-width: 500px;
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: white;
+        font-size: 0.95rem;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--secondary-color),
+          var(--secondary-light)
+        );
+        border-radius: 6px;
+        width: 75%;
+        position: relative;
+        transition: width 1.5s ease-out;
+      }
+
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* Styles pour garantir le nom de l'admin en blanc */
+      .user-profile h4 {
+        color: white !important;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .admin-name-white {
+        color: #ffffff !important;
+        font-weight: 800;
+        text-shadow:
+          0 2px 0 #000,
+          2px 0 0 #000,
+          0 -2px 0 #000,
+          -2px 0 0 #000,
+          2px 2px 0 #000,
+          -2px -2px 0 #000,
+          2px -2px 0 #000,
+          -2px 2px 0 #000,
+          0 0 8px rgba(0, 0, 0, 0.6),
+          0 0 15px rgba(0, 0, 0, 0.4);
+        position: relative;
+        display: inline-block;
+        padding: 0 5px;
+      }
+
+      .admin-name-white::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+        animation: underlinePulse 2s infinite;
+      }
+
+      @keyframes underlinePulse {
+        0%,
+        100% {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scaleX(1.05);
+          opacity: 0.8;
+        }
+      }
+
+      /* Stats Cards */
+      .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stat-card {
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 20px var(--shadow);
+        display: flex;
+        align-items: center;
+        transition: var(--transition);
+        border-top: 4px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+      .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px var(--shadow);
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        font-size: 1.5rem;
+        color: white;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-light)
+        );
+      }
+
+      .stat-icon.revenue {
+        background: linear-gradient(135deg, var(--success-color), #34d399);
+      }
+
+      .stat-icon.customers {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      }
+
+      .stat-icon.products {
+        background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+      }
+
+      .stat-info h3 {
+        font-size: 2rem;
+        margin-bottom: 5px;
+        color: var(--primary-color);
+      }
+
+      .stat-info p {
+        opacity: 0.8;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+
+      .currency {
+        font-size: 1rem;
+        color: var(--secondary-color);
+        font-weight: bold;
+      }
+
+      .trend {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-top: 5px;
+      }
+
+      .trend.up {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: var(--success-color);
+      }
+
+      .trend.down {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: var(--danger-color);
+      }
+
+      /* Tables avec images */
+      .dashboard-section {
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px var(--shadow);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--card-bg);
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+
+      .btn i {
+        margin-right: 8px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-light)
+        );
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary-color)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, var(--success-color), #34d399);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: linear-gradient(135deg, #059669, var(--success-color));
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      th {
+        text-align: left;
+        padding: 15px;
+        border-bottom: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 600;
+        background-color: var(--card-bg);
+      }
+
+      td {
+        padding: 15px;
+        border-bottom: 1px solid var(--card-bg);
+        vertical-align: middle;
+      }
+
+      tr:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+      }
+
+      /* Images dans les tables */
+      .product-image,
+      .customer-image,
+      .pet-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid var(--card-bg);
+        transition: var(--transition);
+      }
+
+      .product-image:hover,
+      .customer-image:hover,
+      .pet-image:hover {
+        transform: scale(1.1);
+        border-color: var(--primary-color);
+      }
+
+      .image-cell {
+        width: 70px;
+        text-align: center;
+      }
+
+      .status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+      }
+
+      .status.delivered {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: var(--success-color);
+      }
+
+      .status.pending {
+        background-color: rgba(245, 158, 11, 0.2);
+        color: var(--warning-color);
+      }
+
+      .status.processing {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: var(--info-color);
+      }
+
+      .status.cancelled {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: var(--danger-color);
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin: 0 5px;
+        color: var(--primary-color);
+        font-size: 1rem;
+        transition: var(--transition);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .action-btn:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--primary-dark);
+        transform: scale(1.1);
+      }
+
+      .action-btn.delete {
+        color: var(--danger-color);
+      }
+
+      .action-btn.delete:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+      }
+
+      /* Charts */
+      .charts-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .chart-container {
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 15px var(--shadow);
+      }
+
+      .chart-container h3 {
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .chart {
+        height: 250px;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        padding-top: 20px;
+      }
+
+      .chart-bar {
+        flex: 1;
+        background: linear-gradient(
+          to top,
+          var(--primary-color),
+          var(--primary-light)
+        );
+        border-radius: 5px 5px 0 0;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .chart-bar:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+
+      .chart-label {
+        position: absolute;
+        bottom: -25px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--bg-color);
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h2 {
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .close-btn:hover {
+        color: var(--accent-color);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--primary-color);
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--card-bg);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-light)
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1rem;
+      }
+
+      .submit-btn:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary-color)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+      }
+
+      /* Historique Section */
+      .history-container {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      .history-item {
+        padding: 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition);
+      }
+
+      .dark-mode .history-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .history-item:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+        transform: translateX(5px);
+      }
+
+      .history-item:last-child {
+        border-bottom: none;
+      }
+
+      .history-info h4 {
+        margin-bottom: 5px;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .history-info p {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        line-height: 1.4;
+      }
+
+      .history-date {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .history-date i {
+        margin-right: 5px;
+        color: var(--secondary-color);
+      }
+
+      /* Notifications Panel */
+      .notifications-panel {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 380px;
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+        border: 1px solid var(--card-bg);
+      }
+
+      .notifications-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--card-bg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--card-bg);
+        border-radius: 12px 12px 0 0;
+      }
+
+      .notifications-header h3 {
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .notifications-list {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      .notification-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--card-bg);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .notification-item:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+      }
+
+      .notification-item.unread {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .notification-content h4 {
+        margin-bottom: 5px;
+        color: var(--primary-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .notification-content h4 i {
+        margin-right: 8px;
+        color: var(--secondary-color);
+      }
+
+      .notification-content p {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        line-height: 1.4;
+      }
+
+      .notification-time {
+        font-size: 0.8rem;
+        opacity: 0.6;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+      }
+
+      .notification-time i {
+        margin-right: 5px;
+      }
+
+      .mark-all-read {
+        color: var(--primary-color);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
+
+      .mark-all-read i {
+        margin-right: 5px;
+      }
+
+      /* Footer */
+      .main-footer {
+        background-color: var(--footer-bg);
+        color: var(--footer-text);
+        padding: 40px 0 20px;
+        margin-top: auto;
+      }
+
+      .footer-content {
+        padding: 0 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 30px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: var(--secondary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-column h3 i {
+        color: var(--secondary-color);
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .contact-item i {
+        width: 20px;
+        color: var(--secondary-color);
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .social-link:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-3px);
+      }
+
+      .opening-hours p {
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .opening-hours .day {
+        font-weight: 500;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        opacity: 0.8;
+        padding: 20px 30px 0;
+      }
+
+      /* Pet Gallery */
+      .pet-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .pet-item {
+        text-align: center;
+      }
+
+      .pet-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-color);
+        margin-bottom: 8px;
+        transition: var(--transition);
+      }
+
+      .pet-avatar:hover {
+        transform: scale(1.1);
+        border-color: var(--secondary-color);
+      }
+
+      .pet-name {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .sidebar {
+          width: 70px;
+        }
+
+        .sidebar-header h2,
+        .menu-item span,
+        .sidebar-footer p,
+        .slogan {
+          display: none;
+        }
+
+        .menu-item {
+          justify-content: center;
+          padding: 20px 0;
+        }
+
+        .menu-item i {
+          margin-right: 0;
+          font-size: 1.2rem;
+        }
+
+        .main-content {
+          margin-left: 70px;
+        }
+
+        .notifications-panel {
+          right: -50px;
+          width: 320px;
+        }
+
+        .footer-content {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .stats-cards,
+        .charts-row {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          flex-direction: column;
+          gap: 15px;
+          text-align: center;
+          padding: 15px;
+          min-height: auto;
+        }
+
+        .topbar-right {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .welcome-banner {
+          flex-direction: column;
+          text-align: center;
+          gap: 25px;
+          padding: 25px;
+        }
+
+        .welcome-banner-icon {
+          order: -1;
+          font-size: 3.5rem;
+        }
+
+        .welcome-banner-content h2 {
+          font-size: 1.8rem;
+          justify-content: center;
+        }
+
+        table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .notifications-panel {
+          width: 300px;
+          right: -30px;
+        }
+
+        .dashboard-content {
+          padding: 20px;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .contact-item {
+          justify-content: center;
+        }
+
+        .social-links {
+          justify-content: center;
+        }
+      }
+
+      .notification-toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-light)
+        );
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+        max-width: 350px;
+        border-left: 5px solid var(--secondary-color);
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Drapeau Tunisien */
+      .tunisia-flag {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 10px;
+        font-size: 0.9rem;
+      }
+
+      .tunisia-flag i {
+        color: white;
+        margin-right: 5px;
+      }
+
+      .price-dt {
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+
+      .price-dt::after {
+        content: " DT";
+        font-weight: normal;
+      }
+
+      /* Badge de ville */
+      .city-badge {
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+        display: inline-block;
+      }
+
+      /* Admin Badge */
+      .admin-badge {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--secondary-dark)
+        );
+        color: white;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="logo">
+          <i class="fas fa-paw"></i> <span>PetFood TN</span>
+        </a>
+        <div class="slogan">
+          Nourriture fraîche pour vos animaux, livrée chez vous
+        </div>
+      </div>
+
+      <div class="menu">
+        <a href="#" class="menu-item active" data-section="dashboard">
+          <i class="fas fa-tachometer-alt"></i> <span>Tableau de bord</span>
+        </a>
+        <a href="#" class="menu-item" data-section="orders">
+          <i class="fas fa-shopping-cart"></i> <span>Commandes</span>
+        </a>
+        <a href="#" class="menu-item" data-section="products">
+          <i class="fas fa-box-open"></i> <span>Produits</span>
+        </a>
+        <a href="#" class="menu-item" data-section="customers">
+          <i class="fas fa-users"></i> <span>Clients</span>
+        </a>
+        <a href="#" class="menu-item" data-section="history">
+          <i class="fas fa-history"></i> <span>Historique</span>
+        </a>
+        <a href="index.html" class="menu-item">
+          <i class="fas fa-store"></i> <span>Retour au site</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <p
+          style="
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+          "
+        >
+          <span class="tunisia-flag">
+            <i class="fas fa-flag"></i> Tunisie
+          </span>
+        </p>
+        <button class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-circle"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1 id="dashboardTitle">
+            Tableau de bord
+            <span class="tunisia-flag">
+              <i class="fas fa-flag"></i> Tunisie
+            </span>
+          </h1>
+          <div class="topbar-slogan">
+            <i class="fas fa-heart"></i>
+            <span id="dynamicSlogan"
+              >Nourriture fraîche pour vos animaux, livrée chez vous en
+              24h</span
+            >
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="notifications" id="notificationsIcon">
+            <i class="fas fa-bell"></i>
+            <div class="notification-badge" id="notificationBadge">3</div>
+          </div>
+
+          <div class="user-profile">
+            <div class="user-avatar">GJ</div>
+            <div style="color: white !important">
+              <h4
+                style="
+                  color: white !important;
+                  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                "
+              >
+                EL Jezi Ghassen <span class="admin-badge">Admin</span>
+              </h4>
+              <p
+                style="
+                  font-size: 0.9rem;
+                  opacity: 0.9;
+                  color: rgba(255, 255, 255, 0.9) !important;
+                "
+              >
+                Administrateur Principal
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Panel -->
+      <div class="notifications-panel" id="notificationsPanel">
+        <div class="notifications-header">
+          <h3>
+            <i class="fas fa-bell"></i> Notifications
+            <span id="unreadCount">(3)</span>
+          </h3>
+          <button class="mark-all-read" id="markAllReadBtn">
+            <i class="fas fa-check-double"></i> Tout marquer comme lu
+          </button>
+        </div>
+        <div class="notifications-list" id="notificationsList">
+          <!-- Les notifications seront chargées par JavaScript -->
+        </div>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <!-- Welcome Banner AVEC IMAGE D'ANIMAL EN BACKGROUND -->
+        <div class="welcome-banner" id="welcomeBanner">
+          <div class="welcome-banner-content">
+            <h2 style="color: white !important">
+              <i class="fas fa-hand-wave" style="color: white !important"></i>
+              Bienvenue,
+              <span class="admin-name-white"> EL Jezi Ghassen </span> !
+            </h2>
+            <p
+              style="
+                color: white !important;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+              "
+            >
+              Vous gérez
+              <strong style="color: white !important"
+                >189 clients tunisiens</strong
+              >
+              et
+              <strong style="color: white !important"
+                >48 commandes aujourd'hui</strong
+              >. Continuez à fournir la meilleure nourriture pour animaux en
+              Tunisie !
+            </p>
+
+            <!-- Barre de progression pour l'objectif mensuel -->
+            <div class="progress-container">
+              <div class="progress-info">
+                <span>Objectif mensuel</span>
+                <span>75%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%"></div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-top: 8px;
+                  font-size: 0.85rem;
+                  color: rgba(255, 255, 255, 0.9);
+                "
+              >
+                <span>2,845 DT / 3,800 DT</span>
+                <span>+8.5% ce mois</span>
+              </div>
+            </div>
+          </div>
+          <div class="welcome-banner-icon">
+            <i class="fas fa-dog" style="color: white !important"></i>
+          </div>
+        </div>
+
+        <!-- Section Dashboard -->
+        <div id="dashboardSection" class="dashboard-section active-section">
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalOrders">48</h3>
+                <p>Commandes aujourd'hui</p>
+                <span class="trend up">+12% vs hier</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon revenue">
+                <i class="fas fa-donate"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalRevenue">2,845 <span class="price-dt"></span></h3>
+                <p>Chiffre d'affaires</p>
+                <span class="trend up">+8.5% ce mois</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon customers">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalCustomers">189</h3>
+                <p>Clients actifs</p>
+                <span class="trend up">+15 nouveaux</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon products">
+                <i class="fas fa-box-open"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalProducts">36</h3>
+                <p>Produits en stock</p>
+                <span class="trend down">5 en rupture</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-container">
+              <h3><i class="fas fa-chart-bar"></i> Commandes par ville</h3>
+              <div class="chart" id="ordersByCityChart">
+                <!-- Les barres du graphique seront générées par JavaScript -->
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <h3>
+                <i class="fas fa-chart-line"></i> Revenus mensuels
+                <span class="price-dt"></span>
+              </h3>
+              <div class="chart" id="revenueChart">
+                <!-- Les barres du graphique seront générées par JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h2><i class="fas fa-shopping-cart"></i> Commandes récentes</h2>
+              <button class="btn btn-primary" id="viewAllOrdersBtn">
+                <i class="fas fa-eye"></i> Voir toutes les commandes
+              </button>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Client</th>
+                  <th>Animal</th>
+                  <th>Produit</th>
+                  <th>Montant</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentOrdersTable">
+                <!-- Les commandes récentes seront générées par JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section Commandes -->
+        <div id="ordersSection" class="dashboard-section" style="display: none">
+          <div class="section-header">
+            <h2><i class="fas fa-shopping-cart"></i> Gestion des commandes</h2>
+            <button class="btn btn-primary" id="addOrderBtn">
+              <i class="fas fa-plus"></i> Nouvelle commande
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Animal</th>
+                <th>Produit</th>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable">
+              <!-- Les commandes seront générées par JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Section Produits -->
+        <div
+          id="productsSection"
+          class="dashboard-section"
+          style="display: none"
+        >
+          <div class="section-header">
+            <h2><i class="fas fa-box-open"></i> Produits disponibles</h2>
+            <button class="btn btn-primary" id="addProductBtn">
+              <i class="fas fa-plus"></i> Ajouter un produit
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Fournisseur</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable">
+              <!-- Les produits seront générées par JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Section Clients -->
+        <div
+          id="customersSection"
+          class="dashboard-section"
+          style="display: none"
+        >
+          <div class="section-header">
+            <h2><i class="fas fa-users"></i> Clients Tunisiens</h2>
+            <button class="btn btn-primary" id="addCustomerBtn">
+              <i class="fas fa-plus"></i> Ajouter un client
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Ville</th>
+                <th>Téléphone</th>
+                <th>Animal</th>
+                <th>Commandes</th>
+                <th>Dépenses</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="customersTable">
+              <!-- Les clients seront générées par JavaScript -->
+            </tbody>
+          </table>
+
+          <!-- Galerie d'animaux -->
+          <div style="margin-top: 30px">
+            <h3><i class="fas fa-paw"></i> Animaux de nos clients</h3>
+            <div class="pet-gallery" id="petGallery">
+              <!-- La galerie d'animaux sera générée par JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Historique -->
+        <div
+          id="historySection"
+          class="dashboard-section"
+          style="display: none"
+        >
+          <div class="section-header">
+            <h2><i class="fas fa-history"></i> Historique des activités</h2>
+            <button class="btn btn-primary" id="clearHistoryBtn">
+              <i class="fas fa-trash"></i> Effacer l'historique
+            </button>
+          </div>
+
+          <div class="history-container" id="historyContainer">
+            <!-- L'historique sera chargé par JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3><i class="fas fa-map-marker-alt"></i> Contactez-nous</h3>
+            <div class="contact-info">
+              <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Rue de la République, 1002 Tunis, Tunisie</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>+216 71 123 456</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>+216 20 987 654</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>contact@petfood-tn.tn</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-globe"></i>
+                <span>www.petfood-delivery.tn</span>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a href="#" class="social-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-whatsapp"></i
+              ></a>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3><i class="fas fa-clock"></i> Horaires d'ouverture</h3>
+            <div class="opening-hours">
+              <p>
+                <span class="day">Lundi - Vendredi:</span>
+                <span>8h00 - 19h00</span>
+              </p>
+              <p><span class="day">Samedi:</span> <span>9h00 - 18h00</span></p>
+              <p>
+                <span class="day">Dimanche:</span> <span>10h00 - 16h00</span>
+              </p>
+              <p>
+                <span class="day">Livraisons:</span> <span>7j/7 8h-20h</span>
+              </p>
+            </div>
+
+            <h3 style="margin-top: 25px">
+              <i class="fas fa-truck"></i> Zones de livraison
+            </h3>
+            <p>
+              Tunis, Ariana, Ben Arous, Manouba, Sfax, Sousse, Nabeul, Bizerte,
+              Monastir
+            </p>
+          </div>
+
+          <div class="footer-column">
+            <h3><i class="fas fa-info-circle"></i> À propos</h3>
+            <p>
+              PetFood Delivery Tunisie est le leader de la livraison de
+              nourriture fraîche pour animaux en Tunisie. Nous nous engageons à
+              fournir des produits de qualité premium pour la santé et le
+              bien-être de vos compagnons.
+            </p>
+
+            <h3 style="margin-top: 25px">
+              <i class="fas fa-shield-alt"></i> Paiements sécurisés
+            </h3>
+            <p>
+              Nous acceptons les paiements en espèces à la livraison, par carte
+              bancaire et via les portefeuilles électroniques.
+            </p>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>&copy; 2023 PetFood Delivery Tunisie. Tous droits réservés.</p>
+          <p style="margin-top: 5px">
+            Développé avec
+            <i class="fas fa-heart" style="color: #ff6b6b"></i> pour les animaux
+            de Tunisie
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Modal pour ajouter une commande -->
+    <div class="modal" id="orderModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalOrderTitle">
+            <i class="fas fa-cart-plus"></i> Nouvelle commande
+          </h2>
+          <button class="close-btn" id="closeModalBtn">&times;</button>
+        </div>
+
+        <form id="orderForm">
+          <div class="form-group">
+            <label for="customerSelect"
+              ><i class="fas fa-user"></i> Client Tunisien</label
+            >
+            <select id="customerSelect" required>
+              <option value="">Sélectionnez un client</option>
+              <!-- Les options seront générées par JavaScript -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tunisianCity"
+              ><i class="fas fa-city"></i> Ville en Tunisie</label
+            >
+            <select id="tunisianCity" required>
+              <option value="">Sélectionnez une ville</option>
+              <option value="tunis">Tunis</option>
+              <option value="sfax">Sfax</option>
+              <option value="sousse">Sousse</option>
+              <option value="kairouan">Kairouan</option>
+              <option value="bizerte">Bizerte</option>
+              <option value="gabes">Gabès</option>
+              <option value="ariana">Ariana</option>
+              <option value="gafsa">Gafsa</option>
+              <option value="monastir">Monastir</option>
+              <option value="nabeul">Nabeul</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="productSelect"
+              ><i class="fas fa-box"></i> Produit(s)</label
+            >
+            <select id="productSelect" multiple required style="height: 120px">
+              <!-- Les options seront générées par JavaScript -->
+            </select>
+            <small style="display: block; margin-top: 5px; opacity: 0.7"
+              >Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs
+              produits</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="orderStatus"
+              ><i class="fas fa-truck"></i> Statut de livraison</label
+            >
+            <select id="orderStatus" required>
+              <option value="pending">En attente</option>
+              <option value="processing">En traitement</option>
+              <option value="delivered">Livrée</option>
+              <option value="cancelled">Annulée</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitOrderBtn">
+            <i class="fas fa-shopping-cart"></i> Enregistrer la commande
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+      <i class="fas fa-bell" style="margin-right: 10px"></i>
+      <span id="notificationText">Action effectuée avec succès!</span>
+    </div>
+
+    <!-- Le JavaScript reste le même -->
+    <script>
+      
+      const tunisianData = {
+        orders: [
+          {
+            id: 101,
+            customer: "Mohamed Ben Ali",
+            city: "Tunis",
+            animal: "Chien (Golden Retriever)",
+            products: "Croquettes chien premium (5kg)",
+            date: "2023-10-15",
+            amount: "85.500",
+            status: "delivered",
+          },
+          {
+            id: 102,
+            customer: "Fatima Trabelsi",
+            city: "Sfax",
+            animal: "Chat (Persan)",
+            products: "Pâtée chat thon (24x85g)",
+            date: "2023-10-14",
+            amount: "42.750",
+            status: "processing",
+          },
+          {
+            id: 103,
+            customer: "Khalil Boukadida",
+            city: "Sousse",
+            animal: "Chien (Berger Allemand)",
+            products: "Friandises pour chien",
+            date: "2023-10-13",
+            amount: "15.250",
+            status: "pending",
+          },
+          {
+            id: 104,
+            customer: "Amira Saidi",
+            city: "Ariana",
+            animal: "Chat (Siamois)",
+            products: "Litière chat bio (10kg)",
+            date: "2023-10-12",
+            amount: "28.900",
+            status: "delivered",
+          },
+          {
+            id: 105,
+            customer: "Youssef Gharbi",
+            city: "Nabeul",
+            animal: "Chat (Maine Coon)",
+            products: "Jouet pour chat + friandises",
+            date: "2023-10-11",
+            amount: "32.500",
+            status: "cancelled",
+          },
+          {
+            id: 106,
+            customer: "Noura Hammami",
+            city: "Monastir",
+            animal: "Chat (Européen)",
+            products: "Croquettes chat stérilisé (3kg)",
+            date: "2023-10-10",
+            amount: "45.750",
+            status: "delivered",
+          },
+          {
+            id: 107,
+            customer: "Riadh Jemai",
+            city: "Bizerte",
+            animal: "Chien (Labrador)",
+            products: "Os à mâcher chien",
+            date: "2023-10-09",
+            amount: "12.300",
+            status: "processing",
+          },
+        ],
+        products: [
+          {
+            id: 1,
+            name: "Croquettes chien premium",
+            category: "Chien",
+            price: "85.500",
+            stock: 28,
+            supplier: "Royal Canin TN",
+            image:
+              "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=150&h=150&fit=crop",
+          },
+          {
+            id: 2,
+            name: "Pâtée chat thon",
+            category: "Chat",
+            price: "42.750",
+            stock: 42,
+            supplier: "Whiskas TN",
+            image:
+              "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=150&h=150&fit=crop",
+          },
+          {
+            id: 3,
+            name: "Friandises pour chien",
+            category: "Chien",
+            price: "15.250",
+            stock: 67,
+            supplier: "Pedigree TN",
+            image:
+              "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?w=150&h=150&fit=crop",
+          },
+          {
+            id: 4,
+            name: "Litière chat bio",
+            category: "Chat",
+            price: "28.900",
+            stock: 15,
+            supplier: "Cat's Best TN",
+            image:
+              "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=150&h=150&fit=crop",
+          },
+          {
+            id: 5,
+            name: "Jouet pour chat",
+            category: "Chat",
+            price: "18.500",
+            stock: 0,
+            supplier: "PetFun TN",
+            image:
+              "https://images.unsplash.com/photo-1514888286974-6d03bde4ba14?w=150&h=150&fit=crop",
+          },
+          {
+            id: 6,
+            name: "Croquettes chat stérilisé",
+            category: "Chat",
+            price: "45.750",
+            stock: 32,
+            supplier: "Hill's TN",
+            image:
+              "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=150&h=150&fit=crop",
+          },
+          {
+            id: 7,
+            name: "Os à mâcher chien",
+            category: "Chien",
+            price: "12.300",
+            stock: 58,
+            supplier: "DogChow TN",
+            image:
+              "https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop",
+          },
+        ],
+        customers: [
+          {
+            id: 1,
+            name: "Mohamed Ben Ali",
+            city: "Tunis",
+            phone: "+216 20 123 456",
+            orders: 8,
+            totalSpent: "652.400",
+            petName: "Max",
+            petType: "Chien",
+            petImage:
+              "https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop",
+          },
+          {
+            id: 2,
+            name: "Fatima Trabelsi",
+            city: "Sfax",
+            phone: "+216 22 234 567",
+            orders: 5,
+            totalSpent: "285.750",
+            petName: "Mimi",
+            petType: "Chat",
+            petImage:
+              "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=150&h=150&fit=crop",
+          },
+          {
+            id: 3,
+            name: "Khalil Boukadida",
+            city: "Sousse",
+            phone: "+216 73 345 678",
+            orders: 12,
+            totalSpent: "1,240.500",
+            petName: "Rex",
+            petType: "Chien",
+            petImage:
+              "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=150&h=150&fit=crop",
+          },
+          {
+            id: 4,
+            name: "Amira Saidi",
+            city: "Ariana",
+            phone: "+216 98 456 789",
+            orders: 3,
+            totalSpent: "120.900",
+            petName: "Luna",
+            petType: "Chat",
+            petImage:
+              "https://images.unsplash.com/photo-1514888286974-6d03bde4ba14?w=150&h=150&fit=crop",
+          },
+          {
+            id: 5,
+            name: "Youssef Gharbi",
+            city: "Nabeul",
+            phone: "+216 28 567 890",
+            orders: 7,
+            totalSpent: "458.250",
+            petName: "Simba",
+            petType: "Chat",
+            petImage:
+              "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=150&h=150&fit=crop",
+          },
+          {
+            id: 6,
+            name: "Noura Hammami",
+            city: "Monastir",
+            phone: "+216 97 678 901",
+            orders: 4,
+            totalSpent: "210.500",
+            petName: "Bella",
+            petType: "Chien",
+            petImage:
+              "https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?w=150&h=150&fit=crop",
+          },
+          {
+            id: 7,
+            name: "Riadh Jemai",
+            city: "Bizerte",
+            phone: "+216 24 789 012",
+            orders: 9,
+            totalSpent: "580.300",
+            petName: "Rocky",
+            petType: "Chien",
+            petImage:
+              "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=150&h=150&fit=crop",
+          },
+        ],
+        pets: [
+          {
+            name: "Max",
+            type: "Golden Retriever",
+            owner: "Mohamed Ben Ali",
+            image:
+              "https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Mimi",
+            type: "Chat Persan",
+            owner: "Fatima Trabelsi",
+            image:
+              "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Rex",
+            type: "Berger Allemand",
+            owner: "Khalil Boukadida",
+            image:
+              "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Luna",
+            type: "Chat Siamois",
+            owner: "Amira Saidi",
+            image:
+              "https://images.unsplash.com/photo-1514888286974-6d03bde4ba14?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Simba",
+            type: "Maine Coon",
+            owner: "Youssef Gharbi",
+            image:
+              "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Bella",
+            type: "Labrador",
+            owner: "Noura Hammami",
+            image:
+              "https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Rocky",
+            type: "Bulldog",
+            owner: "Riadh Jemai",
+            image:
+              "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Charlie",
+            type: "Chat Européen",
+            owner: "Leila Mansour",
+            image:
+              "https://images.unsplash.com/photo-1494256997604-768d1f608cac?w=150&h=150&fit=crop",
+          },
+          {
+            name: "Lucky",
+            type: "Beagle",
+            owner: "Sami Karray",
+            image:
+              "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=150&h=150&fit=crop",
+          },
+        ],
+        history: [
+          {
+            id: 1,
+            action: "Nouvelle commande",
+            details: "Commande #108 de Sami Karray (Gabès)",
+            date: "2023-10-15 14:30",
+            user: "EL Jezi Ghassen",
+          },
+          {
+            id: 2,
+            action: "Mise à jour stock",
+            details: "Stock Croquettes chien premium mis à jour: 28 unités",
+            date: "2023-10-15 11:15",
+            user: "EL Jezi Ghassen",
+          },
+          {
+            id: 3,
+            action: "Commande livrée",
+            details: "Commande #101 livrée à Mohamed Ben Ali (Tunis)",
+            date: "2023-10-15 09:45",
+            user: "Livreur",
+          },
+          {
+            id: 4,
+            action: "Nouveau client",
+            details: "Inscription de Leila Mansour (Kairouan)",
+            date: "2023-10-14 16:20",
+            user: "Système",
+          },
+          {
+            id: 5,
+            action: "Paiement reçu",
+            details: "Paiement de 85.500 DT pour commande #101",
+            date: "2023-10-14 10:30",
+            user: "Système",
+          },
+        ],
+        notifications: [
+          {
+            id: 1,
+            title: "Nouvelle commande",
+            message: "Sami Karray a passé une commande de 65.250 DT",
+            time: "Il y a 2 heures",
+            read: false,
+            icon: "fa-cart-plus",
+          },
+          {
+            id: 2,
+            title: "Stock faible",
+            message: "Litière chat bio - seulement 15 unités restantes",
+            time: "Il y a 5 heures",
+            read: false,
+            icon: "fa-exclamation-triangle",
+          },
+          {
+            id: 3,
+            title: "Livraison réussie",
+            message: "Commande #101 livrée avec succès à Tunis",
+            time: "Il y a 1 jour",
+            read: true,
+            icon: "fa-check-circle",
+          },
+          {
+            id: 4,
+            title: "Nouveau client",
+            message: "Leila Mansour s'est inscrit depuis Kairouan",
+            time: "Il y a 2 jours",
+            read: true,
+            icon: "fa-user-plus",
+          },
+          {
+            id: 5,
+            title: "Promotion spéciale",
+            message: "Promotion de 15% sur les croquettes chien ce week-end",
+            time: "Il y a 3 jours",
+            read: true,
+            icon: "fa-percentage",
+          },
+        ],
+      };
+
+   
+      const slogans = [
+        "Nourriture fraîche pour vos animaux, livrée chez vous en 24h",
+        "Le bonheur de vos animaux, notre priorité !",
+        "Qualité premium pour chiens et chats tunisiens",
+        "Livraison rapide dans toute la Tunisie",
+        "Des produits frais, des animaux heureux",
+        "Votre animal mérite le meilleur, nous le livrons",
+        "Nutrition optimale pour la santé de votre compagnon",
+      ];
+
+    
+      const themeToggle = document.getElementById("themeToggle");
+      const menuItems = document.querySelectorAll(".menu-item");
+      const dashboardSections = document.querySelectorAll(".dashboard-section");
+      const dashboardTitle = document.getElementById("dashboardTitle");
+      const dynamicSlogan = document.getElementById("dynamicSlogan");
+
+     
+      const notificationsIcon = document.getElementById("notificationsIcon");
+      const notificationsPanel = document.getElementById("notificationsPanel");
+      const notificationBadge = document.getElementById("notificationBadge");
+      const notificationsList = document.getElementById("notificationsList");
+      const markAllReadBtn = document.getElementById("markAllReadBtn");
+      const unreadCount = document.getElementById("unreadCount");
+
+    
+      const viewAllOrdersBtn = document.getElementById("viewAllOrdersBtn");
+      const addOrderBtn = document.getElementById("addOrderBtn");
+      const addProductBtn = document.getElementById("addProductBtn");
+      const addCustomerBtn = document.getElementById("addCustomerBtn");
+      const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+
+   
+      const orderModal = document.getElementById("orderModal");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+      const orderForm = document.getElementById("orderForm");
+
+      
+      const notificationText = document.getElementById("notificationText");
+
+      
+      document.addEventListener("DOMContentLoaded", function () {
+       
+        loadRecentOrders();
+        loadOrders();
+        loadProducts();
+        loadCustomers();
+        loadPetGallery();
+        loadHistory();
+        loadNotifications();
+        generateCharts();
+
+        
+        checkThemePreference();
+
+        
+        initEventListeners();
+
+        
+        startSloganRotation();
+
+       
+        setTimeout(() => {
+          showNotificationToast(
+            "Bienvenue EL Jezi Ghassen sur le tableau de bord PetFood Delivery Tunisie!",
+          );
+        }, 1000);
+      });
+
+      
+      themeToggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark-mode");
+
+        const isDarkMode =
+          document.documentElement.classList.contains("dark-mode");
+        localStorage.setItem("darkMode", isDarkMode);
+      });
+
+      
+      function checkThemePreference() {
+        const savedDarkMode = localStorage.getItem("darkMode");
+
+        if (savedDarkMode === "true") {
+          document.documentElement.classList.add("dark-mode");
+        } else if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          document.documentElement.classList.add("dark-mode");
+          localStorage.setItem("darkMode", "true");
+        }
+      }
+
+     
+      function startSloganRotation() {
+        let currentSloganIndex = 0;
+
+        
+        setInterval(() => {
+          currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
+          dynamicSlogan.textContent = slogans[currentSloganIndex];
+
+       
+          dynamicSlogan.style.opacity = "0";
+          setTimeout(() => {
+            dynamicSlogan.style.transition = "opacity 0.5s ease";
+            dynamicSlogan.style.opacity = "1";
+          }, 100);
+        }, 10000);
+      }
+
+     
+      function initEventListeners() {
+       
+        menuItems.forEach((item) => {
+          item.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            
+            menuItems.forEach((i) => i.classList.remove("active"));
+            this.classList.add("active");
+
+         
+            const sectionId = this.getAttribute("data-section") + "Section";
+            dashboardSections.forEach((section) => {
+              section.style.display = "none";
+            });
+
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+              activeSection.style.display = "block";
+
+         
+              const sectionName = this.querySelector("span").textContent;
+              dashboardTitle.innerHTML =
+                sectionName +
+                ' <span class="tunisia-flag"><i class="fas fa-flag"></i> Tunisie</span>';
+
+              if (sectionId === "dashboardSection") {
+                generateCharts();
+              }
+
+            
+              if (sectionId === "customersSection") {
+                loadPetGallery();
+              }
+            }
+          });
+        });
+
+        notificationsIcon.addEventListener("click", function (e) {
+          e.stopPropagation();
+          notificationsPanel.style.display =
+            notificationsPanel.style.display === "block" ? "none" : "block";
+        });
+
+        markAllReadBtn.addEventListener("click", function () {
+          markAllNotificationsAsRead();
+        });
+
+        
+        document.addEventListener("click", function () {
+          notificationsPanel.style.display = "none";
+        });
+
+       
+        viewAllOrdersBtn?.addEventListener("click", function () {
+       
+          document.querySelector('.menu-item[data-section="orders"]').click();
+        });
+
+        addOrderBtn?.addEventListener("click", function () {
+          openOrderModal();
+        });
+
+        addProductBtn?.addEventListener("click", function () {
+          showNotificationToast("Fonctionnalité d'ajout de produit à venir!");
+          addToHistory(
+            "Tentative d'ajout produit",
+            "Ouverture du formulaire d'ajout de produit",
+            "EL Jezi Ghassen",
+          );
+        });
+
+        addCustomerBtn?.addEventListener("click", function () {
+          showNotificationToast("Fonctionnalité d'ajout de client à venir!");
+          addToHistory(
+            "Tentative d'ajout client",
+            "Ouverture du formulaire d'ajout de client",
+            "EL Jezi Ghassen",
+          );
+        });
+
+        clearHistoryBtn?.addEventListener("click", function () {
+          if (confirm("Êtes-vous sûr de vouloir effacer tout l'historique ?")) {
+            tunisianData.history = [];
+            loadHistory();
+            showNotificationToast("Historique effacé avec succès!");
+            addToHistory(
+              "Historique effacé",
+              "Tous les historiques ont été supprimés",
+              "EL Jezi Ghassen",
+            );
+          }
+        });
+
+        
+        closeModalBtn?.addEventListener("click", function () {
+          orderModal.style.display = "none";
+        });
+
+        window.addEventListener("click", function (e) {
+          if (e.target === orderModal) {
+            orderModal.style.display = "none";
+          }
+        });
+
+     
+        orderForm?.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const customerSelect = document.getElementById("customerSelect");
+          const customerName = customerSelect.selectedOptions[0].text;
+          const city = document.getElementById("tunisianCity").value;
+          const cityName =
+            document.getElementById("tunisianCity").selectedOptions[0].text;
+          const products = Array.from(
+            document.getElementById("productSelect").selectedOptions,
+          )
+            .map((option) => option.text)
+            .join(", ");
+          const status = document.getElementById("orderStatus").value;
+
+          const amount = (Math.random() * 100 + 20).toFixed(3);
+
+    
+          const newOrder = {
+            id: tunisianData.orders.length + 101,
+            customer: customerName,
+            city: cityName,
+            animal: "Chien (Race mixte)",
+            products: products,
+            date: new Date().toISOString().split("T")[0],
+            amount: amount,
+            status: status,
+          };
+
+          tunisianData.orders.unshift(newOrder);
+
+         
+          addNotification(
+            `Nouvelle commande de ${customerName}`,
+            `${customerName} a passé une commande de ${amount} DT`,
+            "fa-cart-plus",
+          );
+
+       
+          addToHistory(
+            "Nouvelle commande",
+            `Commande #${newOrder.id} de ${customerName} (${cityName}) pour ${amount} DT`,
+            "EL Jezi Ghassen",
+          );
+
+     
+          loadRecentOrders();
+          loadOrders();
+
+       
+          updateStats();
+
+        
+          orderModal.style.display = "none";
+
+         
+          showNotificationToast(
+            `Commande #${newOrder.id} ajoutée avec succès pour ${amount} DT!`,
+          );
+
+         
+          orderForm.reset();
+        });
+      }
+
+      
+      function loadRecentOrders() {
+        const table = document.getElementById("recentOrdersTable");
+        if (!table) return;
+
+        table.innerHTML = "";
+
+    
+        tunisianData.orders.slice(0, 5).forEach((order) => {
+          const statusClass = getStatusClass(order.status);
+          const statusText = getStatusText(order.status);
+
+          const row = `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td>${order.animal}</td>
+                        <td>${order.products}</td>
+                        <td><span class="price-dt">${order.amount}</span></td>
+                        <td><span class="status ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn" title="Voir" onclick="viewOrder(${order.id})"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Modifier" onclick="editOrder(${order.id})"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" title="Supprimer" onclick="deleteOrder(${order.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+
+          table.innerHTML += row;
+        });
+      }
+
+      function loadOrders() {
+        const table = document.getElementById("ordersTable");
+        if (!table) return;
+
+        table.innerHTML = "";
+
+        tunisianData.orders.forEach((order) => {
+          const statusClass = getStatusClass(order.status);
+          const statusText = getStatusText(order.status);
+
+          const row = `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td>${order.animal}</td>
+                        <td>${order.products}</td>
+                        <td>${order.date}</td>
+                        <td><span class="price-dt">${order.amount}</span></td>
+                        <td><span class="status ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn" title="Voir" onclick="viewOrder(${order.id})"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Modifier" onclick="editOrder(${order.id})"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" title="Supprimer" onclick="deleteOrder(${order.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+
+          table.innerHTML += row;
+        });
+      }
+
+      function loadProducts() {
+        const table = document.getElementById("productsTable");
+        if (!table) return;
+
+        table.innerHTML = "";
+
+        tunisianData.products.forEach((product) => {
+          const row = `
+                    <tr>
+                        <td class="image-cell">
+                            <img src="${product.image}" alt="${product.name}" class="product-image">
+                        </td>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td><span class="price-dt">${product.price}</span></td>
+                        <td>${product.stock}</td>
+                        <td>${product.supplier}</td>
+                        <td>
+                            <button class="action-btn" title="Voir" onclick="viewProduct(${product.id})"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Modifier" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" title="Supprimer" onclick="deleteProduct(${product.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+
+          table.innerHTML += row;
+        });
+      }
+
+      function loadCustomers() {
+        const table = document.getElementById("customersTable");
+        if (!table) return;
+
+        table.innerHTML = "";
+
+        tunisianData.customers.forEach((customer) => {
+          const row = `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="${customer.petImage}" alt="${customer.petName}" class="customer-image">
+                                <div>
+                                    <div style="font-weight: 600;">${customer.name}</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.7;">Propriétaire de ${customer.petName}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="city-badge">${customer.city}</span></td>
+                        <td>${customer.phone}</td>
+                        <td>${customer.petName} (${customer.petType})</td>
+                        <td>${customer.orders}</td>
+                        <td><span class="price-dt">${customer.totalSpent}</span></td>
+                        <td>
+                            <button class="action-btn" title="Voir" onclick="viewCustomer(${customer.id})"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Modifier" onclick="editCustomer(${customer.id})"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" title="Supprimer" onclick="deleteCustomer(${customer.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+
+          table.innerHTML += row;
+        });
+      }
+
+ 
+      function loadPetGallery() {
+        const gallery = document.getElementById("petGallery");
+        if (!gallery) return;
+
+        gallery.innerHTML = "";
+
+        tunisianData.pets.forEach((pet) => {
+          const petItem = document.createElement("div");
+          petItem.className = "pet-item";
+          petItem.innerHTML = `
+                    <img src="${pet.image}" alt="${pet.name}" class="pet-avatar">
+                    <div class="pet-name">${pet.name}</div>
+                    <div style="font-size: 0.7rem; opacity: 0.7;">${pet.type}</div>
+                    <div style="font-size: 0.65rem; opacity: 0.6;">${pet.owner}</div>
+                `;
+
+          gallery.appendChild(petItem);
+        });
+      }
+
+     
+      function loadHistory() {
+        const container = document.getElementById("historyContainer");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        if (tunisianData.history.length === 0) {
+          container.innerHTML =
+            '<p style="text-align: center; padding: 20px; opacity: 0.7;">Aucun historique disponible</p>';
+          return;
+        }
+
+        tunisianData.history.forEach((item) => {
+          const historyItem = document.createElement("div");
+          historyItem.className = "history-item";
+          historyItem.innerHTML = `
+                    <div class="history-info">
+                        <h4>${item.action}</h4>
+                        <p>${item.details}</p>
+                        <div class="history-date"><i class="far fa-clock"></i> ${item.date} • Par: ${item.user}</div>
+                    </div>
+                `;
+
+          container.appendChild(historyItem);
+        });
+      }
+
+      function loadNotifications() {
+        if (!notificationsList) return;
+
+        notificationsList.innerHTML = "";
+
+     
+        const unreadNotifications = tunisianData.notifications.filter(
+          (n) => !n.read,
+        ).length;
+        notificationBadge.textContent = unreadNotifications;
+        unreadCount.textContent = `(${unreadNotifications})`;
+
+        tunisianData.notifications.forEach((notification) => {
+          const notificationItem = document.createElement("div");
+          notificationItem.className = `notification-item ${notification.read ? "" : "unread"}`;
+          notificationItem.innerHTML = `
+                    <div class="notification-content">
+                        <h4><i class="fas ${notification.icon}"></i> ${notification.title}</h4>
+                        <p>${notification.message}</p>
+                        <div class="notification-time"><i class="far fa-clock"></i> ${notification.time}</div>
+                    </div>
+                `;
+
+         
+          notificationItem.addEventListener("click", function () {
+            if (!notification.read) {
+              notification.read = true;
+              loadNotifications();
+            }
+          });
+
+          notificationsList.appendChild(notificationItem);
+        });
+      }
+
+      function openOrderModal() {
+      
+        const customerSelect = document.getElementById("customerSelect");
+        customerSelect.innerHTML =
+          '<option value="">Sélectionnez un client tunisien</option>';
+
+        tunisianData.customers.forEach((customer) => {
+          const option = document.createElement("option");
+          option.value = customer.id;
+          option.textContent = `${customer.name} (${customer.city}) - ${customer.petName}`;
+          customerSelect.appendChild(option);
+        });
+
+        
+        const productSelect = document.getElementById("productSelect");
+        productSelect.innerHTML = "";
+
+        tunisianData.products.forEach((product) => {
+          const option = document.createElement("option");
+          option.value = product.id;
+          option.textContent = `${product.name} - ${product.price} DT`;
+          productSelect.appendChild(option);
+        });
+
+   
+        orderModal.style.display = "flex";
+      }
+
+      function generateCharts() {
+       
+        const ordersChart = document.getElementById("ordersByCityChart");
+        if (ordersChart) {
+          const cities = [
+            "Tunis",
+            "Sfax",
+            "Sousse",
+            "Ariana",
+            "Nabeul",
+            "Bizerte",
+            "Monastir",
+          ];
+          const ordersData = [15, 8, 6, 5, 4, 3, 2];
+
+          ordersChart.innerHTML = "";
+
+          const maxValue = Math.max(...ordersData);
+
+          ordersData.forEach((value, index) => {
+            const height = (value / maxValue) * 100;
+            const colors = [
+              "#1e40af",
+              "#3b82f6",
+              "#60a5fa",
+              "#93c5fd",
+              "#bfdbfe",
+              "#dbeafe",
+              "#eff6ff",
+            ];
+
+            const bar = document.createElement("div");
+            bar.className = "chart-bar";
+            bar.style.height = `${height}%`;
+            bar.style.background = `linear-gradient(to top, ${colors[index]}, ${colors[Math.min(index + 1, colors.length - 1)]})`;
+            bar.innerHTML = `<div class="chart-label">${cities[index]}</div>`;
+
+          
+            bar.addEventListener("mouseover", function () {
+              this.style.opacity = "0.9";
+              this.style.transform = "scale(1.05)";
+            });
+
+            bar.addEventListener("mouseout", function () {
+              this.style.opacity = "1";
+              this.style.transform = "scale(1)";
+            });
+
+            ordersChart.appendChild(bar);
+          });
+        }
+
+        
+        const revenueChart = document.getElementById("revenueChart");
+        if (revenueChart) {
+          const months = [
+            "Jan","Fév",
+            "Mar","Avr",
+            "Mai", "Juin","Juil",
+            "Août","Sep",
+            "Oct",
+          ];
+          const revenueData = [
+            1250, 1320, 1100, 1420, 1680, 1890, 1750, 2100, 1950, 2345,
+          ];
+
+          revenueChart.innerHTML = "";
+
+          const maxValue = Math.max(...revenueData);
+
+          revenueData.forEach((value, index) => {
+            const height = (value / maxValue) * 100;
+
+            const bar = document.createElement("div");
+            bar.className = "chart-bar";
+            bar.style.height = `${height}%`;
+            bar.style.background = `linear-gradient(to top, var(--primary-color), var(--primary-light))`;
+            bar.innerHTML = `<div class="chart-label">${months[index]}</div>`;
+
+            bar.addEventListener("mouseover", function () {
+              this.style.opacity = "0.9";
+              this.style.transform = "scale(1.05)";
+            });
+
+            bar.addEventListener("mouseout", function () {
+              this.style.opacity = "1";
+              this.style.transform = "scale(1)";
+            });
+
+            revenueChart.appendChild(bar);
+          });
+        }
+      }
+
+    
+      function updateStats() {
+       
+        const totalOrders = document.getElementById("totalOrders");
+        if (totalOrders) {
+          totalOrders.textContent = tunisianData.orders.length;
+        }
+
+   
+        const totalRevenue = document.getElementById("totalRevenue");
+        if (totalRevenue) {
+          const revenue = tunisianData.orders.reduce((sum, order) => {
+            return sum + parseFloat(order.amount);
+          }, 0);
+          totalRevenue.innerHTML = `${revenue.toFixed(3)} <span class="price-dt"></span>`;
+        }
+
+        
+        const totalCustomers = document.getElementById("totalCustomers");
+        if (totalCustomers) {
+          totalCustomers.textContent = tunisianData.customers.length;
+        }
+
+      
+        const totalProducts = document.getElementById("totalProducts");
+        if (totalProducts) {
+          totalProducts.textContent = tunisianData.products.length;
+        }
+      }
+
+      function viewOrder(orderId) {
+        const order = tunisianData.orders.find((o) => o.id === orderId);
+        if (order) {
+          showNotificationToast(
+            `Affichage de la commande #${orderId} de ${order.customer}`,
+          );
+          addToHistory(
+            "Visualisation commande",
+            `Commande #${orderId} de ${order.customer} consultée`,
+            "EL Jezi Ghassen",
+          );
+        }
+      }
+
+      function editOrder(orderId) {
+        showNotificationToast(`Édition de la commande #${orderId}`);
+        addToHistory(
+          "Édition commande",
+          `Tentative d'édition de la commande #${orderId}`,
+          "EL Jezi Ghassen",
+        );
+      }
+
+      function deleteOrder(orderId) {
+        if (
+          confirm(
+            `Êtes-vous sûr de vouloir supprimer la commande #${orderId} ?`,
+          )
+        ) {
+          const index = tunisianData.orders.findIndex((o) => o.id === orderId);
+          if (index !== -1) {
+            const deletedOrder = tunisianData.orders.splice(index, 1)[0];
+            loadRecentOrders();
+            loadOrders();
+            updateStats();
+            showNotificationToast(
+              `Commande #${orderId} supprimée avec succès!`,
+            );
+            addToHistory(
+              "Suppression commande",
+              `Commande #${orderId} de ${deletedOrder.customer} supprimée`,
+              "EL Jezi Ghassen",
+            );
+            addNotification(
+              "Commande supprimée",
+              `La commande #${orderId} a été supprimée`,
+              "fa-trash",
+            );
+          }
+        }
+      }
+
+      function viewProduct(productId) {
+        const product = tunisianData.products.find((p) => p.id === productId);
+        if (product) {
+          showNotificationToast(`Affichage du produit ${product.name}`);
+          addToHistory(
+            "Visualisation produit",
+            `Produit ${product.name} consulté`,
+            "EL Jezi Ghassen",
+          );
+        }
+      }
+
+      function editProduct(productId) {
+        showNotificationToast(`Édition du produit #${productId}`);
+        addToHistory(
+          "Édition produit",
+          `Tentative d'édition du produit #${productId}`,
+          "EL Jezi Ghassen",
+        );
+      }
+
+      function deleteProduct(productId) {
+        if (
+          confirm(
+            `Êtes-vous sûr de vouloir supprimer le produit #${productId} ?`,
+          )
+        ) {
+          showNotificationToast(
+            `Produit #${productId} supprimé (démonstration)`,
+          );
+          addToHistory(
+            "Suppression produit",
+            `Produit #${productId} supprimé (démonstration)`,
+            "EL Jezi Ghassen",
+          );
+        }
+      }
+
+      function viewCustomer(customerId) {
+        const customer = tunisianData.customers.find(
+          (c) => c.id === customerId,
+        );
+        if (customer) {
+          showNotificationToast(
+            `Affichage du client ${customer.name} de ${customer.city}`,
+          );
+          addToHistory(
+            "Visualisation client",
+            `Client ${customer.name} consulté`,
+            "EL Jezi Ghassen",
+          );
+        }
+      }
+
+      function editCustomer(customerId) {
+        showNotificationToast(`Édition du client #${customerId}`);
+        addToHistory(
+          "Édition client",
+          `Tentative d'édition du client #${customerId}`,
+          "EL Jezi Ghassen",
+        );
+      }
+
+      function deleteCustomer(customerId) {
+        if (
+          confirm(
+            `Êtes-vous sûr de vouloir supprimer le client #${customerId} ?`,
+          )
+        ) {
+          showNotificationToast(
+            `Client #${customerId} supprimé (démonstration)`,
+          );
+          addToHistory(
+            "Suppression client",
+            `Client #${customerId} supprimé (démonstration)`,
+            "EL Jezi Ghassen",
+          );
+        }
+      }
+
+      function getStatusClass(status) {
+        switch (status) {
+          case "delivered":
+            return "delivered";
+          case "processing":
+            return "processing";
+          case "pending":
+            return "pending";
+          case "cancelled":
+            return "cancelled";
+          default:
+            return "pending";
+        }
+      }
+
+      function getStatusText(status) {
+        switch (status) {
+          case "delivered":
+            return "Livrée";
+          case "processing":
+            return "En traitement";
+          case "pending":
+            return "En attente";
+          case "cancelled":
+            return "Annulée";
+          default:
+            return "En attente";
+        }
+      }
+
+    
+      function showNotificationToast(message) {
+        notificationText.textContent = message;
+        notificationToast.style.display = "block";
+
+        setTimeout(() => {
+          notificationToast.style.display = "none";
+        }, 3000);
+      }
+
+    
+      function addNotification(title, message, icon = "fa-bell") {
+        const newNotification = {
+          id: tunisianData.notifications.length + 1,
+          title: title,
+          message: message,
+          time: "À l'instant",
+          read: false,
+          icon: icon,
+        };
+
+        tunisianData.notifications.unshift(newNotification);
+        loadNotifications();
+      }
+
+      function markAllNotificationsAsRead() {
+        tunisianData.notifications.forEach((notification) => {
+          notification.read = true;
+        });
+        loadNotifications();
+        showNotificationToast("Toutes les notifications marquées comme lues");
+        addToHistory(
+          "Notifications marquées lues",
+          "Toutes les notifications ont été marquées comme lues",
+          "EL Jezi Ghassen",
+        );
+      }
+
+      function addToHistory(action, details, user = "EL Jezi Ghassen") {
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+        const newHistoryItem = {
+          id: tunisianData.history.length + 1,
+          action: action,
+          details: details,
+          date: dateStr,
+          user: user,
+        };
+
+        tunisianData.history.unshift(newHistoryItem);
+        loadHistory();
+      }
+
+      updateStats();
+    </script>
+  </body>
+</html>
