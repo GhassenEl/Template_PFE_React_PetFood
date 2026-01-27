@@ -333,37 +333,6 @@
         gap: 1rem;
       }
 
-      .notification-btn {
-        position: relative;
-        background: var(--card-bg);
-        border: 2px solid var(--primary-light);
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: var(--shadow);
-        color: var(--primary-color);
-        transition: all 0.3s;
-      }
-
-      .notification-btn:hover {
-        background: var(--primary-color);
-        color: white;
-        transform: rotate(15deg);
-      }
-
-      .notification-btn .badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: var(--accent-color);
-        min-width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
       .user-info {
         display: flex;
         align-items: center;
@@ -685,6 +654,34 @@
         color: white;
       }
 
+      /* ===== STARS RATING ===== */
+      .rating-stars {
+        color: #f1c40f;
+        font-size: 1rem;
+      }
+
+      .rating-stars .far {
+        color: var(--gray-color);
+      }
+
+      .star-rating-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .star-rating-input .star {
+        font-size: 2rem;
+        color: var(--gray-color);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .star-rating-input .star:hover,
+      .star-rating-input .star.active {
+        color: #f1c40f;
+      }
+
       /* ===== TABLE ===== */
       .table-container {
         overflow-x: auto;
@@ -758,6 +755,15 @@
         background: rgba(52, 152, 219, 0.25);
         color: #3498db;
         border: 1px solid #3498db;
+      }
+
+      .review-content {
+        max-height: 100px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        background: var(--primary-light);
+        border-radius: var(--radius);
+        margin-top: 0.5rem;
       }
 
       .action-btn {
@@ -922,62 +928,7 @@
       }
 
       /* ===== NOTIFICATIONS PANEL ===== */
-      .notifications-panel {
-        display: none;
-        position: fixed;
-        top: 100px;
-        right: 2rem;
-        width: 400px;
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        z-index: 100;
-        border: 2px solid var(--primary-color);
-        max-height: 500px;
-        overflow-y: auto;
-      }
-
-      .notification-item {
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: flex-start;
-        transition: all 0.3s;
-      }
-
-      .notification-item:hover {
-        background: var(--primary-light);
-      }
-
-      .notification-item.unread {
-        background: var(--primary-light);
-        border-left: 4px solid var(--primary-color);
-      }
-
-      .notification-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1rem;
-        color: white;
-        flex-shrink: 0;
-        font-size: 1.2rem;
-      }
-
-      .notification-icon.success {
-        background: var(--success-color);
-      }
-
-      .notification-icon.warning {
-        background: var(--warning-color);
-      }
-
-      .notification-icon.info {
-        background: var(--info-color);
-      }
+      /* SUPPRIMÉ: Le panneau de notifications a été retiré */
 
       /* ===== FOOTER ===== */
       .footer {
@@ -1230,10 +1181,6 @@
         .dashboard-cards {
           grid-template-columns: 1fr;
         }
-        .notifications-panel {
-          width: 90%;
-          right: 5%;
-        }
         .counter-stats {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -1311,6 +1258,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="#" class="nav-link" data-tab="reviews">
+              <i class="fas fa-star"></i> Avis
+              <span class="badge" id="reviews-badge">12</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link" data-tab="payment">
               <i class="fas fa-credit-card"></i> Paiements
             </a>
@@ -1346,11 +1299,7 @@
           </div>
 
           <div class="header-actions">
-            <button class="notification-btn" id="notificationBtn">
-              <i class="fas fa-bell"></i>
-              <span class="badge" id="notification-count">3</span>
-            </button>
-
+            <!-- SUPPRIMÉ: Le bouton de notification -->
             <div class="user-info">
               <div class="user-avatar">
                 <i class="fas fa-user"></i>
@@ -1365,20 +1314,7 @@
           </div>
         </header>
 
-        <!-- NOTIFICATIONS PANEL -->
-        <div class="notifications-panel" id="notificationsPanel">
-          <div class="section-header" style="margin: 0; padding: 1rem">
-            <h3 class="section-title">
-              <i class="fas fa-bell"></i> Notifications
-            </h3>
-            <button class="btn btn-secondary" id="markAllRead">
-              Tout marquer comme lu
-            </button>
-          </div>
-          <div id="notifications-list">
-            <!-- Notifications will be loaded here -->
-          </div>
-        </div>
+        <!-- SUPPRIMÉ: Le panneau de notifications -->
 
         <!-- DASHBOARD TAB -->
         <div id="dashboard" class="tab-content active">
@@ -1612,6 +1548,85 @@
           </div>
         </div>
 
+        <!-- AVIS TAB (NOUVEAU) -->
+        <div id="reviews" class="tab-content">
+          <div class="section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <i class="fas fa-star"></i> Gestion des Avis Clients
+              </h3>
+              <button class="btn btn-primary" id="addReviewBtn">
+                <i class="fas fa-plus"></i> Ajouter un avis
+              </button>
+            </div>
+
+            <!-- STATISTIQUES DES AVIS -->
+            <div class="dashboard-cards">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Note Moyenne</h3>
+                  <div class="card-icon">
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+                <div class="card-value" id="average-rating">4.5/5</div>
+                <div class="card-change">
+                  <i class="fas fa-arrow-up"></i> +0.2 ce mois
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Total Avis</h3>
+                  <div class="card-icon">
+                    <i class="fas fa-comments"></i>
+                  </div>
+                </div>
+                <div class="card-value" id="total-reviews">12</div>
+                <div class="card-change">
+                  <i class="fas fa-arrow-up"></i> +3 ce mois
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Avis Positifs</h3>
+                  <div class="card-icon">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                </div>
+                <div class="card-value" id="positive-reviews">85%</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <div class="card-change">
+                  <i class="fas fa-arrow-up"></i> +5% vs dernier mois
+                </div>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Produit</th>
+                    <th>Note</th>
+                    <th>Commentaire</th>
+                    <th>Date</th>
+                    <th>Vérifié</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reviews-table">
+                  <!-- Reviews will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- PAYMENT TAB (SIMPLIFIÉ) -->
         <div id="payment" class="tab-content">
           <!-- Section des moyens de paiement -->
@@ -1628,68 +1643,100 @@
             <div class="payment-methods-grid">
               <div class="payment-method-card">
                 <div class="payment-icon">
-                  <i class="fas fa-credit-card" style="color: var(--primary-color);"></i>
+                  <i
+                    class="fas fa-credit-card"
+                    style="color: var(--primary-color)"
+                  ></i>
                 </div>
                 <div class="payment-name">Carte Bancaire</div>
                 <div class="payment-desc">Visa, Mastercard, Carte Bleue</div>
                 <div class="payment-method-status">
-                  <span style="color: var(--success-color);">✓</span> 3D Secure
+                  <span style="color: var(--success-color)">✓</span> 3D Secure
                 </div>
               </div>
 
               <div class="payment-method-card">
                 <div class="payment-icon">
-                  <i class="fas fa-money-bill-wave" style="color: var(--success-color);"></i>
+                  <i
+                    class="fas fa-money-bill-wave"
+                    style="color: var(--success-color)"
+                  ></i>
                 </div>
                 <div class="payment-name">Espèces</div>
                 <div class="payment-desc">Paiement en main propre</div>
                 <div class="payment-method-status">
-                  <span style="color: var(--success-color);">✓</span> À la livraison
+                  <span style="color: var(--success-color)">✓</span> À la
+                  livraison
                 </div>
               </div>
 
               <div class="payment-method-card">
                 <div class="payment-icon">
-                  <i class="fas fa-university" style="color: var(--info-color);"></i>
+                  <i
+                    class="fas fa-university"
+                    style="color: var(--info-color)"
+                  ></i>
                 </div>
                 <div class="payment-name">Virement Bancaire</div>
                 <div class="payment-desc">Transfert bancaire national</div>
                 <div class="payment-method-status">
-                  <span style="color: var(--success-color);">✓</span> Sous 48h
+                  <span style="color: var(--success-color)">✓</span> Sous 48h
                 </div>
               </div>
 
               <div class="payment-method-card">
                 <div class="payment-icon">
-                  <i class="fas fa-mobile-alt" style="color: var(--warning-color);"></i>
+                  <i
+                    class="fas fa-mobile-alt"
+                    style="color: var(--warning-color)"
+                  ></i>
                 </div>
                 <div class="payment-name">Paiement Mobile</div>
                 <div class="payment-desc">Via applications mobiles</div>
                 <div class="payment-method-status">
-                  <span style="color: var(--success-color);">✓</span> Instantané
+                  <span style="color: var(--success-color)">✓</span> Instantané
                 </div>
               </div>
 
               <div class="payment-method-card">
                 <div class="payment-icon">
-                  <i class="fas fa-file-invoice-dollar" style="color: var(--secondary-color);"></i>
+                  <i
+                    class="fas fa-file-invoice-dollar"
+                    style="color: var(--secondary-color)"
+                  ></i>
                 </div>
                 <div class="payment-name">Chèque</div>
                 <div class="payment-desc">Chèques bancaires tunisiens</div>
                 <div class="payment-method-status">
-                  <span style="color: var(--success-color);">✓</span> Encaissement 5 jours
+                  <span style="color: var(--success-color)">✓</span>
+                  Encaissement 5 jours
                 </div>
               </div>
             </div>
 
-            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--primary-light); border-radius: var(--radius);">
-              <h4 style="color: var(--primary-color); margin-bottom: 1rem;">
+            <div
+              style="
+                margin-top: 2rem;
+                padding: 1.5rem;
+                background: var(--primary-light);
+                border-radius: var(--radius);
+              "
+            >
+              <h4 style="color: var(--primary-color); margin-bottom: 1rem">
                 <i class="fas fa-info-circle"></i> Informations importantes
               </h4>
-              <ul style="color: var(--text-color); padding-left: 1.5rem;">
-                <li>Les paiements par carte sont sécurisés avec la technologie 3D Secure</li>
-                <li>Les paiements en espèces sont acceptés uniquement à la livraison</li>
-                <li>Les virements bancaires doivent être confirmés par email</li>
+              <ul style="color: var(--text-color); padding-left: 1.5rem">
+                <li>
+                  Les paiements par carte sont sécurisés avec la technologie 3D
+                  Secure
+                </li>
+                <li>
+                  Les paiements en espèces sont acceptés uniquement à la
+                  livraison
+                </li>
+                <li>
+                  Les virements bancaires doivent être confirmés par email
+                </li>
                 <li>Les chèques doivent être émis à l'ordre de "PetFood TN"</li>
               </ul>
             </div>
@@ -1703,24 +1750,49 @@
               </h3>
             </div>
 
-            <div style="padding: 1rem; background: var(--primary-light); border-radius: var(--radius);">
+            <div
+              style="
+                padding: 1rem;
+                background: var(--primary-light);
+                border-radius: var(--radius);
+              "
+            >
               <div class="form-group">
                 <label for="simpleInvoiceClient">Nom du Client *</label>
-                <input type="text" id="simpleInvoiceClient" required placeholder="Saisir le nom du client" />
+                <input
+                  type="text"
+                  id="simpleInvoiceClient"
+                  required
+                  placeholder="Saisir le nom du client"
+                />
               </div>
               <div class="form-group">
                 <label for="simpleInvoiceAmount">Montant (DT) *</label>
-                <input type="number" id="simpleInvoiceAmount" step="0.01" min="0" required placeholder="0.00" />
+                <input
+                  type="number"
+                  id="simpleInvoiceAmount"
+                  step="0.01"
+                  min="0"
+                  required
+                  placeholder="0.00"
+                />
               </div>
               <div class="form-group">
                 <label for="simpleInvoiceDescription">Description</label>
-                <textarea id="simpleInvoiceDescription" rows="2" placeholder="Description de la facture"></textarea>
+                <textarea
+                  id="simpleInvoiceDescription"
+                  rows="2"
+                  placeholder="Description de la facture"
+                ></textarea>
               </div>
               <div style="display: flex; gap: 1rem; margin-top: 1.5rem">
                 <button class="btn btn-primary" onclick="createSimpleInvoice()">
                   <i class="fas fa-check"></i> Valider
                 </button>
-                <button class="btn btn-secondary" onclick="clearSimpleInvoice()">
+                <button
+                  class="btn btn-secondary"
+                  onclick="clearSimpleInvoice()"
+                >
                   <i class="fas fa-times"></i> Annuler
                 </button>
               </div>
@@ -2146,11 +2218,114 @@
       </div>
     </div>
 
+    <!-- MODAL D'AVIS (NOUVEAU) -->
+    <div class="modal" id="reviewModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="reviewModalTitle">Ajouter un avis</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="reviewForm">
+          <input type="hidden" id="reviewId" />
+          <div class="form-group">
+            <label for="reviewClient">Client *</label>
+            <select id="reviewClient" required>
+              <option value="">Sélectionner un client</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reviewProduct">Produit *</label>
+            <select id="reviewProduct" required>
+              <option value="">Sélectionner un produit</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reviewRatingInput">Note *</label>
+            <div class="star-rating-input" id="starRating">
+              <span class="star" data-value="1"
+                ><i class="far fa-star"></i
+              ></span>
+              <span class="star" data-value="2"
+                ><i class="far fa-star"></i
+              ></span>
+              <span class="star" data-value="3"
+                ><i class="far fa-star"></i
+              ></span>
+              <span class="star" data-value="4"
+                ><i class="far fa-star"></i
+              ></span>
+              <span class="star" data-value="5"
+                ><i class="far fa-star"></i
+              ></span>
+              <input
+                type="hidden"
+                id="reviewRating"
+                name="reviewRating"
+                value="0"
+                required
+              />
+            </div>
+            <div
+              style="
+                margin-top: 0.5rem;
+                font-size: 0.9rem;
+                color: var(--gray-color);
+              "
+            >
+              Cliquez sur les étoiles pour attribuer une note
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reviewComment">Commentaire *</label>
+            <textarea
+              id="reviewComment"
+              rows="4"
+              required
+              placeholder="Partagez votre expérience avec ce produit..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="reviewDate">Date *</label>
+            <input type="date" id="reviewDate" required />
+          </div>
+
+          <div class="form-group">
+            <label for="reviewVerified">Statut de vérification</label>
+            <select id="reviewVerified">
+              <option value="true">Vérifié</option>
+              <option value="false">Non vérifié</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reviewResponse">Réponse (optionnel)</label>
+            <textarea
+              id="reviewResponse"
+              rows="3"
+              placeholder="Réponse de l'administration..."
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary close-modal">
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- MODAL DE PAIEMENT -->
     <div class="modal" id="paymentModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title" id="paymentModalTitle">Ajouter un paiement</h3>
+          <h3 class="modal-title" id="paymentModalTitle">
+            Ajouter un paiement
+          </h3>
           <button class="close-modal">&times;</button>
         </div>
         <form id="paymentForm">
@@ -2424,6 +2599,68 @@
         },
       ];
 
+      // Données pour les avis
+      let reviews = [
+        {
+          id: 1,
+          clientId: 1,
+          clientName: "Ali Ben Salah",
+          productId: 1,
+          productName: "Croquettes Premium Chien",
+          rating: 5,
+          comment:
+            "Excellent produit ! Mon chien adore ces croquettes. Livraison rapide et emballage soigné.",
+          date: "2024-01-16",
+          verified: true,
+          response:
+            "Merci pour votre confiance Ali ! Nous sommes ravis que votre compagnon apprécie nos produits.",
+          createdAt: "2024-01-16",
+        },
+        {
+          id: 2,
+          clientId: 2,
+          clientName: "Fatma Trabelsi",
+          productId: 2,
+          productName: "Pâtée Chat Adulte",
+          rating: 4,
+          comment:
+            "Bonne qualité, mes chats aiment bien. Un peu cher mais la qualité est au rendez-vous.",
+          date: "2024-01-17",
+          verified: true,
+          response: "",
+          createdAt: "2024-01-17",
+        },
+        {
+          id: 3,
+          clientId: 3,
+          clientName: "Mohamed Amri",
+          productId: 1,
+          productName: "Croquettes Premium Chien",
+          rating: 5,
+          comment:
+            "Mon berger allemand est en pleine forme depuis que je lui donne ces croquettes. Recommandé !",
+          date: "2024-01-18",
+          verified: false,
+          response: "",
+          createdAt: "2024-01-18",
+        },
+        {
+          id: 4,
+          clientId: 1,
+          clientName: "Ali Ben Salah",
+          productId: 3,
+          productName: "Graines pour Oiseaux",
+          rating: 3,
+          comment:
+            "Les graines sont de bonne qualité mais l'emballage était un peu abîmé à l'arrivée.",
+          date: "2024-01-19",
+          verified: true,
+          response:
+            "Nous vous présentons nos excuses pour l'emballage. Nous avons pris des mesures pour améliorer notre processus d'emballage.",
+          createdAt: "2024-01-19",
+        },
+      ];
+
       let payments = [
         {
           id: 1,
@@ -2502,33 +2739,25 @@
           action: "Mise à jour produit",
           details: "Stock mis à jour pour Croquettes Premium",
         },
+        {
+          date: "2024-01-18 14:20",
+          user: "EL Jezi Ghassen",
+          action: "Ajout avis",
+          details: "Nouvel avis de Ali Ben Salah",
+        },
+        {
+          date: "2024-01-19 11:10",
+          user: "EL Jezi Ghassen",
+          action: "Réponse avis",
+          details: "Réponse à l'avis de Mohamed Amri",
+        },
       ];
 
-      let notifications = [
-        {
-          id: 1,
-          type: "success",
-          message: "Nouvelle commande reçue #1005",
-          time: "Il y a 10 minutes",
-          read: false,
-        },
-        {
-          id: 2,
-          type: "warning",
-          message: "Stock faible pour Pâtée Chat (15 restants)",
-          time: "Il y a 2 heures",
-          read: false,
-        },
-        {
-          id: 3,
-          type: "info",
-          message: "Nouveau client inscrit: Leila Mansour",
-          time: "Il y a 5 heures",
-          read: false,
-        },
-      ];
+      // SUPPRIMÉ: Les notifications ne sont plus nécessaires
+      let notifications = [];
 
       let currentOrderItems = [];
+      let currentReviewRating = 0;
 
       // ==================== FONCTIONS UTILITAIRES ====================
       function getStatusText(status) {
@@ -2590,6 +2819,300 @@
         return date.toLocaleString("fr-FR");
       }
 
+      function renderStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+          if (i <= rating) {
+            stars += '<i class="fas fa-star"></i>';
+          } else {
+            stars += '<i class="far fa-star"></i>';
+          }
+        }
+        return `<span class="rating-stars">${stars}</span>`;
+      }
+
+      // ==================== GESTION DES AVIS (CRUD) ====================
+      function loadReviews() {
+        const tbody = document.getElementById("reviews-table");
+        tbody.innerHTML = "";
+
+        reviews.forEach((review) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${review.id}</td>
+            <td><strong>${review.clientName}</strong></td>
+            <td>${review.productName}</td>
+            <td>${renderStars(review.rating)}</td>
+            <td>
+              <div class="review-content">${review.comment}</div>
+              ${
+                review.response
+                  ? `
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background: var(--primary-light); border-radius: var(--radius); font-size: 0.9rem;">
+                  <strong><i class="fas fa-reply"></i> Réponse:</strong> ${review.response}
+                </div>
+              `
+                  : ""
+              }
+            </td>
+            <td>${formatDate(review.date)}</td>
+            <td>
+              ${
+                review.verified
+                  ? '<span style="color: var(--success-color);"><i class="fas fa-check-circle"></i> Vérifié</span>'
+                  : '<span style="color: var(--warning-color);"><i class="fas fa-clock"></i> En attente</span>'
+              }
+            </td>
+            <td>
+              <button class="action-btn" onclick="editReview(${review.id})" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn" onclick="toggleReviewVerification(${review.id})" title="${review.verified ? "Désactiver" : "Vérifier"}">
+                <i class="fas ${review.verified ? "fa-times" : "fa-check"}"></i>
+              </button>
+              <button class="action-btn" onclick="deleteReview(${review.id})" title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        updateReviewsStats();
+        updateReviewsBadge();
+      }
+
+      function openReviewModal(reviewId = null) {
+        const modal = document.getElementById("reviewModal");
+        const title = document.getElementById("reviewModalTitle");
+        const form = document.getElementById("reviewForm");
+
+        // Remplir la liste des clients
+        const clientSelect = document.getElementById("reviewClient");
+        clientSelect.innerHTML =
+          '<option value="">Sélectionner un client</option>';
+        clients.forEach((client) => {
+          const option = document.createElement("option");
+          option.value = client.id;
+          option.textContent = client.name;
+          clientSelect.appendChild(option);
+        });
+
+        // Remplir la liste des produits
+        const productSelect = document.getElementById("reviewProduct");
+        productSelect.innerHTML =
+          '<option value="">Sélectionner un produit</option>';
+        products.forEach((product) => {
+          const option = document.createElement("option");
+          option.value = product.id;
+          option.textContent = product.name;
+          productSelect.appendChild(option);
+        });
+
+        // Initialiser les étoiles
+        initStarRating();
+
+        if (reviewId) {
+          title.textContent = "Modifier l'avis";
+          const review = reviews.find((r) => r.id == reviewId);
+          if (review) {
+            document.getElementById("reviewId").value = review.id;
+            document.getElementById("reviewClient").value = review.clientId;
+            document.getElementById("reviewProduct").value = review.productId;
+            document.getElementById("reviewRating").value = review.rating;
+            document.getElementById("reviewComment").value = review.comment;
+            document.getElementById("reviewDate").value = review.date;
+            document.getElementById("reviewVerified").value = review.verified;
+            document.getElementById("reviewResponse").value =
+              review.response || "";
+
+            // Mettre à jour l'affichage des étoiles
+            currentReviewRating = review.rating;
+            updateStarDisplay(review.rating);
+          }
+        } else {
+          title.textContent = "Ajouter un avis";
+          form.reset();
+          document.getElementById("reviewId").value = "";
+          document.getElementById("reviewDate").value = new Date()
+            .toISOString()
+            .split("T")[0];
+          document.getElementById("reviewVerified").value = "true";
+          document.getElementById("reviewRating").value = "0";
+
+          // Réinitialiser les étoiles
+          currentReviewRating = 0;
+          updateStarDisplay(0);
+        }
+
+        modal.style.display = "flex";
+      }
+
+      function initStarRating() {
+        const stars = document.querySelectorAll("#starRating .star");
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            const rating = parseInt(this.getAttribute("data-value"));
+            currentReviewRating = rating;
+            document.getElementById("reviewRating").value = rating;
+            updateStarDisplay(rating);
+          });
+
+          star.addEventListener("mouseover", function () {
+            const rating = parseInt(this.getAttribute("data-value"));
+            updateStarDisplay(rating, true);
+          });
+        });
+
+        document
+          .getElementById("starRating")
+          .addEventListener("mouseleave", function () {
+            updateStarDisplay(currentReviewRating);
+          });
+      }
+
+      function updateStarDisplay(rating, isHover = false) {
+        const stars = document.querySelectorAll("#starRating .star");
+        stars.forEach((star, index) => {
+          const starValue = index + 1;
+          if (
+            isHover ? starValue <= rating : starValue <= currentReviewRating
+          ) {
+            star.innerHTML = '<i class="fas fa-star"></i>';
+            star.classList.add("active");
+          } else {
+            star.innerHTML = '<i class="far fa-star"></i>';
+            star.classList.remove("active");
+          }
+        });
+      }
+
+      function saveReview(e) {
+        e.preventDefault();
+
+        const id = document.getElementById("reviewId").value;
+        const clientId = document.getElementById("reviewClient").value;
+        const productId = document.getElementById("reviewProduct").value;
+        const rating = parseInt(document.getElementById("reviewRating").value);
+        const comment = document.getElementById("reviewComment").value;
+        const date = document.getElementById("reviewDate").value;
+        const verified =
+          document.getElementById("reviewVerified").value === "true";
+        const response = document.getElementById("reviewResponse").value;
+
+        if (!clientId || !productId || !rating || !comment || !date) {
+          alert("Veuillez remplir tous les champs obligatoires");
+          return;
+        }
+
+        const client = clients.find((c) => c.id == clientId);
+        const product = products.find((p) => p.id == productId);
+
+        if (id) {
+          // Mise à jour
+          const index = reviews.findIndex((r) => r.id == id);
+          reviews[index] = {
+            ...reviews[index],
+            clientId,
+            clientName: client.name,
+            productId,
+            productName: product.name,
+            rating,
+            comment,
+            date,
+            verified,
+            response,
+          };
+          addToHistory("Modification avis", `Avis #${id} modifié`);
+        } else {
+          // Ajout
+          const newId =
+            reviews.length > 0 ? Math.max(...reviews.map((r) => r.id)) + 1 : 1;
+          reviews.push({
+            id: newId,
+            clientId,
+            clientName: client.name,
+            productId,
+            productName: product.name,
+            rating,
+            comment,
+            date,
+            verified,
+            response: response || "",
+            createdAt: new Date().toISOString().split("T")[0],
+          });
+          addToHistory("Ajout avis", `Nouvel avis #${newId}`);
+        }
+
+        loadReviews();
+        closeAllModals();
+      }
+
+      function editReview(id) {
+        openReviewModal(id);
+      }
+
+      function toggleReviewVerification(id) {
+        const review = reviews.find((r) => r.id == id);
+        if (review) {
+          review.verified = !review.verified;
+          loadReviews();
+          addToHistory(
+            review.verified ? "Vérification avis" : "Désactivation avis",
+            `Avis #${id} ${review.verified ? "vérifié" : "désactivé"}`,
+          );
+        }
+      }
+
+      function deleteReview(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cet avis ?")) {
+          const review = reviews.find((r) => r.id == id);
+          reviews = reviews.filter((r) => r.id != id);
+          loadReviews();
+          addToHistory("Suppression avis", `Avis #${id} supprimé`);
+        }
+      }
+
+      function updateReviewsStats() {
+        if (reviews.length === 0) {
+          document.getElementById("average-rating").textContent = "0/5";
+          document.getElementById("total-reviews").textContent = "0";
+          document.getElementById("positive-reviews").textContent = "0%";
+          return;
+        }
+
+        // Note moyenne
+        const totalRating = reviews.reduce(
+          (sum, review) => sum + review.rating,
+          0,
+        );
+        const averageRating = (totalRating / reviews.length).toFixed(1);
+        document.getElementById("average-rating").textContent =
+          `${averageRating}/5`;
+
+        // Total avis
+        document.getElementById("total-reviews").textContent = reviews.length;
+
+        // Avis positifs (4+ étoiles)
+        const positiveReviews = reviews.filter(
+          (review) => review.rating >= 4,
+        ).length;
+        const positivePercentage = Math.round(
+          (positiveReviews / reviews.length) * 100,
+        );
+        document.getElementById("positive-reviews").textContent =
+          `${positivePercentage}%`;
+        document.querySelector("#reviews .progress-fill").style.width =
+          `${positivePercentage}%`;
+      }
+
+      function updateReviewsBadge() {
+        const pendingReviews = reviews.filter((r) => !r.verified).length;
+        document.getElementById("reviews-badge").textContent = pendingReviews;
+        document.getElementById("reviews-badge").style.display =
+          pendingReviews > 0 ? "flex" : "none";
+      }
+
       // ==================== CRUD CLIENTS ====================
       function loadClients() {
         const tbody = document.getElementById("clients-table");
@@ -2633,7 +3156,8 @@
             document.getElementById("clientName").value = client.name;
             document.getElementById("clientEmail").value = client.email;
             document.getElementById("clientPhone").value = client.phone;
-            document.getElementById("clientAddress").value = client.address || "";
+            document.getElementById("clientAddress").value =
+              client.address || "";
             document.getElementById("clientCity").value = client.city;
           }
         } else {
@@ -2668,7 +3192,6 @@
             city,
           };
           addToHistory("Modification client", `Client ${name} modifié`);
-          showNotification("success", `Client ${name} modifié avec succès`);
         } else {
           // Ajout
           const newId =
@@ -2684,7 +3207,6 @@
             createdAt: new Date().toISOString().split("T")[0],
           });
           addToHistory("Ajout client", `Nouveau client: ${name}`);
-          showNotification("success", `Client ${name} ajouté avec succès`);
         }
 
         loadClients();
@@ -2702,7 +3224,6 @@
           clients = clients.filter((c) => c.id != id);
           loadClients();
           addToHistory("Suppression client", `Client ${client.name} supprimé`);
-          showNotification("warning", `Client ${client.name} supprimé`);
         }
       }
 
@@ -2806,7 +3327,6 @@
             description,
           };
           addToHistory("Modification produit", `Produit ${name} modifié`);
-          showNotification("success", `Produit ${name} modifié avec succès`);
         } else {
           // Ajout
           const newId =
@@ -2824,7 +3344,6 @@
             createdAt: new Date().toISOString().split("T")[0],
           });
           addToHistory("Ajout produit", `Nouveau produit: ${name}`);
-          showNotification("success", `Produit ${name} ajouté avec succès`);
         }
 
         loadProducts();
@@ -2840,8 +3359,10 @@
           const product = products.find((p) => p.id == id);
           products = products.filter((p) => p.id != id);
           loadProducts();
-          addToHistory("Suppression produit", `Produit ${product.name} supprimé`);
-          showNotification("warning", `Produit ${product.name} supprimé`);
+          addToHistory(
+            "Suppression produit",
+            `Produit ${product.name} supprimé`,
+          );
         }
       }
 
@@ -2887,7 +3408,8 @@
 
         // Remplir la liste des clients
         const clientSelect = document.getElementById("orderClient");
-        clientSelect.innerHTML = '<option value="">Sélectionner un client</option>';
+        clientSelect.innerHTML =
+          '<option value="">Sélectionner un client</option>';
         clients.forEach((client) => {
           const option = document.createElement("option");
           option.value = client.id;
@@ -3056,7 +3578,6 @@
             "Modification commande",
             `Commande #${orderId} modifiée`,
           );
-          showNotification("success", `Commande #${orderId} modifiée avec succès`);
         } else {
           // Ajout
           const newId =
@@ -3072,7 +3593,6 @@
             createdAt: new Date().toISOString().split("T")[0],
           });
           addToHistory("Ajout commande", `Nouvelle commande #${newId} créée`);
-          showNotification("success", `Commande #${newId} créée avec succès`);
         }
 
         loadOrders();
@@ -3094,7 +3614,6 @@
             "Suppression commande",
             `Commande #${orderId} supprimée`,
           );
-          showNotification("warning", `Commande #${orderId} supprimée`);
         }
       }
 
@@ -3173,7 +3692,8 @@
 
         // Remplir la liste des clients
         const clientSelect = document.getElementById("paymentClient");
-        clientSelect.innerHTML = '<option value="">Sélectionner un client</option>';
+        clientSelect.innerHTML =
+          '<option value="">Sélectionner un client</option>';
         clients.forEach((client) => {
           const option = document.createElement("option");
           option.value = client.id;
@@ -3198,7 +3718,8 @@
           if (payment) {
             document.getElementById("paymentId").value = payment.id;
             document.getElementById("paymentClient").value = payment.clientId;
-            document.getElementById("paymentOrder").value = payment.orderId || "";
+            document.getElementById("paymentOrder").value =
+              payment.orderId || "";
             document.getElementById("paymentAmount").value = payment.amount;
             document.getElementById("paymentMethod").value = payment.method;
             document.getElementById("paymentDate").value = payment.date;
@@ -3226,7 +3747,9 @@
         const id = document.getElementById("paymentId").value;
         const clientId = document.getElementById("paymentClient").value;
         const orderId = document.getElementById("paymentOrder").value;
-        const amount = parseFloat(document.getElementById("paymentAmount").value);
+        const amount = parseFloat(
+          document.getElementById("paymentAmount").value,
+        );
         const method = document.getElementById("paymentMethod").value;
         const date = document.getElementById("paymentDate").value;
         const status = document.getElementById("paymentStatus").value;
@@ -3254,7 +3777,6 @@
             reference,
           };
           addToHistory("Modification paiement", `Paiement #${id} modifié`);
-          showNotification("success", `Paiement #${id} modifié avec succès`);
         } else {
           // Ajout
           const newId =
@@ -3274,7 +3796,6 @@
             createdAt: new Date().toISOString().split("T")[0],
           });
           addToHistory("Ajout paiement", `Nouveau paiement #${newId}`);
-          showNotification("success", `Paiement #${newId} ajouté avec succès`);
         }
 
         loadPayments();
@@ -3291,7 +3812,6 @@
           payments = payments.filter((p) => p.id != id);
           loadPayments();
           addToHistory("Suppression paiement", `Paiement #${id} supprimé`);
-          showNotification("warning", `Paiement #${id} supprimé`);
         }
       }
 
@@ -3317,32 +3837,32 @@
       function createSimpleInvoice() {
         const client = document.getElementById("simpleInvoiceClient").value;
         const amount = document.getElementById("simpleInvoiceAmount").value;
-        const description = document.getElementById("simpleInvoiceDescription").value;
+        const description = document.getElementById(
+          "simpleInvoiceDescription",
+        ).value;
 
         if (!client || !amount) {
           alert("Veuillez saisir le nom du client et le montant");
           return;
         }
 
-        const newId = invoices.length > 0 ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
-        
+        const newId =
+          invoices.length > 0 ? Math.max(...invoices.map((i) => i.id)) + 1 : 1;
+
         invoices.unshift({
           id: newId,
-          date: new Date().toISOString().split('T')[0],
+          date: new Date().toISOString().split("T")[0],
           client,
           amount: parseFloat(amount),
           description: description || "Facture simple",
-          status: "créée"
+          status: "créée",
         });
 
         loadInvoices();
-        
-        // Afficher une notification
-        showNotification("success", `Facture #${newId} créée pour ${client}`);
-        
+
         // Réinitialiser le formulaire
         clearSimpleInvoice();
-        
+
         // Ajouter à l'historique
         addToHistory("Création facture", `Facture #${newId} pour ${client}`);
       }
@@ -3357,8 +3877,6 @@
       function populateClientSelects() {
         const selects = document.querySelectorAll("select[id*='Client']");
         selects.forEach((select) => {
-          if (select.id !== "paymentClient" && select.id !== "orderClient")
-            return;
           const currentValue = select.value;
           select.innerHTML = '<option value="">Sélectionner un client</option>';
           clients.forEach((client) => {
@@ -3448,8 +3966,7 @@
       function updateClientsBadge() {
         const newClients = clients.filter(
           (c) =>
-            new Date(c.createdAt).toDateString() ===
-            new Date().toDateString(),
+            new Date(c.createdAt).toDateString() === new Date().toDateString(),
         ).length;
         document.getElementById("clients-badge").textContent = newClients;
         document.getElementById("clients-badge").style.display =
@@ -3483,37 +4000,13 @@
         loadHistory();
       }
 
-      function showNotification(type, message) {
-        const now = new Date();
-        const time = now.toLocaleTimeString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        notifications.unshift({
-          id: notifications.length + 1,
-          type,
-          message,
-          time: `À ${time}`,
-          read: false,
-        });
-
-        updateNotificationCount();
-      }
-
-      function updateNotificationCount() {
-        const unreadCount = notifications.filter((n) => !n.read).length;
-        const badge = document.getElementById("notification-count");
-        badge.textContent = unreadCount;
-        badge.style.display = unreadCount > 0 ? "flex" : "none";
-      }
-
       // ==================== INITIALISATION ====================
       document.addEventListener("DOMContentLoaded", function () {
         // Initialiser les données
         loadClients();
         loadProducts();
         loadOrders();
+        loadReviews();
         loadPayments();
         loadInvoices();
         loadHistory();
@@ -3552,6 +4045,9 @@
         document
           .getElementById("addPaymentBtn")
           .addEventListener("click", () => openPaymentModal());
+        document
+          .getElementById("addReviewBtn")
+          .addEventListener("click", () => openReviewModal());
 
         // Fermer les modales
         document.querySelectorAll(".close-modal").forEach((btn) => {
@@ -3578,6 +4074,9 @@
         document
           .getElementById("paymentForm")
           .addEventListener("submit", savePayment);
+        document
+          .getElementById("reviewForm")
+          .addEventListener("submit", saveReview);
 
         // Initialiser la date du jour dans les formulaires
         const today = new Date().toISOString().split("T")[0];
@@ -3589,6 +4088,9 @@
         if (darkModeToggle) {
           darkModeToggle.addEventListener("click", toggleDarkMode);
         }
+
+        // Initialiser les étoiles pour les avis
+        initStarRating();
       });
 
       function closeAllModals() {
@@ -3598,6 +4100,7 @@
 
         document.querySelectorAll("form").forEach((form) => form.reset());
         currentOrderItems = [];
+        currentReviewRating = 0;
       }
 
       function toggleDarkMode() {
@@ -3626,6 +4129,9 @@
       window.updateOrderItem = updateOrderItem;
       window.editPayment = editPayment;
       window.deletePayment = deletePayment;
+      window.editReview = editReview;
+      window.deleteReview = deleteReview;
+      window.toggleReviewVerification = toggleReviewVerification;
       window.toggleDarkMode = toggleDarkMode;
       window.createSimpleInvoice = createSimpleInvoice;
       window.clearSimpleInvoice = clearSimpleInvoice;
