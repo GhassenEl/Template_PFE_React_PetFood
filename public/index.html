@@ -5413,7 +5413,7 @@
         loadHistory();
       }
 
-      // Fonctions pour le formulaire de contact
+      
       function sendContactForm() {
         const name = document.getElementById("contactName").value;
         const email = document.getElementById("contactEmail").value;
@@ -5426,7 +5426,7 @@
           return;
         }
 
-        // Simulation d'envoi de formulaire
+        
         const subjectText =
           {
             support: "Support technique",
@@ -5440,13 +5440,13 @@
           `Merci ${name} ! Votre message a été envoyé avec succès.\n\nNous vous répondrons à ${email} dans les plus brefs délais.`,
         );
 
-        // Ajouter à l'historique
+        
         addToHistory(
           "Envoi message",
           `Nouveau message de ${name} (${subjectText})`,
         );
 
-        // Effacer le formulaire
+      
         clearContactForm();
       }
 
@@ -5479,7 +5479,7 @@
       window.sendContactForm = sendContactForm;
       window.clearContactForm = clearContactForm;
 
-      // Fonctions de recherche globales
+      
       window.searchDashboard = searchDashboard;
       window.clearDashboardSearch = clearDashboardSearch;
       window.searchClients = searchClients;
