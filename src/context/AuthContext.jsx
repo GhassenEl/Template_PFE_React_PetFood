@@ -20,12 +20,11 @@ export const AuthProvider = ({ children }) => {
 
     setUser(mockUser);
 
-    // Ajouter la session active
     const session = {
       userId: mockUser.id,
       userName: mockUser.name,
       loginTime: new Date().toISOString(),
-      ip: "192.168.1." + Math.floor(Math.random() * 255),
+      ip: "192.168.1.1",
       device: navigator.userAgent,
     };
 

@@ -1,14 +1,8 @@
 // src/App.js
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Factures from "./pages/Factures";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login"; // Changé de components à pages
 import Dashboard from "./pages/Dashboard";
 import Historique from "./pages/Historique";
@@ -38,10 +32,10 @@ function AppContent() {
   };
 
   return (
-    <div className="app">
+    <div className="App">
       {user ? (
         // Utilisateur connecté - Dashboard avec sidebar
-        <div className="app-container">
+        <div className="App-container">
           <Sidebar companyInfo={companyInfo} onLogout={logout} />
           <main className="main-content">
             <Routes>
@@ -70,7 +64,6 @@ function AppContent() {
         // Utilisateur non connecté - Page de login uniquement
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       )}
     </div>
@@ -78,7 +71,7 @@ function AppContent() {
 }
 
 // Composant principal App
-function App() {
+function app() {
   return (
     <Router>
       <AuthProvider>

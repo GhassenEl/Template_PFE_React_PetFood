@@ -11,8 +11,7 @@ import {
   FaStar,
   FaCreditCard,
   FaEnvelope,
-  FaChartLine,
-  FaUserFriends,
+  FaFileInvoice,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -28,13 +27,18 @@ const Sidebar = ({ companyInfo, onLogout }) => {
     { path: "/clients", icon: FaUsers, label: "Clients" },
     { path: "/avis", icon: FaStar, label: "Avis" },
     { path: "/paiements", icon: FaCreditCard, label: "Paiements" },
+    { path: "/factures", icon: FaFileInvoice, label: "Factures" },
     { path: "/contact", icon: FaEnvelope, label: "Contact" },
   ];
 
   return (
     <div className="sidebar">
       <div className="company-info">
-        <img src={companyInfo.logo} alt="Logo" className="logo" />
+        <img
+          src={companyInfo.logo || "/logo-petfood.png"}
+          alt="Logo"
+          className="logo"
+        />
         <h3>{companyInfo.name}</h3>
         <p className="slogan">{companyInfo.slogan}</p>
       </div>
