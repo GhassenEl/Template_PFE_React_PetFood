@@ -1,9 +1,10 @@
-// src/App.js
+// src/app.js - Version compatible react-router-dom v5
 import React from "react";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"; // Changé ici
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Factures from "./pages/Factures";
-import Sidebar from "./components/Sidebar.jsx";
-import Login from "./pages/Login"; // Changé de components à pages
+
+// Pages
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Historique from "./pages/Historique";
 import Notifications from "./pages/Notifications";
@@ -13,12 +14,18 @@ import Clients from "./pages/Clients";
 import Avis from "./pages/Avis";
 import Paiements from "./pages/Paiements";
 import Contact from "./pages/Contact";
+import Factures from "./pages/Factures";
+
+// Components
+import Sidebar from "./components/Sidebar";
+
+// Styles
 import "./App.css";
 
 // Composant pour les routes privées
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Redirect to="/login" />; // Changé ici
 };
 
 // Contenu principal de l'application
@@ -32,46 +39,37 @@ function AppContent() {
   };
 
   return (
-    <div className="App">
+    <div className="app">
       {user ? (
-        // Utilisateur connecté - Dashboard avec sidebar
-        <div className="App-container">
+        <div className="app-container">
           <Sidebar companyInfo={companyInfo} onLogout={logout} />
           <main className="main-content">
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/historique" element={<Historique />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/produits" element={<Produits />} />
-              <Route path="/commandes" element={<Commandes />} />
-              <Route path="/clients" element={<Clients />} />
-              <Route path="/avis" element={<Avis />} />
-              <Route path="/paiements" element={<Paiements />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="/factures"
-                element={
-                  <PrivateRoute>
-                    <Factures />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/" element={<Navigate to="/dashboard" />} />
-            </Routes>
+            <Switch> {/* Changé de Routes à Switch */}
+              <Route path="/dashboard" component={Dashboard} /> {/* Changé element à component */}
+              <Route path="/historique" component={Historique} />
+              <Route path="/notifications" component={Notifications} />
+              <Route path="/produits" component={Produits} />
+              <Route path="/commandes" component={Commandes} />
+              <Route path="/clients" component={Clients} />
+              <Route path="/avis" component={Avis} />
+              <Route path="/paiements" component={Paiements} />
+              <Route path="/contact" component={Contact} />
+              <Route path="/factures" component={Factures} />
+              <Redirect from="/" to="/dashboard" /> {/* Changé Navigate à Redirect */}
+            </Switch>
           </main>
         </div>
       ) : (
-        // Utilisateur non connecté - Page de login uniquement
-        <Routes>
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Redirect from="*" to="/login" />
+        </Switch>
       )}
     </div>
   );
 }
 
-// Composant principal App
-function app() {
+function App() {
   return (
     <Router>
       <AuthProvider>
