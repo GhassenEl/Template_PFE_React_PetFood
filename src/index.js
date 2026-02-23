@@ -7,6 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import Factures from './pages/Factures';
 import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
 import Dashboard from "./pages/Dashboard";
