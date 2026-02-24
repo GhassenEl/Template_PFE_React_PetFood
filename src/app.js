@@ -1,23 +1,28 @@
-// src/app.js - Version compatible react-router-dom v5
+// src/app.js
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"; // Changé ici
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
-// Pages
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Historique from "./pages/Historique";
-import Notifications from "./pages/Notifications";
-import Produits from "./pages/Produits";
-import Commandes from "./pages/Commandes";
-import Clients from "./pages/Clients";
-import Avis from "./pages/Avis";
-import Paiements from "./pages/Paiements";
-import Contact from "./pages/Contact";
-import Factures from "./pages/Factures";
-
-// Components
+// Importer Sidebar (assurez-vous que le chemin est correct)
 import Sidebar from "./components/Sidebar";
+
+// Pages (créez ces fichiers plus tard)
+const Login = () => <div>Page de Login</div>;
+const Dashboard = () => <div>Dashboard</div>;
+const Historique = () => <div>Historique</div>;
+const Notifications = () => <div>Notifications</div>;
+const Produits = () => <div>Produits</div>;
+const Commandes = () => <div>Commandes</div>;
+const Clients = () => <div>Clients</div>;
+const Avis = () => <div>Avis</div>;
+const Paiements = () => <div>Paiements</div>;
+const Contact = () => <div>Contact</div>;
+const Factures = () => <div>Factures</div>;
 
 // Styles
 import "./App.css";
@@ -25,10 +30,10 @@ import "./App.css";
 // Composant pour les routes privées
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
-  return user ? children : <Redirect to="/login" />; // Changé ici
+  return user ? children : <Redirect to="/login" />;
 };
 
-// Contenu principal de l'application
+// Contenu principal
 function AppContent() {
   const { user, logout } = useAuth();
 
@@ -41,11 +46,11 @@ function AppContent() {
   return (
     <div className="app">
       {user ? (
-        <div className="app-container">
+        <div style={{ display: "flex" }}>
           <Sidebar companyInfo={companyInfo} onLogout={logout} />
-          <main className="main-content">
-            <Switch> {/* Changé de Routes à Switch */}
-              <Route path="/dashboard" component={Dashboard} /> {/* Changé element à component */}
+          <main style={{ marginLeft: "250px", padding: "20px", flex: 1 }}>
+            <Switch>
+              <Route path="/dashboard" component={Dashboard} />
               <Route path="/historique" component={Historique} />
               <Route path="/notifications" component={Notifications} />
               <Route path="/produits" component={Produits} />
@@ -55,7 +60,7 @@ function AppContent() {
               <Route path="/paiements" component={Paiements} />
               <Route path="/contact" component={Contact} />
               <Route path="/factures" component={Factures} />
-              <Redirect from="/" to="/dashboard" /> {/* Changé Navigate à Redirect */}
+              <Redirect from="/" to="/dashboard" />
             </Switch>
           </main>
         </div>

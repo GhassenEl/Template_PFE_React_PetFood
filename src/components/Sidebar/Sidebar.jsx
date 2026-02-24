@@ -1,66 +1,78 @@
 // src/components/Sidebar.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  FaHome,
-  FaHistory,
-  FaBell,
-  FaBox,
-  FaShoppingCart,
-  FaUsers,
-  FaStar,
-  FaCreditCard,
-  FaEnvelope,
-  FaFileInvoice,
-  FaSignOutAlt,
-} from "react-icons/fa";
 
 const Sidebar = ({ companyInfo, onLogout }) => {
   const location = useLocation();
 
   const menuItems = [
-    { path: "/dashboard", icon: FaHome, label: "Dashboard" },
-    { path: "/historique", icon: FaHistory, label: "Historique" },
-    { path: "/notifications", icon: FaBell, label: "Notifications" },
-    { path: "/produits", icon: FaBox, label: "Produits" },
-    { path: "/commandes", icon: FaShoppingCart, label: "Commandes" },
-    { path: "/clients", icon: FaUsers, label: "Clients" },
-    { path: "/avis", icon: FaStar, label: "Avis" },
-    { path: "/paiements", icon: FaCreditCard, label: "Paiements" },
-    { path: "/factures", icon: FaFileInvoice, label: "Factures" },
-    { path: "/contact", icon: FaEnvelope, label: "Contact" },
+    { path: "/dashboard", label: "Dashboard" },
+    { path: "/historique", label: "Historique" },
+    { path: "/notifications", label: "Notifications" },
+    { path: "/produits", label: "Produits" },
+    { path: "/commandes", label: "Commandes" },
+    { path: "/clients", label: "Clients" },
+    { path: "/avis", label: "Avis" },
+    { path: "/paiements", label: "Paiements" },
+    { path: "/factures", label: "Factures" },
+    { path: "/contact", label: "Contact" },
   ];
 
   return (
-    <div className="sidebar">
-      <div className="company-info">
+    <div
+      style={{
+        width: "250px",
+        background: "#2c3e50",
+        color: "white",
+        height: "100vh",
+        position: "fixed",
+        padding: "20px",
+      }}
+    >
+      <div style={{ textAlign: "center", marginBottom: "30px" }}>
         <img
           src={companyInfo.logo || "/logo-petfood.png"}
           alt="Logo"
-          className="logo"
+          style={{ width: "80px", height: "80px", borderRadius: "50%" }}
         />
         <h3>{companyInfo.name}</h3>
-        <p className="slogan">{companyInfo.slogan}</p>
+        <p>{companyInfo.slogan}</p>
       </div>
 
-      <nav className="sidebar-nav">
+      <nav>
         {menuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`nav-item ${location.pathname === item.path ? "active" : ""}`}
+            style={{
+              display: "block",
+              padding: "10px",
+              color: location.pathname === item.path ? "#4CAF50" : "white",
+              textDecoration: "none",
+              margin: "5px 0",
+            }}
           >
-            <item.icon className="icon" />
-            <span>{item.label}</span>
+            {item.label}
           </Link>
         ))}
       </nav>
 
-      <div className="sidebar-footer">
-        <button onClick={onLogout} className="logout-btn">
-          <FaSignOutAlt /> Déconnexion
-        </button>
-      </div>
+      <button
+        onClick={onLogout}
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          width: "calc(100% - 40px)",
+          padding: "10px",
+          background: "#e74c3c",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Déconnexion
+      </button>
     </div>
   );
 };
