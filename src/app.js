@@ -1,4 +1,5 @@
 // src/app.js
+import "./App.css";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -25,7 +26,6 @@ const Contact = () => <div>Contact</div>;
 const Factures = () => <div>Factures</div>;
 
 // Styles
-import "./App.css";
 
 // Composant pour les routes privées
 const PrivateRoute = ({ children }) => {
