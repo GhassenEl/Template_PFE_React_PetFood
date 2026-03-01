@@ -1,16 +1,17 @@
 /* src/components/Header.css */
 .header {
-  height: 70px;
+  height: 80px;
   background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 30px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .header-left {
@@ -18,22 +19,25 @@
 }
 
 .page-title h1 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin: 0;
   color: var(--primary);
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 .welcome-message {
-  margin: 4px 0 0;
-  font-size: 0.9rem;
+  margin: 5px 0 0;
+  font-size: 0.95rem;
   color: var(--text-primary);
   opacity: 0.8;
+  text-transform: capitalize;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
 }
 
 /* Date et heure */
@@ -41,52 +45,58 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 5px 15px;
-  background: var(--bg-primary);
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-color);
 }
 
 .date, .time {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .date-icon, .time-icon {
-  font-size: 1rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 
 .date-text {
   color: var(--text-primary);
   font-weight: 500;
+  text-transform: capitalize;
 }
 
 .time-text {
   color: var(--primary);
   font-weight: 600;
+  font-size: 1.1rem;
 }
 
 /* Bouton thème */
 .theme-toggle {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border: none;
-  background: var(--bg-primary);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
   color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .theme-toggle:hover {
   background: var(--primary);
   color: white;
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--primary);
 }
 
 /* Notifications rapides */
@@ -95,10 +105,10 @@
 }
 
 .notification-badge {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border: none;
-  background: var(--bg-primary);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
   border-radius: 50%;
   cursor: pointer;
   position: relative;
@@ -106,10 +116,12 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
 }
 
 .notification-badge:hover {
   background: var(--primary);
+  border-color: var(--primary);
 }
 
 .notification-badge:hover .notification-icon {
@@ -117,8 +129,9 @@
 }
 
 .notification-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .badge-count {
@@ -127,15 +140,116 @@
   right: -5px;
   background: #e74c3c;
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: bold;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 9px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
+  padding: 0 5px;
+  border: 2px solid var(--bg-surface);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Dropdown notifications */
+.notifications-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 320px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.quick-notifications:hover .notifications-dropdown {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+.notifications-dropdown h4 {
+  padding: 15px 20px;
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background: var(--bg-primary);
+}
+
+.notif-icon {
+  width: 35px;
+  height: 35px;
+  background: var(--bg-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 1.2rem;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-content p {
+  margin: 0 0 5px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.notif-content small {
+  color: var(--text-primary);
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+.notifications-footer {
+  padding: 12px 20px;
+  text-align: center;
+  background: var(--bg-primary);
+}
+
+.notifications-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.notifications-footer a:hover {
+  text-decoration: underline;
 }
 
 /* Profil utilisateur */
@@ -146,42 +260,36 @@
 .profile-button {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 10px;
+  gap: 12px;
+  padding: 5px 15px 5px 5px;
   border: none;
-  background: var(--bg-primary);
-  border-radius: 40px;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid transparent;
+  border: 1px solid var(--border-color);
 }
 
 .profile-button:hover {
-  background: var(--bg-surface);
   border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  overflow: hidden;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar::after {
-  content: '👤';
-  font-size: 1.5rem;
+.avatar-icon {
+  font-size: 1.8rem;
   color: white;
+  line-height: 1;
 }
 
 .user-info {
@@ -193,32 +301,41 @@
 .user-name {
   font-weight: 600;
   color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
 .user-role {
   font-size: 0.7rem;
   color: var(--primary);
-  opacity: 0.8;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .dropdown-arrow {
   font-size: 0.8rem;
   color: var(--text-primary);
   margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.profile-button:hover .dropdown-arrow {
+  transform: translateY(2px);
 }
 
 /* Menu déroulant du profil */
 .profile-menu {
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 0;
-  width: 220px;
+  width: 240px;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   z-index: 1000;
   animation: slideDown 0.3s ease;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -245,23 +362,26 @@
 .profile-menu li a {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 12px 20px;
   color: var(--text-primary);
   text-decoration: none;
-  transition: background 0.3s ease;
-  gap: 10px;
+  transition: all 0.3s ease;
+  gap: 12px;
+  font-size: 0.95rem;
 }
 
 .profile-menu li a:hover {
   background: var(--bg-primary);
+  padding-left: 25px;
 }
 
 .profile-menu li a:hover .menu-icon {
   transform: scale(1.1);
+  color: var(--primary);
 }
 
 .menu-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   width: 24px;
   text-align: center;
   transition: transform 0.3s ease;
@@ -278,19 +398,34 @@
 }
 
 .logout-item:hover {
-  background: #e74c3c20 !important;
+  background: rgba(231, 76, 60, 0.1) !important;
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .datetime {
     display: none;
   }
 }
 
+@media (max-width: 992px) {
+  .header {
+    padding: 0 20px;
+  }
+
+  .page-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-message {
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
-    padding: 0 16px;
+    height: 70px;
+    padding: 0 15px;
   }
 
   .page-title h1 {
@@ -298,7 +433,7 @@
   }
 
   .welcome-message {
-    font-size: 0.8rem;
+    display: none;
   }
 
   .user-info {
@@ -314,12 +449,32 @@
   }
 
   .avatar {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .avatar-icon {
+    font-size: 1.5rem;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .notification-badge {
+    width: 40px;
+    height: 40px;
+  }
+
+  .notification-icon {
+    font-size: 1.1rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .quick-notifications {
     display: none;
   }
@@ -327,4 +482,57 @@
   .page-title h1 {
     font-size: 1rem;
   }
+
+  .header-right {
+    gap: 10px;
+  }
+}
+
+/* Mode sombre spécificités */
+.dark-mode .header {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-bottom-color: #404040;
+}
+
+.dark-mode .datetime {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-color: #404040;
+}
+
+.dark-mode .theme-toggle,
+.dark-mode .notification-badge,
+.dark-mode .profile-button {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-color: #404040;
+}
+
+.dark-mode .notifications-dropdown,
+.dark-mode .profile-menu {
+  background: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .notifications-dropdown h4 {
+  background: #1a1a1a;
+  border-bottom-color: #404040;
+}
+
+.dark-mode .notification-item {
+  border-bottom-color: #404040;
+}
+
+.dark-mode .notification-item:hover {
+  background: #1a1a1a;
+}
+
+.dark-mode .notif-icon {
+  background: #1a1a1a;
+}
+
+.dark-mode .notifications-footer {
+  background: #1a1a1a;
+}
+
+.dark-mode .profile-menu li a:hover {
+  background: #1a1a1a;
 }

@@ -6,7 +6,7 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-import "./App.css";
+import "./app.css";
 
 // Context pour l'authentification
 const AuthContext = createContext();
@@ -64,8 +64,8 @@ const ThemeProvider = ({ children }) => {
 };
 
 // Import des composants
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
+import Sidebar from "./components/Sidebar/Sidebar";
+import Header from "./components/Header/Header"; 
 
 // Page Dashboard
 const Dashboard = () => {

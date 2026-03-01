@@ -1,7 +1,7 @@
 // src/components/Header.js
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import "./Header.css";
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import './Header.css';
 
 const Header = ({ toggleTheme, isDarkMode }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -19,51 +19,58 @@ const Header = ({ toggleTheme, isDarkMode }) => {
   // Obtenir le titre de la page en fonction de l'URL
   const getPageTitle = () => {
     const path = location.pathname;
-    switch (path) {
-      case "/dashboard":
-        return "Tableau de bord";
-      case "/produits":
-        return "Gestion des produits";
-      case "/commandes":
-        return "Gestion des commandes";
-      case "/clients":
-        return "Gestion des clients";
-      case "/factures":
-        return "Gestion des factures";
-      case "/avis":
-        return "Gestion des avis";
-      case "/historique":
-        return "Historique des actions";
-      case "/notifications":
-        return "Centre de notifications";
-      case "/info-societe":
-        return "Informations société";
-      case "/paiements":
-        return "Gestion des paiements";
-      case "/contact":
-        return "Messages de contact";
+    switch(path) {
+      case '/dashboard':
+        return 'Tableau de bord';
+      case '/produits':
+        return 'Gestion des produits';
+      case '/commandes':
+        return 'Gestion des commandes';
+      case '/clients':
+        return 'Gestion des clients';
+      case '/factures':
+        return 'Gestion des factures';
+      case '/avis':
+        return 'Avis clients';
+      case '/historique':
+        return 'Historique des actions';
+      case '/notifications':
+        return 'Centre de notifications';
+      case '/info-societe':
+        return 'Informations société';
+      case '/paiements':
+        return 'Gestion des paiements';
+      case '/contact':
+        return 'Messages de contact';
       default:
-        return "PetFood TN";
+        return 'PetFood TN';
     }
   };
 
   // Formater l'heure
   const formatTime = () => {
-    return currentTime.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
+    return currentTime.toLocaleTimeString('fr-TN', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
     });
   };
 
-  // Formater la date
+  // Formater la date en français avec contexte tunisien
   const formatDate = () => {
-    return currentTime.toLocaleDateString("fr-FR", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return currentTime.toLocaleDateString('fr-TN', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
     });
   };
+
+  // Données de notification avec noms tunisiens
+  const notifications = [
+    { id: 1, message: "Nouvelle commande de Mehdi Ben Ahmed", time: "Il y a 5 min", type: "commande" },
+    { id: 2, message: "Paiement reçu de Sarra Trabelsi", time: "Il y a 15 min", type: "paiement" },
+    { id: 3, message: "Stock faible : Croquettes premium", time: "Il y a 30 min", type: "stock" },
+  ];
 
   return (
     <header className="header">
@@ -71,12 +78,9 @@ const Header = ({ toggleTheme, isDarkMode }) => {
         <div className="page-title">
           <h1>{getPageTitle()}</h1>
           <p className="welcome-message">
-            {new Date().getHours() < 12
-              ? "Bonjour"
-              : new Date().getHours() < 18
-                ? "Bon après-midi"
-                : "Bonsoir"}
-            , Admin !
+            {new Date().getHours() < 12 ? 'Sabah el khir' : 
+             new Date().getHours() < 18 ? 'Après-midi' : 'Massa el khir'}, 
+            Admin
           </p>
         </div>
       </div>
@@ -95,12 +99,12 @@ const Header = ({ toggleTheme, isDarkMode }) => {
         </div>
 
         {/* Bouton de thème */}
-        <button
-          className="theme-toggle"
+        <button 
+          className="theme-toggle" 
           onClick={toggleTheme}
-          title={isDarkMode ? "Mode clair" : "Mode sombre"}
+          title={isDarkMode ? 'Mode clair' : 'Mode sombre'}
         >
-          {isDarkMode ? "☀️" : "🌙"}
+          {isDarkMode ? '☀️' : '🌙'}
         </button>
 
         {/* Notifications rapides */}
@@ -109,19 +113,38 @@ const Header = ({ toggleTheme, isDarkMode }) => {
             <span className="notification-icon">🔔</span>
             <span className="badge-count">3</span>
           </button>
+          <div className="notifications-dropdown">
+            <h4>Notifications</h4>
+            {notifications.map(notif => (
+              <div key={notif.id} className="notification-item">
+                <div className="notif-icon">
+                  {notif.type === 'commande' && '📦'}
+                  {notif.type === 'paiement' && '💰'}
+                  {notif.type === 'stock' && '⚠️'}
+                </div>
+                <div className="notif-content">
+                  <p>{notif.message}</p>
+                  <small>{notif.time}</small>
+                </div>
+              </div>
+            ))}
+            <div className="notifications-footer">
+              <a href="/notifications">Voir toutes les notifications</a>
+            </div>
+          </div>
         </div>
 
         {/* Profil utilisateur */}
         <div className="user-profile">
-          <button
+          <button 
             className="profile-button"
             onClick={() => setShowProfileMenu(!showProfileMenu)}
           >
             <div className="avatar">
-              <img src="/default-avatar.png" alt="Admin" />
+              <span className="avatar-icon">👤</span>
             </div>
             <div className="user-info">
-              <span className="user-name">Admin</span>
+              <span className="user-name">Mohamed Ben Salem</span>
               <span className="user-role">Administrateur</span>
             </div>
             <span className="dropdown-arrow">▼</span>
