@@ -1,44 +1,309 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./app.css";
 
 function App() {
   // ==================== ÉTAT GLOBAL ====================
-  const [currentSection, setCurrentSection] = useState('dashboard');
+  const [currentSection, setCurrentSection] = useState("dashboard");
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
-  
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
+
   // États pour les modales
   const [showProductModal, setShowProductModal] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  // ==================== DONNÉES ====================
+  // ==================== DONNÉES PRODUITS ====================
   const [products, setProducts] = useState([
-    { id: 1, name: "Croquettes Royal Canin", category: "Croquettes", price: 89.500, stock: 23, image: "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=100&h=100&fit=crop" },
-    { id: 2, name: "Pâtée Gourmet Chat", category: "Pâtées", price: 12.750, stock: 45, image: "https://images.unsplash.com/photo-1589924691995-4008b2a9f9d6?w=100&h=100&fit=crop" },
-    { id: 3, name: "Litière Naturelle", category: "Soins", price: 18.250, stock: 12, image: "https://images.unsplash.com/photo-1583336663277-620dc5a1d9d3?w=100&h=100&fit=crop" },
-    { id: 4, name: "Brosse Démêlante", category: "Accessoires", price: 8.500, stock: 34, image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=100&h=100&fit=crop" }
+    {
+      id: 1,
+      name: "Croquettes Royal Canin Chien",
+      category: "Croquettes",
+      price: 89.5,
+      stock: 23,
+      description: "Croquettes premium pour chien adulte - 15kg",
+      image:
+        "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=200&h=200&fit=crop",
+      brand: "Royal Canin",
+      rating: 4.5,
+    },
+    {
+      id: 2,
+      name: "Pâtée Gourmet Chat",
+      category: "Pâtées",
+      price: 12.75,
+      stock: 45,
+      description: "Pâtée sans céréales au saumon - 400g",
+      image:
+        "https://images.unsplash.com/photo-1589924691995-4008b2a9f9d6?w=200&h=200&fit=crop",
+      brand: "Gourmet",
+      rating: 4.8,
+    },
+    {
+      id: 3,
+      name: "Litière Naturelle",
+      category: "Soins",
+      price: 18.25,
+      stock: 12,
+      description: "Litière agglomérante naturelle - 10kg",
+      image:
+        "https://images.unsplash.com/photo-1583336663277-620dc5a1d9d3?w=200&h=200&fit=crop",
+      brand: "Nature",
+      rating: 4.2,
+    },
+    {
+      id: 4,
+      name: "Brosse Démêlante",
+      category: "Accessoires",
+      price: 8.5,
+      stock: 34,
+      description: "Brosse douce pour chien à poils longs",
+      image:
+        "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=200&h=200&fit=crop",
+      brand: "PetGroom",
+      rating: 4.0,
+    },
+    {
+      id: 5,
+      name: "Croquettes Hill's Chat",
+      category: "Croquettes",
+      price: 42.5,
+      stock: 67,
+      description: "Croquettes pour chat stérilisé - 8kg",
+      image:
+        "https://images.unsplash.com/photo-1623381184712-525bc1652346?w=200&h=200&fit=crop",
+      brand: "Hill's",
+      rating: 4.7,
+    },
+    {
+      id: 6,
+      name: "Arbre à chat Premium",
+      category: "Accessoires",
+      price: 189.9,
+      stock: 8,
+      description: "Arbre à chat avec griffoir et cachettes",
+      image:
+        "https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=200&h=200&fit=crop",
+      brand: "CatKing",
+      rating: 4.9,
+    },
   ]);
 
+  // ==================== DONNÉES COMMANDES ====================
   const [orders, setOrders] = useState([
-    { id: "CMD001", client: "Mehdi Ben Ahmed", date: "2026-03-02", amount: 189, status: "livre" },
-    { id: "CMD002", client: "Sarra Trabelsi", date: "2026-03-02", amount: 145, status: "encours" },
-    { id: "CMD003", client: "Youssef Jaziri", date: "2026-03-01", amount: 267, status: "attente" }
+    {
+      id: "CMD001",
+      client: "Mehdi Ben Ahmed",
+      date: "2026-03-02",
+      amount: 189,
+      status: "livre",
+      paymentMethod: "Carte bancaire",
+      products: [
+        { id: 1, name: "Croquettes Royal Canin", quantity: 2, price: 89.5 },
+      ],
+      deliveryAddress: "23 Rue de Carthage, Tunis",
+      phone: "+216 98 765 432",
+    },
+    {
+      id: "CMD002",
+      client: "Sarra Trabelsi",
+      date: "2026-03-02",
+      amount: 145,
+      status: "encours",
+      paymentMethod: "Espèces",
+      products: [{ id: 2, name: "Pâtée Gourmet", quantity: 5, price: 12.75 }],
+      deliveryAddress: "45 Avenue Habib Bourguiba, Sousse",
+      phone: "+216 97 654 321",
+    },
+    {
+      id: "CMD003",
+      client: "Youssef Jaziri",
+      date: "2026-03-01",
+      amount: 267,
+      status: "attente",
+      paymentMethod: "Carte bancaire",
+      products: [{ id: 6, name: "Arbre à chat", quantity: 1, price: 189.9 }],
+      deliveryAddress: "12 Rue des Jardins, Sfax",
+      phone: "+216 96 543 210",
+    },
   ]);
 
+  // ==================== DONNÉES FACTURES ====================
+  const [invoices, setInvoices] = useState([
+    {
+      id: "INV001",
+      orderId: "CMD001",
+      client: "Mehdi Ben Ahmed",
+      date: "2026-03-02",
+      dueDate: "2026-04-02",
+      status: "payée",
+      items: [
+        {
+          description: "Croquettes Royal Canin x2",
+          quantity: 2,
+          price: 89.5,
+          total: 179,
+        },
+      ],
+      subtotal: 179,
+      tax: 10,
+      total: 189,
+    },
+    {
+      id: "INV002",
+      orderId: "CMD002",
+      client: "Sarra Trabelsi",
+      date: "2026-03-02",
+      dueDate: "2026-04-02",
+      status: "en_attente",
+      items: [
+        {
+          description: "Pâtée Gourmet x5",
+          quantity: 5,
+          price: 12.75,
+          total: 63.75,
+        },
+      ],
+      subtotal: 63.75,
+      tax: 3.25,
+      total: 67,
+    },
+  ]);
+
+  // ==================== DONNÉES PAIEMENTS ====================
+  const [payments, setPayments] = useState([
+    {
+      id: "PAY001",
+      transactionId: "TRX78945",
+      client: "Mehdi Ben Ahmed",
+      amount: 189,
+      method: "Carte bancaire",
+      status: "validé",
+      date: "2026-03-02",
+      orderId: "CMD001",
+    },
+    {
+      id: "PAY002",
+      transactionId: "TRX78946",
+      client: "Sarra Trabelsi",
+      amount: 145,
+      method: "Espèces",
+      status: "en_attente",
+      date: "2026-03-02",
+      orderId: "CMD002",
+    },
+    {
+      id: "PAY003",
+      transactionId: "TRX78947",
+      client: "Youssef Jaziri",
+      amount: 267,
+      method: "Carte bancaire",
+      status: "en_attente",
+      date: "2026-03-01",
+      orderId: "CMD003",
+    },
+  ]);
+
+  // ==================== DONNÉES CLIENTS ====================
   const [customers, setCustomers] = useState([
-    { id: 1, name: "Mehdi Ben Ahmed", email: "mehdi@email.com", phone: "+216 98 765 432", orders: 12, total: 1234 },
-    { id: 2, name: "Sarra Trabelsi", email: "sarra@email.com", phone: "+216 97 654 321", orders: 8, total: 890 }
+    {
+      id: 1,
+      name: "Mehdi Ben Ahmed",
+      email: "mehdi.benahmed@email.com",
+      phone: "+216 98 765 432",
+      address: "23 Rue de Carthage, Tunis",
+      city: "Tunis",
+      orders: 12,
+      total: 1234,
+      since: "2025-01-15",
+      lastOrder: "2026-03-02",
+    },
+    {
+      id: 2,
+      name: "Sarra Trabelsi",
+      email: "sarra.trabelsi@email.com",
+      phone: "+216 97 654 321",
+      address: "45 Avenue Habib Bourguiba, Sousse",
+      city: "Sousse",
+      orders: 8,
+      total: 890,
+      since: "2025-02-20",
+      lastOrder: "2026-03-02",
+    },
+    {
+      id: 3,
+      name: "Youssef Jaziri",
+      email: "youssef.jaziri@email.com",
+      phone: "+216 96 543 210",
+      address: "12 Rue des Jardins, Sfax",
+      city: "Sfax",
+      orders: 3,
+      total: 267,
+      since: "2026-01-10",
+      lastOrder: "2026-03-01",
+    },
   ]);
 
+  // ==================== DONNÉES AVIS ====================
   const [reviews, setReviews] = useState([
-    { id: 1, client: "Ahmed Ben Ali", product: "Croquettes", rating: 5, comment: "Excellent !", status: "approuvé" },
-    { id: 2, client: "Fatma Said", product: "Pâtée", rating: 4, comment: "Très bien", status: "en_attente" }
+    {
+      id: 1,
+      client: "Ahmed Ben Ali",
+      product: "Croquettes Royal Canin",
+      rating: 5,
+      comment:
+        "Excellent produit ! Mes chiens adorent, leur pelage est plus brillant.",
+      date: "2026-03-01",
+      status: "approuvé",
+      helpful: 12,
+    },
+    {
+      id: 2,
+      client: "Fatma Said",
+      product: "Pâtée Gourmet",
+      rating: 4,
+      comment: "Très bonne qualité, mon chat est ravi.",
+      date: "2026-02-28",
+      status: "approuvé",
+      helpful: 8,
+    },
+    {
+      id: 3,
+      client: "Sonia Mansour",
+      product: "Brosse Démêlante",
+      rating: 3,
+      comment: "Produit correct mais un peu cher.",
+      date: "2026-02-26",
+      status: "en_attente",
+      helpful: 3,
+    },
   ]);
+
+  // ==================== DONNÉES SOCIÉTÉ ====================
+  const [companyInfo, setCompanyInfo] = useState({
+    name: "PetFood TN",
+    email: "contact@petfood.tn",
+    phone: "+216 71 123 456",
+    fax: "+216 71 123 457",
+    address: "Immeuble PetFood, Rue du Lac, Les Berges du Lac, Tunis",
+    facebook: "https://facebook.com/petfoodtn",
+    instagram: "https://instagram.com/petfoodtn",
+    linkedin: "https://linkedin.com/company/petfoodtn",
+    hours: "Lun-Ven: 9h-18h, Sam: 9h-13h",
+    rc: "B18263472026",
+    matriculeFiscal: "1234567/A/M/000",
+    map: "https://maps.google.com/?q=Tunis",
+  });
 
   // ==================== STATISTIQUES ====================
   const [stats, setStats] = useState({
@@ -46,31 +311,48 @@ function App() {
     orders: 0,
     customers: 0,
     revenue: 0,
-    pendingOrders: 0
+    pendingOrders: 0,
+    monthlyRevenue: 0,
   });
 
   useEffect(() => {
     calculateStats();
-  }, [products, orders, customers]);
+  }, [products, orders, customers, payments]);
 
   const calculateStats = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
     setStats({
       products: products.length,
       orders: orders.length,
       customers: customers.length,
-      revenue: orders
-        .filter(o => o.status === 'livre')
-        .reduce((sum, o) => sum + o.amount, 0),
-      pendingOrders: orders.filter(o => o.status === 'attente' || o.status === 'encours').length
+      revenue: payments
+        .filter((p) => p.status === "validé")
+        .reduce((sum, p) => sum + p.amount, 0),
+      pendingOrders: orders.filter(
+        (o) => o.status === "attente" || o.status === "encours",
+      ).length,
+      monthlyRevenue: payments
+        .filter((p) => {
+          const paymentDate = new Date(p.date);
+          return (
+            p.status === "validé" &&
+            paymentDate.getMonth() === currentMonth &&
+            paymentDate.getFullYear() === currentYear
+          );
+        })
+        .reduce((sum, p) => sum + p.amount, 0),
     });
   };
 
   // ==================== THÈME SOMBRE ====================
   useEffect(() => {
-    const savedTheme = localStorage.getItem('petfood-theme');
-    if (savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem("petfood-theme");
+    if (savedTheme === "dark") {
       setIsDarkMode(true);
-      document.body.classList.add('dark-mode');
+      document.body.classList.add("dark-mode");
     }
 
     const timer = setInterval(() => {
@@ -82,240 +364,460 @@ function App() {
 
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add('dark-mode');
-      localStorage.setItem('petfood-theme', 'dark');
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("petfood-theme", "dark");
     } else {
-      document.body.classList.remove('dark-mode');
-      localStorage.setItem('petfood-theme', 'light');
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("petfood-theme", "light");
     }
   }, [isDarkMode]);
 
   // ==================== FONCTIONS UTILITAIRES ====================
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('fr-FR');
+    return new Date(date).toLocaleDateString("fr-FR");
   };
 
   const formatDateTime = () => {
     const date = currentDateTime;
     return {
-      date: date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-      time: date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      date: date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      time: date.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
   };
 
   const formatCurrency = (amount) => {
-    return amount.toLocaleString() + ' DT';
+    return amount.toLocaleString() + " DT";
   };
 
   const getStatusText = (status) => {
     const map = {
-      'livre': 'Livré',
-      'encours': 'En cours',
-      'attente': 'En attente',
-      'approuvé': 'Approuvé',
-      'en_attente': 'En attente'
+      livre: "Livré",
+      encours: "En cours",
+      attente: "En attente",
+      validé: "Validé",
+      en_attente: "En attente",
+      remboursé: "Remboursé",
+      approuvé: "Approuvé",
+      payée: "Payée",
     };
     return map[status] || status;
   };
 
   const getStatusClass = (status) => {
     const map = {
-      'livre': 'success',
-      'approuvé': 'success',
-      'encours': 'warning',
-      'en_attente': 'warning',
-      'attente': 'danger'
+      livre: "success",
+      validé: "success",
+      approuvé: "success",
+      payée: "success",
+      encours: "warning",
+      en_attente: "warning",
+      attente: "danger",
+      remboursé: "info",
     };
-    return map[status] || 'default';
+    return map[status] || "default";
   };
 
-  const showNotification = (message, type = 'info') => {
+  const showNotification = (message, type = "info") => {
     setNotification({ show: true, message, type });
-    setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+    setTimeout(
+      () => setNotification({ show: false, message: "", type: "" }),
+      3000,
+    );
   };
 
-  // ==================== CRUD ====================
-  const handleDelete = (type, id) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer cet élément ?`)) {
-      if (type === 'product') setProducts(products.filter(p => p.id !== id));
-      if (type === 'order') setOrders(orders.filter(o => o.id !== id));
-      if (type === 'customer') setCustomers(customers.filter(c => c.id !== id));
-      if (type === 'review') setReviews(reviews.filter(r => r.id !== id));
-      showNotification('Élément supprimé', 'info');
+  // ==================== CRUD PRODUITS ====================
+  const handleAddProduct = (productData) => {
+    const newId = Math.max(...products.map((p) => p.id), 0) + 1;
+    setProducts([
+      ...products,
+      {
+        id: newId,
+        ...productData,
+        rating: 0,
+      },
+    ]);
+    setShowProductModal(false);
+    showNotification("Produit ajouté avec succès", "success");
+  };
+
+  const handleEditProduct = (productData) => {
+    setProducts(
+      products.map((p) =>
+        p.id === editingItem.id ? { ...p, ...productData } : p,
+      ),
+    );
+    setShowProductModal(false);
+    setEditingItem(null);
+    showNotification("Produit modifié avec succès", "success");
+  };
+
+  const handleDeleteProduct = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+      setProducts(products.filter((p) => p.id !== id));
+      showNotification("Produit supprimé", "info");
     }
   };
 
-  const handleView = (type, item) => {
-    alert(JSON.stringify(item, null, 2));
+  const handleViewProduct = (product) => {
+    alert(`
+      PRODUIT: ${product.name}
+      Marque: ${product.brand}
+      Catégorie: ${product.category}
+      Prix: ${formatCurrency(product.price)}
+      Stock: ${product.stock}
+      Note: ${product.rating}/5
+      Description: ${product.description}
+    `);
+  };
+
+  // ==================== CRUD COMMANDES ====================
+  const handleAddOrder = (orderData) => {
+    const newId = `CMD${String(orders.length + 1).padStart(3, "0")}`;
+    setOrders([
+      ...orders,
+      {
+        id: newId,
+        ...orderData,
+        date: new Date().toISOString().split("T")[0],
+        status: "attente",
+      },
+    ]);
+    setShowOrderModal(false);
+    showNotification("Commande ajoutée avec succès", "success");
+  };
+
+  const handleEditOrder = (orderData) => {
+    setOrders(
+      orders.map((o) => (o.id === editingItem.id ? { ...o, ...orderData } : o)),
+    );
+    setShowOrderModal(false);
+    setEditingItem(null);
+    showNotification("Commande modifiée avec succès", "success");
+  };
+
+  const handleDeleteOrder = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette commande ?")) {
+      setOrders(orders.filter((o) => o.id !== id));
+      showNotification("Commande supprimée", "info");
+    }
+  };
+
+  const handleViewOrder = (order) => {
+    const productList = order.products
+      .map(
+        (p) =>
+          `- ${p.name} x${p.quantity} : ${formatCurrency(p.price * p.quantity)}`,
+      )
+      .join("\n");
+
+    alert(`
+      COMMANDE: ${order.id}
+      Client: ${order.client}
+      Téléphone: ${order.phone}
+      Adresse: ${order.deliveryAddress}
+      Date: ${formatDate(order.date)}
+      Statut: ${getStatusText(order.status)}
+      
+      PRODUITS:
+      ${productList}
+      
+      TOTAL: ${formatCurrency(order.amount)}
+      Paiement: ${order.paymentMethod}
+    `);
+  };
+
+  // ==================== CRUD FACTURES ====================
+  const handleAddInvoice = (invoiceData) => {
+    const newId = `INV${String(invoices.length + 1).padStart(3, "0")}`;
+    setInvoices([
+      ...invoices,
+      {
+        id: newId,
+        ...invoiceData,
+        date: new Date().toISOString().split("T")[0],
+      },
+    ]);
+    setShowInvoiceModal(false);
+    showNotification("Facture créée avec succès", "success");
+  };
+
+  const handleEditInvoice = (invoiceData) => {
+    setInvoices(
+      invoices.map((i) =>
+        i.id === editingItem.id ? { ...i, ...invoiceData } : i,
+      ),
+    );
+    setShowInvoiceModal(false);
+    setEditingItem(null);
+    showNotification("Facture modifiée avec succès", "success");
+  };
+
+  const handleDeleteInvoice = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) {
+      setInvoices(invoices.filter((i) => i.id !== id));
+      showNotification("Facture supprimée", "info");
+    }
+  };
+
+  const handleViewInvoice = (invoice) => {
+    const itemsList = invoice.items
+      .map((item) => `- ${item.description} : ${formatCurrency(item.total)}`)
+      .join("\n");
+
+    alert(`
+      FACTURE: ${invoice.id}
+      Commande: ${invoice.orderId}
+      Client: ${invoice.client}
+      Date: ${formatDate(invoice.date)}
+      Échéance: ${formatDate(invoice.dueDate)}
+      Statut: ${getStatusText(invoice.status)}
+      
+      DÉTAILS:
+      ${itemsList}
+      
+      Sous-total: ${formatCurrency(invoice.subtotal)}
+      TVA: ${formatCurrency(invoice.tax)}
+      TOTAL: ${formatCurrency(invoice.total)}
+    `);
+  };
+
+  // ==================== CRUD PAIEMENTS ====================
+  const handleAddPayment = (paymentData) => {
+    const newId = `PAY${String(payments.length + 1).padStart(3, "0")}`;
+    setPayments([
+      ...payments,
+      {
+        id: newId,
+        transactionId: `TRX${Math.floor(Math.random() * 90000 + 10000)}`,
+        ...paymentData,
+        date: new Date().toISOString().split("T")[0],
+      },
+    ]);
+    setShowPaymentModal(false);
+    showNotification("Paiement ajouté avec succès", "success");
+  };
+
+  const handleEditPayment = (paymentData) => {
+    setPayments(
+      payments.map((p) =>
+        p.id === editingItem.id ? { ...p, ...paymentData } : p,
+      ),
+    );
+    setShowPaymentModal(false);
+    setEditingItem(null);
+    showNotification("Paiement modifié avec succès", "success");
+  };
+
+  const handleDeletePayment = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce paiement ?")) {
+      setPayments(payments.filter((p) => p.id !== id));
+      showNotification("Paiement supprimé", "info");
+    }
+  };
+
+  const handleViewPayment = (payment) => {
+    alert(`
+      PAIEMENT: ${payment.id}
+      Transaction: ${payment.transactionId}
+      Client: ${payment.client}
+      Commande: ${payment.orderId}
+      Montant: ${formatCurrency(payment.amount)}
+      Méthode: ${payment.method}
+      Statut: ${getStatusText(payment.status)}
+      Date: ${formatDate(payment.date)}
+    `);
+  };
+
+  // ==================== CRUD CLIENTS ====================
+  const handleAddCustomer = (customerData) => {
+    const newId = Math.max(...customers.map((c) => c.id), 0) + 1;
+    setCustomers([
+      ...customers,
+      {
+        id: newId,
+        orders: 0,
+        total: 0,
+        since: new Date().toISOString().split("T")[0],
+        ...customerData,
+      },
+    ]);
+    setShowCustomerModal(false);
+    showNotification("Client ajouté avec succès", "success");
+  };
+
+  const handleEditCustomer = (customerData) => {
+    setCustomers(
+      customers.map((c) =>
+        c.id === editingItem.id ? { ...c, ...customerData } : c,
+      ),
+    );
+    setShowCustomerModal(false);
+    setEditingItem(null);
+    showNotification("Client modifié avec succès", "success");
+  };
+
+  const handleDeleteCustomer = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce client ?")) {
+      setCustomers(customers.filter((c) => c.id !== id));
+      showNotification("Client supprimé", "info");
+    }
+  };
+
+  const handleViewCustomer = (customer) => {
+    alert(`
+      CLIENT: ${customer.name}
+      Email: ${customer.email}
+      Téléphone: ${customer.phone}
+      Adresse: ${customer.address}
+      Ville: ${customer.city}
+      
+      Statistiques:
+      - Commandes: ${customer.orders}
+      - Total dépensé: ${formatCurrency(customer.total)}
+      - Client depuis: ${formatDate(customer.since)}
+      - Dernière commande: ${customer.lastOrder ? formatDate(customer.lastOrder) : "Aucune"}
+    `);
+  };
+
+  // ==================== CRUD AVIS ====================
+  const handleAddReview = (reviewData) => {
+    const newId = Math.max(...reviews.map((r) => r.id), 0) + 1;
+    setReviews([
+      ...reviews,
+      {
+        id: newId,
+        date: new Date().toISOString().split("T")[0],
+        status: "en_attente",
+        helpful: 0,
+        ...reviewData,
+      },
+    ]);
+    setShowReviewModal(false);
+    showNotification("Avis ajouté avec succès", "success");
+  };
+
+  const handleEditReview = (reviewData) => {
+    setReviews(
+      reviews.map((r) =>
+        r.id === editingItem.id ? { ...r, ...reviewData } : r,
+      ),
+    );
+    setShowReviewModal(false);
+    setEditingItem(null);
+    showNotification("Avis modifié avec succès", "success");
+  };
+
+  const handleDeleteReview = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet avis ?")) {
+      setReviews(reviews.filter((r) => r.id !== id));
+      showNotification("Avis supprimé", "info");
+    }
+  };
+
+  const handleApproveReview = (id) => {
+    setReviews(
+      reviews.map((r) => (r.id === id ? { ...r, status: "approuvé" } : r)),
+    );
+    showNotification("Avis approuvé", "success");
+  };
+
+  const handleViewReview = (review) => {
+    alert(`
+      AVIS:
+      Client: ${review.client}
+      Produit: ${review.product}
+      Note: ${review.rating}/5
+      Commentaire: "${review.comment}"
+      Date: ${formatDate(review.date)}
+      Statut: ${getStatusText(review.status)}
+      Utile: ${review.helpful} personnes
+    `);
+  };
+
+  // ==================== CRUD CONTACT ====================
+  const handleAddContact = (contactData) => {
+    setCompanyInfo({ ...companyInfo, ...contactData });
+    setShowContactModal(false);
+    showNotification("Informations de contact mises à jour", "success");
+  };
+
+  const handleEditContact = (contactData) => {
+    setCompanyInfo({ ...companyInfo, ...contactData });
+    setShowContactModal(false);
+    setEditingItem(null);
+    showNotification("Contact modifié avec succès", "success");
+  };
+
+  const handleViewContact = () => {
+    alert(`
+      INFORMATIONS DE CONTACT:
+      
+      Société: ${companyInfo.name}
+      Email: ${companyInfo.email}
+      Téléphone: ${companyInfo.phone}
+      Fax: ${companyInfo.fax}
+      Adresse: ${companyInfo.address}
+      Horaires: ${companyInfo.hours}
+      RC: ${companyInfo.rc}
+      MF: ${companyInfo.matriculeFiscal}
+      
+      Réseaux sociaux:
+      - Facebook: ${companyInfo.facebook}
+      - Instagram: ${companyInfo.instagram}
+      - LinkedIn: ${companyInfo.linkedin}
+    `);
   };
 
   // ==================== FILTRES ====================
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.brand.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const filteredOrders = orders.filter(o =>
-    o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    o.client.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrders = orders.filter(
+    (o) =>
+      o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      o.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      o.phone.includes(searchTerm),
   );
 
-  const filteredCustomers = customers.filter(c =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInvoices = invoices.filter(
+    (i) =>
+      i.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      i.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      i.orderId.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const filteredReviews = reviews.filter(r =>
-    r.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.product.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPayments = payments.filter(
+    (p) =>
+      p.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.orderId.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // ==================== MODALES ====================
-  const ProductModal = () => (
-    <div className="modal" onClick={() => setShowProductModal(false)}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{editingItem ? 'Modifier' : 'Ajouter'} un produit</h2>
-          <button className="close" onClick={() => setShowProductModal(false)}>&times;</button>
-        </div>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          setShowProductModal(false);
-          showNotification('Produit sauvegardé', 'success');
-        }}>
-          <div className="form-group">
-            <label>Nom</label>
-            <input type="text" defaultValue={editingItem?.name} required />
-          </div>
-          <div className="form-group">
-            <label>Catégorie</label>
-            <select defaultValue={editingItem?.category || 'Croquettes'}>
-              <option>Croquettes</option>
-              <option>Pâtées</option>
-              <option>Accessoires</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Prix (DT)</label>
-            <input type="number" step="0.001" defaultValue={editingItem?.price} required />
-          </div>
-          <div className="form-group">
-            <label>Stock</label>
-            <input type="number" defaultValue={editingItem?.stock} required />
-          </div>
-          <div className="form-group">
-            <label>Image URL</label>
-            <input type="url" defaultValue={editingItem?.image} required />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {editingItem ? 'Modifier' : 'Ajouter'}
-          </button>
-        </form>
-      </div>
-    </div>
+  const filteredCustomers = customers.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.phone.includes(searchTerm) ||
+      c.city.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const OrderModal = () => (
-    <div className="modal" onClick={() => setShowOrderModal(false)}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{editingItem ? 'Modifier' : 'Ajouter'} une commande</h2>
-          <button className="close" onClick={() => setShowOrderModal(false)}>&times;</button>
-        </div>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          setShowOrderModal(false);
-          showNotification('Commande sauvegardée', 'success');
-        }}>
-          <div className="form-group">
-            <label>Client</label>
-            <input type="text" defaultValue={editingItem?.client} required />
-          </div>
-          <div className="form-group">
-            <label>Montant (DT)</label>
-            <input type="number" step="0.001" defaultValue={editingItem?.amount} required />
-          </div>
-          <div className="form-group">
-            <label>Statut</label>
-            <select defaultValue={editingItem?.status || 'attente'}>
-              <option value="attente">En attente</option>
-              <option value="encours">En cours</option>
-              <option value="livre">Livré</option>
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {editingItem ? 'Modifier' : 'Ajouter'}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
-  const CustomerModal = () => (
-    <div className="modal" onClick={() => setShowCustomerModal(false)}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{editingItem ? 'Modifier' : 'Ajouter'} un client</h2>
-          <button className="close" onClick={() => setShowCustomerModal(false)}>&times;</button>
-        </div>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          setShowCustomerModal(false);
-          showNotification('Client sauvegardé', 'success');
-        }}>
-          <div className="form-group">
-            <label>Nom</label>
-            <input type="text" defaultValue={editingItem?.name} required />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" defaultValue={editingItem?.email} required />
-          </div>
-          <div className="form-group">
-            <label>Téléphone</label>
-            <input type="text" defaultValue={editingItem?.phone} required />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {editingItem ? 'Modifier' : 'Ajouter'}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
-  const ReviewModal = () => (
-    <div className="modal" onClick={() => setShowReviewModal(false)}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{editingItem ? 'Modifier' : 'Ajouter'} un avis</h2>
-          <button className="close" onClick={() => setShowReviewModal(false)}>&times;</button>
-        </div>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          setShowReviewModal(false);
-          showNotification('Avis sauvegardé', 'success');
-        }}>
-          <div className="form-group">
-            <label>Client</label>
-            <input type="text" defaultValue={editingItem?.client} required />
-          </div>
-          <div className="form-group">
-            <label>Produit</label>
-            <input type="text" defaultValue={editingItem?.product} required />
-          </div>
-          <div className="form-group">
-            <label>Note (1-5)</label>
-            <input type="number" min="1" max="5" defaultValue={editingItem?.rating || 5} required />
-          </div>
-          <div className="form-group">
-            <label>Commentaire</label>
-            <textarea rows="3" defaultValue={editingItem?.comment} required />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {editingItem ? 'Modifier' : 'Ajouter'}
-          </button>
-        </form>
-      </div>
-    </div>
+  const filteredReviews = reviews.filter(
+    (r) =>
+      r.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.comment.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // ==================== RENDU ====================
@@ -342,18 +844,22 @@ function App() {
 
         <nav>
           {[
-            { id: 'dashboard', icon: 'home', label: 'Tableau de bord' },
-            { id: 'products', icon: 'box', label: 'Produits' },
-            { id: 'orders', icon: 'shopping-cart', label: 'Commandes' },
-            { id: 'customers', icon: 'users', label: 'Clients' },
-            { id: 'reviews', icon: 'star', label: 'Avis' }
-          ].map(section => (
+            { id: "dashboard", icon: "home", label: "Tableau de bord" },
+            { id: "products", icon: "box", label: "Produits" },
+            { id: "orders", icon: "shopping-cart", label: "Commandes" },
+            { id: "invoices", icon: "file-invoice", label: "Factures" },
+            { id: "payments", icon: "credit-card", label: "Paiements" },
+            { id: "customers", icon: "users", label: "Clients" },
+            { id: "reviews", icon: "star", label: "Avis" },
+            { id: "contact", icon: "envelope", label: "Contact" },
+            { id: "settings", icon: "cog", label: "Paramètres" },
+          ].map((section) => (
             <div
               key={section.id}
-              className={`nav-item ${currentSection === section.id ? 'active' : ''}`}
+              className={`nav-item ${currentSection === section.id ? "active" : ""}`}
               onClick={() => {
                 setCurrentSection(section.id);
-                setSearchTerm('');
+                setSearchTerm("");
               }}
             >
               <i className={`fas fa-${section.icon}`}></i>
@@ -374,18 +880,25 @@ function App() {
         <div className="header">
           <div>
             <h1 className="page-title">
-              {currentSection === 'dashboard' && 'Tableau de bord'}
-              {currentSection === 'products' && 'Gestion des Produits'}
-              {currentSection === 'orders' && 'Gestion des Commandes'}
-              {currentSection === 'customers' && 'Gestion des Clients'}
-              {currentSection === 'reviews' && 'Gestion des Avis'}
+              {currentSection === "dashboard" && "Tableau de bord"}
+              {currentSection === "products" && "Gestion des Produits"}
+              {currentSection === "orders" && "Gestion des Commandes"}
+              {currentSection === "invoices" && "Gestion des Factures"}
+              {currentSection === "payments" && "Gestion des Paiements"}
+              {currentSection === "customers" && "Gestion des Clients"}
+              {currentSection === "reviews" && "Gestion des Avis"}
+              {currentSection === "contact" && "Contact Société"}
+              {currentSection === "settings" && "Paramètres"}
             </h1>
             <p>El Jezi Ghassen, Admin</p>
           </div>
 
           <div className="admin-info">
-            <button className="theme-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-              <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
+            <button
+              className="theme-btn"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+            >
+              <i className={`fas fa-${isDarkMode ? "sun" : "moon"}`}></i>
             </button>
 
             <div className="profile">
@@ -404,78 +917,49 @@ function App() {
         </div>
 
         {/* DASHBOARD */}
-        {currentSection === 'dashboard' && (
+        {currentSection === "dashboard" && (
           <div className="dashboard">
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon blue">
-                  <i className="fas fa-box"></i>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-label">Produits</span>
-                  <span className="stat-value">{stats.products}</span>
-                </div>
+                <i className="fas fa-box"></i>
+                <div className="stat-value">{stats.products}</div>
+                <div className="stat-label">Produits</div>
               </div>
-
               <div className="stat-card">
-                <div className="stat-icon green">
-                  <i className="fas fa-shopping-cart"></i>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-label">Commandes</span>
-                  <span className="stat-value">{stats.orders}</span>
-                </div>
+                <i className="fas fa-shopping-cart"></i>
+                <div className="stat-value">{stats.orders}</div>
+                <div className="stat-label">Commandes</div>
               </div>
-
               <div className="stat-card">
-                <div className="stat-icon orange">
-                  <i className="fas fa-clock"></i>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-label">En attente</span>
-                  <span className="stat-value">{stats.pendingOrders}</span>
-                </div>
+                <i className="fas fa-clock"></i>
+                <div className="stat-value">{stats.pendingOrders}</div>
+                <div className="stat-label">En attente</div>
               </div>
-
               <div className="stat-card">
-                <div className="stat-icon purple">
-                  <i className="fas fa-users"></i>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-label">Clients</span>
-                  <span className="stat-value">{stats.customers}</span>
-                </div>
+                <i className="fas fa-users"></i>
+                <div className="stat-value">{stats.customers}</div>
+                <div className="stat-label">Clients</div>
               </div>
-
               <div className="stat-card">
-                <div className="stat-icon gold">
-                  <i className="fas fa-chart-line"></i>
+                <i className="fas fa-chart-line"></i>
+                <div className="stat-value">
+                  {formatCurrency(stats.monthlyRevenue)}
                 </div>
-                <div className="stat-content">
-                  <span className="stat-label">CA Total</span>
-                  <span className="stat-value">{formatCurrency(stats.revenue)}</span>
-                </div>
+                <div className="stat-label">CA Mensuel</div>
               </div>
-            </div>
-
-            {/* Graphique des ventes */}
-            <div className="chart-container">
-              <h3>Ventes des 7 derniers jours</h3>
-              <div className="simple-chart">
-                <div className="bar" style={{height: '40px'}}>Lun<br/><small>450 DT</small></div>
-                <div className="bar" style={{height: '65px'}}>Mar<br/><small>780 DT</small></div>
-                <div className="bar" style={{height: '55px'}}>Mer<br/><small>620 DT</small></div>
-                <div className="bar" style={{height: '80px'}}>Jeu<br/><small>950 DT</small></div>
-                <div className="bar" style={{height: '70px'}}>Ven<br/><small>840 DT</small></div>
-                <div className="bar" style={{height: '90px'}}>Sam<br/><small>1100 DT</small></div>
-                <div className="bar" style={{height: '60px'}}>Dim<br/><small>720 DT</small></div>
+              <div className="stat-card">
+                <i className="fas fa-credit-card"></i>
+                <div className="stat-value">
+                  {formatCurrency(stats.revenue)}
+                </div>
+                <div className="stat-label">CA Total</div>
               </div>
             </div>
           </div>
         )}
 
         {/* PRODUITS */}
-        {currentSection === 'products' && (
+        {currentSection === "products" && (
           <div className="section">
             <div className="section-header">
               <h2>Gestion des Produits</h2>
@@ -484,64 +968,88 @@ function App() {
                   <i className="fas fa-search"></i>
                   <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder="Rechercher un produit..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button className="btn btn-primary" onClick={() => {
-                  setEditingItem(null);
-                  setShowProductModal(true);
-                }}>
-                  <i className="fas fa-plus"></i> Nouveau
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowProductModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouveau produit
                 </button>
               </div>
             </div>
 
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Image</th>
-                    <th>Produit</th>
-                    <th>Catégorie</th>
-                    <th>Prix</th>
-                    <th>Stock</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map(product => (
-                    <tr key={product.id}>
-                      <td><img src={product.image} alt={product.name} className="table-image" /></td>
-                      <td>{product.name}</td>
-                      <td>{product.category}</td>
-                      <td>{formatCurrency(product.price)}</td>
-                      <td>{product.stock}</td>
-                      <td className="actions-cell">
-                        <button className="action-btn view" onClick={() => handleView('product', product)} title="Consulter">
-                          <i className="fas fa-eye"></i>
-                        </button>
-                        <button className="action-btn edit" onClick={() => {
+            <div className="products-grid">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="product-card">
+                  <div className="product-image-container">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="product-card-image"
+                    />
+                    <span className="product-stock-badge">
+                      {product.stock} en stock
+                    </span>
+                  </div>
+                  <div className="product-card-content">
+                    <h3 className="product-name">{product.name}</h3>
+                    <p className="product-brand">{product.brand}</p>
+                    <div className="product-rating">
+                      {[...Array(5)].map((_, i) => (
+                        <i
+                          key={i}
+                          className={`fas fa-star ${i < Math.floor(product.rating) ? "star-filled" : "star-empty"}`}
+                        ></i>
+                      ))}
+                    </div>
+                    <p className="product-price">
+                      {formatCurrency(product.price)}
+                    </p>
+                    <p className="product-description">{product.description}</p>
+
+                    {/* WIDGETS PRODUITS */}
+                    <div className="product-widgets">
+                      <button
+                        className="widget-btn widget-view"
+                        onClick={() => handleViewProduct(product)}
+                      >
+                        <i className="fas fa-eye"></i>
+                        <span>Consulter</span>
+                      </button>
+                      <button
+                        className="widget-btn widget-edit"
+                        onClick={() => {
                           setEditingItem(product);
                           setShowProductModal(true);
-                        }} title="Modifier">
-                          <i className="fas fa-pen"></i>
-                        </button>
-                        <button className="action-btn delete" onClick={() => handleDelete('product', product.id)} title="Supprimer">
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        }}
+                      >
+                        <i className="fas fa-edit"></i>
+                        <span>Modifier</span>
+                      </button>
+                      <button
+                        className="widget-btn widget-delete"
+                        onClick={() => handleDeleteProduct(product.id)}
+                      >
+                        <i className="fas fa-trash"></i>
+                        <span>Supprimer</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* COMMANDES */}
-        {currentSection === 'orders' && (
+        {currentSection === "orders" && (
           <div className="section">
             <div className="section-header">
               <h2>Gestion des Commandes</h2>
@@ -550,16 +1058,19 @@ function App() {
                   <i className="fas fa-search"></i>
                   <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder="Rechercher une commande..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button className="btn btn-primary" onClick={() => {
-                  setEditingItem(null);
-                  setShowOrderModal(true);
-                }}>
-                  <i className="fas fa-plus"></i> Nouvelle
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowOrderModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouvelle commande
                 </button>
               </div>
             </div>
@@ -570,6 +1081,7 @@ function App() {
                   <tr>
                     <th>N° Commande</th>
                     <th>Client</th>
+                    <th>Téléphone</th>
                     <th>Date</th>
                     <th>Montant</th>
                     <th>Statut</th>
@@ -577,30 +1089,238 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.map(order => (
+                  {filteredOrders.map((order) => (
                     <tr key={order.id}>
-                      <td><strong>{order.id}</strong></td>
+                      <td>
+                        <strong>{order.id}</strong>
+                      </td>
                       <td>{order.client}</td>
+                      <td>{order.phone}</td>
                       <td>{formatDate(order.date)}</td>
                       <td>{formatCurrency(order.amount)}</td>
                       <td>
-                        <span className={`status status-${getStatusClass(order.status)}`}>
+                        <span
+                          className={`status status-${getStatusClass(order.status)}`}
+                        >
                           {getStatusText(order.status)}
                         </span>
                       </td>
-                      <td className="actions-cell">
-                        <button className="action-btn view" onClick={() => handleView('order', order)} title="Consulter">
-                          <i className="fas fa-eye"></i>
-                        </button>
-                        <button className="action-btn edit" onClick={() => {
-                          setEditingItem(order);
-                          setShowOrderModal(true);
-                        }} title="Modifier">
-                          <i className="fas fa-pen"></i>
-                        </button>
-                        <button className="action-btn delete" onClick={() => handleDelete('order', order.id)} title="Supprimer">
-                          <i className="fas fa-trash"></i>
-                        </button>
+                      <td>
+                        {/* WIDGETS COMMANDES */}
+                        <div className="table-widgets">
+                          <button
+                            className="widget-sm widget-view"
+                            onClick={() => handleViewOrder(order)}
+                            title="Consulter"
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-edit"
+                            onClick={() => {
+                              setEditingItem(order);
+                              setShowOrderModal(true);
+                            }}
+                            title="Modifier"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-delete"
+                            onClick={() => handleDeleteOrder(order.id)}
+                            title="Supprimer"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* FACTURES */}
+        {currentSection === "invoices" && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Gestion des Factures</h2>
+              <div className="header-actions">
+                <div className="search-box">
+                  <i className="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Rechercher une facture..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowInvoiceModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouvelle facture
+                </button>
+              </div>
+            </div>
+
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>N° Facture</th>
+                    <th>Commande</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Échéance</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredInvoices.map((invoice) => (
+                    <tr key={invoice.id}>
+                      <td>{invoice.id}</td>
+                      <td>{invoice.orderId}</td>
+                      <td>{invoice.client}</td>
+                      <td>{formatDate(invoice.date)}</td>
+                      <td>{formatDate(invoice.dueDate)}</td>
+                      <td>{formatCurrency(invoice.total)}</td>
+                      <td>
+                        <span
+                          className={`status status-${getStatusClass(invoice.status)}`}
+                        >
+                          {getStatusText(invoice.status)}
+                        </span>
+                      </td>
+                      <td>
+                        {/* WIDGETS FACTURES */}
+                        <div className="table-widgets">
+                          <button
+                            className="widget-sm widget-view"
+                            onClick={() => handleViewInvoice(invoice)}
+                            title="Consulter"
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-edit"
+                            onClick={() => {
+                              setEditingItem(invoice);
+                              setShowInvoiceModal(true);
+                            }}
+                            title="Modifier"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-delete"
+                            onClick={() => handleDeleteInvoice(invoice.id)}
+                            title="Supprimer"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* PAIEMENTS */}
+        {currentSection === "payments" && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Gestion des Paiements</h2>
+              <div className="header-actions">
+                <div className="search-box">
+                  <i className="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Rechercher un paiement..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowPaymentModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouveau paiement
+                </button>
+              </div>
+            </div>
+
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Client</th>
+                    <th>Commande</th>
+                    <th>Montant</th>
+                    <th>Méthode</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPayments.map((payment) => (
+                    <tr key={payment.id}>
+                      <td>{payment.transactionId}</td>
+                      <td>{payment.client}</td>
+                      <td>{payment.orderId}</td>
+                      <td>{formatCurrency(payment.amount)}</td>
+                      <td>{payment.method}</td>
+                      <td>
+                        <span
+                          className={`status status-${getStatusClass(payment.status)}`}
+                        >
+                          {getStatusText(payment.status)}
+                        </span>
+                      </td>
+                      <td>{formatDate(payment.date)}</td>
+                      <td>
+                        {/* WIDGETS PAIEMENTS */}
+                        <div className="table-widgets">
+                          <button
+                            className="widget-sm widget-view"
+                            onClick={() => handleViewPayment(payment)}
+                            title="Consulter"
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-edit"
+                            onClick={() => {
+                              setEditingItem(payment);
+                              setShowPaymentModal(true);
+                            }}
+                            title="Modifier"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button
+                            className="widget-sm widget-delete"
+                            onClick={() => handleDeletePayment(payment.id)}
+                            title="Supprimer"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -611,7 +1331,7 @@ function App() {
         )}
 
         {/* CLIENTS */}
-        {currentSection === 'customers' && (
+        {currentSection === "customers" && (
           <div className="section">
             <div className="section-header">
               <h2>Gestion des Clients</h2>
@@ -620,64 +1340,101 @@ function App() {
                   <i className="fas fa-search"></i>
                   <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder="Rechercher un client..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button className="btn btn-primary" onClick={() => {
-                  setEditingItem(null);
-                  setShowCustomerModal(true);
-                }}>
-                  <i className="fas fa-user-plus"></i> Nouveau
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowCustomerModal(true);
+                  }}
+                >
+                  <i className="fas fa-user-plus"></i> Nouveau client
                 </button>
               </div>
             </div>
 
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Commandes</th>
-                    <th>Total</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredCustomers.map(customer => (
-                    <tr key={customer.id}>
-                      <td><strong>{customer.name}</strong></td>
-                      <td>{customer.email}</td>
-                      <td>{customer.phone}</td>
-                      <td>{customer.orders}</td>
-                      <td>{formatCurrency(customer.total)}</td>
-                      <td className="actions-cell">
-                        <button className="action-btn view" onClick={() => handleView('customer', customer)} title="Consulter">
-                          <i className="fas fa-eye"></i>
-                        </button>
-                        <button className="action-btn edit" onClick={() => {
-                          setEditingItem(customer);
-                          setShowCustomerModal(true);
-                        }} title="Modifier">
-                          <i className="fas fa-pen"></i>
-                        </button>
-                        <button className="action-btn delete" onClick={() => handleDelete('customer', customer.id)} title="Supprimer">
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="customers-grid">
+              {filteredCustomers.map((customer) => (
+                <div key={customer.id} className="customer-card">
+                  <div className="customer-header">
+                    <div className="customer-avatar">
+                      {customer.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h3>{customer.name}</h3>
+                      <p>{customer.city}</p>
+                    </div>
+                  </div>
+                  <div className="customer-details">
+                    <p>
+                      <i className="fas fa-envelope"></i> {customer.email}
+                    </p>
+                    <p>
+                      <i className="fas fa-phone"></i> {customer.phone}
+                    </p>
+                    <p>
+                      <i className="fas fa-map-marker-alt"></i>{" "}
+                      {customer.address}
+                    </p>
+                  </div>
+                  <div className="customer-stats">
+                    <div>
+                      <span className="stat-number">{customer.orders}</span>
+                      <span className="stat-label">Commandes</span>
+                    </div>
+                    <div>
+                      <span className="stat-number">
+                        {formatCurrency(customer.total)}
+                      </span>
+                      <span className="stat-label">Dépensé</span>
+                    </div>
+                    <div>
+                      <span className="stat-number">
+                        {formatDate(customer.since)}
+                      </span>
+                      <span className="stat-label">Depuis</span>
+                    </div>
+                  </div>
+
+                  {/* WIDGETS CLIENTS */}
+                  <div className="customer-widgets">
+                    <button
+                      className="widget-btn widget-view"
+                      onClick={() => handleViewCustomer(customer)}
+                    >
+                      <i className="fas fa-eye"></i>
+                      <span>Consulter</span>
+                    </button>
+                    <button
+                      className="widget-btn widget-edit"
+                      onClick={() => {
+                        setEditingItem(customer);
+                        setShowCustomerModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i>
+                      <span>Modifier</span>
+                    </button>
+                    <button
+                      className="widget-btn widget-delete"
+                      onClick={() => handleDeleteCustomer(customer.id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                      <span>Supprimer</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* AVIS */}
-        {currentSection === 'reviews' && (
+        {currentSection === "reviews" && (
           <div className="section">
             <div className="section-header">
               <h2>Gestion des Avis</h2>
@@ -686,72 +1443,978 @@ function App() {
                   <i className="fas fa-search"></i>
                   <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder="Rechercher un avis..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button className="btn btn-primary" onClick={() => {
-                  setEditingItem(null);
-                  setShowReviewModal(true);
-                }}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowReviewModal(true);
+                  }}
+                >
                   <i className="fas fa-plus"></i> Nouvel avis
                 </button>
               </div>
             </div>
 
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Client</th>
-                    <th>Produit</th>
-                    <th>Note</th>
-                    <th>Avis</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredReviews.map(review => (
-                    <tr key={review.id}>
-                      <td>{review.client}</td>
-                      <td>{review.product}</td>
-                      <td>{'⭐'.repeat(review.rating)}</td>
-                      <td>{review.comment}</td>
-                      <td>
-                        <span className={`status status-${getStatusClass(review.status)}`}>
-                          {getStatusText(review.status)}
-                        </span>
-                      </td>
-                      <td className="actions-cell">
-                        <button className="action-btn view" onClick={() => handleView('review', review)} title="Consulter">
-                          <i className="fas fa-eye"></i>
-                        </button>
-                        <button className="action-btn edit" onClick={() => {
-                          setEditingItem(review);
-                          setShowReviewModal(true);
-                        }} title="Modifier">
-                          <i className="fas fa-pen"></i>
-                        </button>
-                        <button className="action-btn delete" onClick={() => handleDelete('review', review.id)} title="Supprimer">
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="reviews-grid">
+              {filteredReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className={`review-card review-${review.status}`}
+                >
+                  <div className="review-header">
+                    <div>
+                      <h4>{review.client}</h4>
+                      <div className="rating">
+                        {[...Array(5)].map((_, i) => (
+                          <i
+                            key={i}
+                            className={`fas fa-star ${i < review.rating ? "star-filled" : "star-empty"}`}
+                          ></i>
+                        ))}
+                      </div>
+                    </div>
+                    <span
+                      className={`review-status status-${getStatusClass(review.status)}`}
+                    >
+                      {getStatusText(review.status)}
+                    </span>
+                  </div>
+                  <p className="review-product">
+                    <strong>Produit:</strong> {review.product}
+                  </p>
+                  <p className="review-comment">"{review.comment}"</p>
+                  <div className="review-footer">
+                    <span className="review-date">
+                      {formatDate(review.date)}
+                    </span>
+                    <span className="review-helpful">
+                      <i className="fas fa-thumbs-up"></i> {review.helpful}
+                    </span>
+                  </div>
+
+                  {/* WIDGETS AVIS */}
+                  <div className="review-widgets">
+                    <button
+                      className="widget-btn widget-view"
+                      onClick={() => handleViewReview(review)}
+                    >
+                      <i className="fas fa-eye"></i>
+                      <span>Consulter</span>
+                    </button>
+                    {review.status === "en_attente" && (
+                      <button
+                        className="widget-btn widget-approve"
+                        onClick={() => handleApproveReview(review.id)}
+                      >
+                        <i className="fas fa-check"></i>
+                        <span>Approuver</span>
+                      </button>
+                    )}
+                    <button
+                      className="widget-btn widget-edit"
+                      onClick={() => {
+                        setEditingItem(review);
+                        setShowReviewModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i>
+                      <span>Modifier</span>
+                    </button>
+                    <button
+                      className="widget-btn widget-delete"
+                      onClick={() => handleDeleteReview(review.id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                      <span>Supprimer</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CONTACT */}
+        {currentSection === "contact" && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Contact Société</h2>
+              <div className="header-actions">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleViewContact()}
+                >
+                  <i className="fas fa-eye"></i> Voir
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(companyInfo);
+                    setShowContactModal(true);
+                  }}
+                >
+                  <i className="fas fa-edit"></i> Modifier
+                </button>
+              </div>
+            </div>
+
+            <div className="contact-container">
+              <div className="contact-info-grid">
+                <div className="contact-card">
+                  <i className="fas fa-store"></i>
+                  <h3>{companyInfo.name}</h3>
+                  <p>RC: {companyInfo.rc}</p>
+                  <p>MF: {companyInfo.matriculeFiscal}</p>
+                </div>
+
+                <div className="contact-card">
+                  <i className="fas fa-phone"></i>
+                  <h3>Téléphone</h3>
+                  <p>{companyInfo.phone}</p>
+                  <p>Fax: {companyInfo.fax}</p>
+                </div>
+
+                <div className="contact-card">
+                  <i className="fas fa-envelope"></i>
+                  <h3>Email</h3>
+                  <p>{companyInfo.email}</p>
+                </div>
+
+                <div className="contact-card">
+                  <i className="fas fa-map-marker-alt"></i>
+                  <h3>Adresse</h3>
+                  <p>{companyInfo.address}</p>
+                </div>
+
+                <div className="contact-card">
+                  <i className="fas fa-clock"></i>
+                  <h3>Horaires</h3>
+                  <p>{companyInfo.hours}</p>
+                </div>
+              </div>
+
+              <div className="contact-social-section">
+                <h3>Réseaux sociaux</h3>
+                <div className="social-media-grid">
+                  <a
+                    href={companyInfo.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card facebook"
+                  >
+                    <i className="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                  </a>
+                  <a
+                    href={companyInfo.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card instagram"
+                  >
+                    <i className="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                  </a>
+                  <a
+                    href={companyInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card linkedin"
+                  >
+                    <i className="fab fa-linkedin-in"></i>
+                    <span>LinkedIn</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="contact-form-section">
+                <h3>Formulaire de contact</h3>
+                <form
+                  className="contact-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    showNotification("Message envoyé avec succès", "success");
+                    e.target.reset();
+                  }}
+                >
+                  <div className="form-row">
+                    <input type="text" placeholder="Votre nom" required />
+                    <input type="email" placeholder="Votre email" required />
+                  </div>
+                  <input type="text" placeholder="Sujet" required />
+                  <textarea
+                    rows="4"
+                    placeholder="Votre message..."
+                    required
+                  ></textarea>
+                  <button type="submit" className="btn btn-primary">
+                    Envoyer le message
+                  </button>
+                </form>
+              </div>
+
+              <div className="contact-map">
+                <h3>Notre emplacement</h3>
+                <iframe
+                  title="map"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3191.803638702294!2d10.181667315290648!3d36.85840897993147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd35a8c6b8b8b9%3A0x5b8b8b8b8b8b8b8b!2sTunis!5e0!3m2!1sfr!2stn!4v1620000000000!5m2!1sfr!2stn"
+                  width="100%"
+                  height="300"
+                  style={{ border: 0, borderRadius: "12px" }}
+                  allowFullScreen=""
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* PARAMÈTRES */}
+        {currentSection === "settings" && (
+          <div className="settings-section">
+            <h2>Paramètres</h2>
+            <div className="settings-card">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setCompanyInfo({
+                    ...companyInfo,
+                    name: e.target.name.value,
+                    email: e.target.email.value,
+                    phone: e.target.phone.value,
+                    address: e.target.address.value,
+                    hours: e.target.hours.value,
+                  });
+                  showNotification("Paramètres sauvegardés", "success");
+                }}
+              >
+                <div className="form-group">
+                  <label>Nom du magasin</label>
+                  <input
+                    type="text"
+                    name="name"
+                    defaultValue={companyInfo.name}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    defaultValue={companyInfo.email}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Téléphone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    defaultValue={companyInfo.phone}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Adresse</label>
+                  <input
+                    type="text"
+                    name="address"
+                    defaultValue={companyInfo.address}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Horaires</label>
+                  <input
+                    type="text"
+                    name="hours"
+                    defaultValue={companyInfo.hours}
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary">
+                  Sauvegarder
+                </button>
+              </form>
             </div>
           </div>
         )}
       </div>
 
-      {/* Modales */}
-      {showProductModal && <ProductModal />}
-      {showOrderModal && <OrderModal />}
-      {showCustomerModal && <CustomerModal />}
-      {showReviewModal && <ReviewModal />}
+      {/* MODAL PRODUIT */}
+      {showProductModal && (
+        <div className="modal" onClick={() => setShowProductModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un produit</h2>
+              <button
+                className="close"
+                onClick={() => setShowProductModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.price = parseFloat(data.price);
+                data.stock = parseInt(data.stock);
+
+                if (editingItem) {
+                  handleEditProduct(data);
+                } else {
+                  handleAddProduct(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Nom</label>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={editingItem?.name}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Marque</label>
+                <input
+                  type="text"
+                  name="brand"
+                  defaultValue={editingItem?.brand}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Catégorie</label>
+                <select
+                  name="category"
+                  defaultValue={editingItem?.category || "Croquettes"}
+                >
+                  <option value="Croquettes">Croquettes</option>
+                  <option value="Pâtées">Pâtées</option>
+                  <option value="Accessoires">Accessoires</option>
+                  <option value="Friandises">Friandises</option>
+                  <option value="Soins">Soins</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Prix (DT)</label>
+                <input
+                  type="number"
+                  name="price"
+                  step="0.001"
+                  defaultValue={editingItem?.price}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Stock</label>
+                <input
+                  type="number"
+                  name="stock"
+                  defaultValue={editingItem?.stock}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Image URL</label>
+                <input
+                  type="url"
+                  name="image"
+                  defaultValue={editingItem?.image}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  rows="3"
+                  defaultValue={editingItem?.description}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL COMMANDE */}
+      {showOrderModal && (
+        <div className="modal" onClick={() => setShowOrderModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} une commande</h2>
+              <button
+                className="close"
+                onClick={() => setShowOrderModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.amount = parseFloat(data.amount);
+
+                if (editingItem) {
+                  handleEditOrder(data);
+                } else {
+                  handleAddOrder(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Client</label>
+                <input
+                  type="text"
+                  name="client"
+                  defaultValue={editingItem?.client}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Téléphone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  defaultValue={editingItem?.phone}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Adresse</label>
+                <input
+                  type="text"
+                  name="deliveryAddress"
+                  defaultValue={editingItem?.deliveryAddress}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Montant (DT)</label>
+                <input
+                  type="number"
+                  name="amount"
+                  step="0.001"
+                  defaultValue={editingItem?.amount}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Paiement</label>
+                <select
+                  name="paymentMethod"
+                  defaultValue={editingItem?.paymentMethod || "Carte bancaire"}
+                >
+                  <option value="Carte bancaire">Carte bancaire</option>
+                  <option value="Espèces">Espèces</option>
+                  <option value="Virement">Virement</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL FACTURE */}
+      {showInvoiceModal && (
+        <div className="modal" onClick={() => setShowInvoiceModal(false)}>
+          <div
+            className="modal-content modal-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Créer"} une facture</h2>
+              <button
+                className="close"
+                onClick={() => setShowInvoiceModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.amount = parseFloat(data.amount);
+                data.subtotal = parseFloat(data.subtotal);
+                data.tax = parseFloat(data.tax);
+                data.total = parseFloat(data.total);
+
+                if (editingItem) {
+                  handleEditInvoice(data);
+                } else {
+                  handleAddInvoice(data);
+                }
+              }}
+            >
+              <div className="form-row">
+                <div className="form-group">
+                  <label>N° Commande</label>
+                  <input
+                    type="text"
+                    name="orderId"
+                    defaultValue={editingItem?.orderId}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Client</label>
+                  <input
+                    type="text"
+                    name="client"
+                    defaultValue={editingItem?.client}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Date échéance</label>
+                  <input
+                    type="date"
+                    name="dueDate"
+                    defaultValue={editingItem?.dueDate}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Statut</label>
+                  <select
+                    name="status"
+                    defaultValue={editingItem?.status || "en_attente"}
+                  >
+                    <option value="en_attente">En attente</option>
+                    <option value="payée">Payée</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Sous-total</label>
+                  <input
+                    type="number"
+                    name="subtotal"
+                    step="0.001"
+                    defaultValue={editingItem?.subtotal}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>TVA</label>
+                  <input
+                    type="number"
+                    name="tax"
+                    step="0.001"
+                    defaultValue={editingItem?.tax}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Total</label>
+                <input
+                  type="number"
+                  name="total"
+                  step="0.001"
+                  defaultValue={editingItem?.total}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Créer"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PAIEMENT */}
+      {showPaymentModal && (
+        <div className="modal" onClick={() => setShowPaymentModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un paiement</h2>
+              <button
+                className="close"
+                onClick={() => setShowPaymentModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.amount = parseFloat(data.amount);
+
+                if (editingItem) {
+                  handleEditPayment(data);
+                } else {
+                  handleAddPayment(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Client</label>
+                <input
+                  type="text"
+                  name="client"
+                  defaultValue={editingItem?.client}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>N° Commande</label>
+                <input
+                  type="text"
+                  name="orderId"
+                  defaultValue={editingItem?.orderId}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Montant</label>
+                <input
+                  type="number"
+                  name="amount"
+                  step="0.001"
+                  defaultValue={editingItem?.amount}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Méthode</label>
+                <select
+                  name="method"
+                  defaultValue={editingItem?.method || "Carte bancaire"}
+                >
+                  <option value="Carte bancaire">Carte bancaire</option>
+                  <option value="Espèces">Espèces</option>
+                  <option value="Virement">Virement</option>
+                  <option value="Chèque">Chèque</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Statut</label>
+                <select
+                  name="status"
+                  defaultValue={editingItem?.status || "en_attente"}
+                >
+                  <option value="en_attente">En attente</option>
+                  <option value="validé">Validé</option>
+                  <option value="remboursé">Remboursé</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL CLIENT */}
+      {showCustomerModal && (
+        <div className="modal" onClick={() => setShowCustomerModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un client</h2>
+              <button
+                className="close"
+                onClick={() => setShowCustomerModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                if (editingItem) {
+                  handleEditCustomer(data);
+                } else {
+                  handleAddCustomer(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Nom complet</label>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={editingItem?.name}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  defaultValue={editingItem?.email}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Téléphone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  defaultValue={editingItem?.phone}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Adresse</label>
+                <input
+                  type="text"
+                  name="address"
+                  defaultValue={editingItem?.address}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Ville</label>
+                <input
+                  type="text"
+                  name="city"
+                  defaultValue={editingItem?.city}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL AVIS */}
+      {showReviewModal && (
+        <div className="modal" onClick={() => setShowReviewModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un avis</h2>
+              <button
+                className="close"
+                onClick={() => setShowReviewModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.rating = parseInt(data.rating);
+
+                if (editingItem) {
+                  handleEditReview(data);
+                } else {
+                  handleAddReview(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Client</label>
+                <input
+                  type="text"
+                  name="client"
+                  defaultValue={editingItem?.client}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Produit</label>
+                <input
+                  type="text"
+                  name="product"
+                  defaultValue={editingItem?.product}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Note (1-5)</label>
+                <input
+                  type="number"
+                  name="rating"
+                  min="1"
+                  max="5"
+                  defaultValue={editingItem?.rating || 5}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Commentaire</label>
+                <textarea
+                  name="comment"
+                  rows="3"
+                  defaultValue={editingItem?.comment}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL CONTACT */}
+      {showContactModal && (
+        <div className="modal" onClick={() => setShowContactModal(false)}>
+          <div
+            className="modal-content modal-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>
+                {editingItem ? "Modifier" : "Ajouter"} les informations de
+                contact
+              </h2>
+              <button
+                className="close"
+                onClick={() => setShowContactModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                if (editingItem) {
+                  handleEditContact(data);
+                } else {
+                  handleAddContact(data);
+                }
+              }}
+            >
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nom de la société</label>
+                  <input
+                    type="text"
+                    name="name"
+                    defaultValue={companyInfo.name}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    defaultValue={companyInfo.email}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Téléphone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    defaultValue={companyInfo.phone}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Fax</label>
+                  <input
+                    type="text"
+                    name="fax"
+                    defaultValue={companyInfo.fax}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Adresse</label>
+                <input
+                  type="text"
+                  name="address"
+                  defaultValue={companyInfo.address}
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>RC</label>
+                  <input type="text" name="rc" defaultValue={companyInfo.rc} />
+                </div>
+                <div className="form-group">
+                  <label>Matricule Fiscal</label>
+                  <input
+                    type="text"
+                    name="matriculeFiscal"
+                    defaultValue={companyInfo.matriculeFiscal}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Horaires</label>
+                <input
+                  type="text"
+                  name="hours"
+                  defaultValue={companyInfo.hours}
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Facebook</label>
+                  <input
+                    type="url"
+                    name="facebook"
+                    defaultValue={companyInfo.facebook}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Instagram</label>
+                  <input
+                    type="url"
+                    name="instagram"
+                    defaultValue={companyInfo.instagram}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>LinkedIn</label>
+                <input
+                  type="url"
+                  name="linkedin"
+                  defaultValue={companyInfo.linkedin}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
