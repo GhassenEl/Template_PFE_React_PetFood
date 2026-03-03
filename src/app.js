@@ -12,6 +12,8 @@ function App() {
     message: "",
     type: "",
   });
+  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState([]);
 
   // États pour les modales
   const [showProductModal, setShowProductModal] = useState(false);
@@ -20,7 +22,6 @@ function App() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
   // ==================== DONNÉES PRODUITS ====================
@@ -32,8 +33,7 @@ function App() {
       price: 89.5,
       stock: 23,
       description: "Croquettes premium pour chien adulte - 15kg",
-      image:
-        "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=200&h=200&fit=crop",
+      image: "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=200&h=200&fit=crop",
       brand: "Royal Canin",
       rating: 4.5,
     },
@@ -44,8 +44,7 @@ function App() {
       price: 12.75,
       stock: 45,
       description: "Pâtée sans céréales au saumon - 400g",
-      image:
-        "https://images.unsplash.com/photo-1589924691995-4008b2a9f9d6?w=200&h=200&fit=crop",
+      image: "https://images.unsplash.com/photo-1589924691995-4008b2a9f9d6?w=200&h=200&fit=crop",
       brand: "Gourmet",
       rating: 4.8,
     },
@@ -56,8 +55,7 @@ function App() {
       price: 18.25,
       stock: 12,
       description: "Litière agglomérante naturelle - 10kg",
-      image:
-        "https://images.unsplash.com/photo-1583336663277-620dc5a1d9d3?w=200&h=200&fit=crop",
+      image: "https://images.unsplash.com/photo-1583336663277-620dc5a1d9d3?w=200&h=200&fit=crop",
       brand: "Nature",
       rating: 4.2,
     },
@@ -68,34 +66,9 @@ function App() {
       price: 8.5,
       stock: 34,
       description: "Brosse douce pour chien à poils longs",
-      image:
-        "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=200&h=200&fit=crop",
+      image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=200&h=200&fit=crop",
       brand: "PetGroom",
       rating: 4.0,
-    },
-    {
-      id: 5,
-      name: "Croquettes Hill's Chat",
-      category: "Croquettes",
-      price: 42.5,
-      stock: 67,
-      description: "Croquettes pour chat stérilisé - 8kg",
-      image:
-        "https://images.unsplash.com/photo-1623381184712-525bc1652346?w=200&h=200&fit=crop",
-      brand: "Hill's",
-      rating: 4.7,
-    },
-    {
-      id: 6,
-      name: "Arbre à chat Premium",
-      category: "Accessoires",
-      price: 189.9,
-      stock: 8,
-      description: "Arbre à chat avec griffoir et cachettes",
-      image:
-        "https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=200&h=200&fit=crop",
-      brand: "CatKing",
-      rating: 4.9,
     },
   ]);
 
@@ -132,7 +105,7 @@ function App() {
       amount: 267,
       status: "attente",
       paymentMethod: "Carte bancaire",
-      products: [{ id: 6, name: "Arbre à chat", quantity: 1, price: 189.9 }],
+      products: [{ id: 3, name: "Litière Naturelle", quantity: 2, price: 18.25 }],
       deliveryAddress: "12 Rue des Jardins, Sfax",
       phone: "+216 96 543 210",
     },
@@ -202,16 +175,6 @@ function App() {
       date: "2026-03-02",
       orderId: "CMD002",
     },
-    {
-      id: "PAY003",
-      transactionId: "TRX78947",
-      client: "Youssef Jaziri",
-      amount: 267,
-      method: "Carte bancaire",
-      status: "en_attente",
-      date: "2026-03-01",
-      orderId: "CMD003",
-    },
   ]);
 
   // ==================== DONNÉES CLIENTS ====================
@@ -240,18 +203,6 @@ function App() {
       since: "2025-02-20",
       lastOrder: "2026-03-02",
     },
-    {
-      id: 3,
-      name: "Youssef Jaziri",
-      email: "youssef.jaziri@email.com",
-      phone: "+216 96 543 210",
-      address: "12 Rue des Jardins, Sfax",
-      city: "Sfax",
-      orders: 3,
-      total: 267,
-      since: "2026-01-10",
-      lastOrder: "2026-03-01",
-    },
   ]);
 
   // ==================== DONNÉES AVIS ====================
@@ -261,8 +212,7 @@ function App() {
       client: "Ahmed Ben Ali",
       product: "Croquettes Royal Canin",
       rating: 5,
-      comment:
-        "Excellent produit ! Mes chiens adorent, leur pelage est plus brillant.",
+      comment: "Excellent produit ! Mes chiens adorent, leur pelage est plus brillant.",
       date: "2026-03-01",
       status: "approuvé",
       helpful: 12,
@@ -277,33 +227,7 @@ function App() {
       status: "approuvé",
       helpful: 8,
     },
-    {
-      id: 3,
-      client: "Sonia Mansour",
-      product: "Brosse Démêlante",
-      rating: 3,
-      comment: "Produit correct mais un peu cher.",
-      date: "2026-02-26",
-      status: "en_attente",
-      helpful: 3,
-    },
   ]);
-
-  // ==================== DONNÉES SOCIÉTÉ ====================
-  const [companyInfo, setCompanyInfo] = useState({
-    name: "PetFood TN",
-    email: "contact@petfood.tn",
-    phone: "+216 71 123 456",
-    fax: "+216 71 123 457",
-    address: "Immeuble PetFood, Rue du Lac, Les Berges du Lac, Tunis",
-    facebook: "https://facebook.com/petfoodtn",
-    instagram: "https://instagram.com/petfoodtn",
-    linkedin: "https://linkedin.com/company/petfoodtn",
-    hours: "Lun-Ven: 9h-18h, Sam: 9h-13h",
-    rc: "B18263472026",
-    matriculeFiscal: "1234567/A/M/000",
-    map: "https://maps.google.com/?q=Tunis",
-  });
 
   // ==================== STATISTIQUES ====================
   const [stats, setStats] = useState({
@@ -332,7 +256,7 @@ function App() {
         .filter((p) => p.status === "validé")
         .reduce((sum, p) => sum + p.amount, 0),
       pendingOrders: orders.filter(
-        (o) => o.status === "attente" || o.status === "encours",
+        (o) => o.status === "attente" || o.status === "encours"
       ).length,
       monthlyRevenue: payments
         .filter((p) => {
@@ -429,44 +353,63 @@ function App() {
     setNotification({ show: true, message, type });
     setTimeout(
       () => setNotification({ show: false, message: "", type: "" }),
-      3000,
+      3000
     );
+  };
+
+  const addToHistory = (action, type, item) => {
+    const historyEntry = {
+      id: Date.now(),
+      action,
+      type,
+      item: item.name || item.client || item.id,
+      date: new Date().toISOString(),
+      user: "El Jezi Ghassen",
+    };
+    setHistory([historyEntry, ...history].slice(0, 50));
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    showNotification("Historique effacé", "info");
   };
 
   // ==================== CRUD PRODUITS ====================
   const handleAddProduct = (productData) => {
     const newId = Math.max(...products.map((p) => p.id), 0) + 1;
-    setProducts([
-      ...products,
-      {
-        id: newId,
-        ...productData,
-        rating: 0,
-      },
-    ]);
+    const newProduct = {
+      id: newId,
+      ...productData,
+      rating: 0,
+    };
+    setProducts([...products, newProduct]);
     setShowProductModal(false);
+    addToHistory("Ajout", "Produit", newProduct);
     showNotification("Produit ajouté avec succès", "success");
   };
 
   const handleEditProduct = (productData) => {
-    setProducts(
-      products.map((p) =>
-        p.id === editingItem.id ? { ...p, ...productData } : p,
-      ),
+    const updatedProducts = products.map((p) =>
+      p.id === editingItem.id ? { ...p, ...productData } : p
     );
+    setProducts(updatedProducts);
     setShowProductModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Produit", editingItem);
     showNotification("Produit modifié avec succès", "success");
   };
 
   const handleDeleteProduct = (id) => {
+    const product = products.find((p) => p.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
       setProducts(products.filter((p) => p.id !== id));
+      addToHistory("Suppression", "Produit", product);
       showNotification("Produit supprimé", "info");
     }
   };
 
   const handleViewProduct = (product) => {
+    addToHistory("Consultation", "Produit", product);
     alert(`
       PRODUIT: ${product.name}
       Marque: ${product.brand}
@@ -481,40 +424,44 @@ function App() {
   // ==================== CRUD COMMANDES ====================
   const handleAddOrder = (orderData) => {
     const newId = `CMD${String(orders.length + 1).padStart(3, "0")}`;
-    setOrders([
-      ...orders,
-      {
-        id: newId,
-        ...orderData,
-        date: new Date().toISOString().split("T")[0],
-        status: "attente",
-      },
-    ]);
+    const newOrder = {
+      id: newId,
+      ...orderData,
+      date: new Date().toISOString().split("T")[0],
+      status: "attente",
+    };
+    setOrders([...orders, newOrder]);
     setShowOrderModal(false);
+    addToHistory("Ajout", "Commande", newOrder);
     showNotification("Commande ajoutée avec succès", "success");
   };
 
   const handleEditOrder = (orderData) => {
-    setOrders(
-      orders.map((o) => (o.id === editingItem.id ? { ...o, ...orderData } : o)),
+    const updatedOrders = orders.map((o) =>
+      o.id === editingItem.id ? { ...o, ...orderData } : o
     );
+    setOrders(updatedOrders);
     setShowOrderModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Commande", editingItem);
     showNotification("Commande modifiée avec succès", "success");
   };
 
   const handleDeleteOrder = (id) => {
+    const order = orders.find((o) => o.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette commande ?")) {
       setOrders(orders.filter((o) => o.id !== id));
+      addToHistory("Suppression", "Commande", order);
       showNotification("Commande supprimée", "info");
     }
   };
 
   const handleViewOrder = (order) => {
+    addToHistory("Consultation", "Commande", order);
     const productList = order.products
       .map(
         (p) =>
-          `- ${p.name} x${p.quantity} : ${formatCurrency(p.price * p.quantity)}`,
+          `- ${p.name} x${p.quantity} : ${formatCurrency(p.price * p.quantity)}`
       )
       .join("\n");
 
@@ -537,37 +484,39 @@ function App() {
   // ==================== CRUD FACTURES ====================
   const handleAddInvoice = (invoiceData) => {
     const newId = `INV${String(invoices.length + 1).padStart(3, "0")}`;
-    setInvoices([
-      ...invoices,
-      {
-        id: newId,
-        ...invoiceData,
-        date: new Date().toISOString().split("T")[0],
-      },
-    ]);
+    const newInvoice = {
+      id: newId,
+      ...invoiceData,
+      date: new Date().toISOString().split("T")[0],
+    };
+    setInvoices([...invoices, newInvoice]);
     setShowInvoiceModal(false);
+    addToHistory("Ajout", "Facture", newInvoice);
     showNotification("Facture créée avec succès", "success");
   };
 
   const handleEditInvoice = (invoiceData) => {
-    setInvoices(
-      invoices.map((i) =>
-        i.id === editingItem.id ? { ...i, ...invoiceData } : i,
-      ),
+    const updatedInvoices = invoices.map((i) =>
+      i.id === editingItem.id ? { ...i, ...invoiceData } : i
     );
+    setInvoices(updatedInvoices);
     setShowInvoiceModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Facture", editingItem);
     showNotification("Facture modifiée avec succès", "success");
   };
 
   const handleDeleteInvoice = (id) => {
+    const invoice = invoices.find((i) => i.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) {
       setInvoices(invoices.filter((i) => i.id !== id));
+      addToHistory("Suppression", "Facture", invoice);
       showNotification("Facture supprimée", "info");
     }
   };
 
   const handleViewInvoice = (invoice) => {
+    addToHistory("Consultation", "Facture", invoice);
     const itemsList = invoice.items
       .map((item) => `- ${item.description} : ${formatCurrency(item.total)}`)
       .join("\n");
@@ -592,38 +541,40 @@ function App() {
   // ==================== CRUD PAIEMENTS ====================
   const handleAddPayment = (paymentData) => {
     const newId = `PAY${String(payments.length + 1).padStart(3, "0")}`;
-    setPayments([
-      ...payments,
-      {
-        id: newId,
-        transactionId: `TRX${Math.floor(Math.random() * 90000 + 10000)}`,
-        ...paymentData,
-        date: new Date().toISOString().split("T")[0],
-      },
-    ]);
+    const newPayment = {
+      id: newId,
+      transactionId: `TRX${Math.floor(Math.random() * 90000 + 10000)}`,
+      ...paymentData,
+      date: new Date().toISOString().split("T")[0],
+    };
+    setPayments([...payments, newPayment]);
     setShowPaymentModal(false);
+    addToHistory("Ajout", "Paiement", newPayment);
     showNotification("Paiement ajouté avec succès", "success");
   };
 
   const handleEditPayment = (paymentData) => {
-    setPayments(
-      payments.map((p) =>
-        p.id === editingItem.id ? { ...p, ...paymentData } : p,
-      ),
+    const updatedPayments = payments.map((p) =>
+      p.id === editingItem.id ? { ...p, ...paymentData } : p
     );
+    setPayments(updatedPayments);
     setShowPaymentModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Paiement", editingItem);
     showNotification("Paiement modifié avec succès", "success");
   };
 
   const handleDeletePayment = (id) => {
+    const payment = payments.find((p) => p.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce paiement ?")) {
       setPayments(payments.filter((p) => p.id !== id));
+      addToHistory("Suppression", "Paiement", payment);
       showNotification("Paiement supprimé", "info");
     }
   };
 
   const handleViewPayment = (payment) => {
+    addToHistory("Consultation", "Paiement", payment);
     alert(`
       PAIEMENT: ${payment.id}
       Transaction: ${payment.transactionId}
@@ -639,39 +590,41 @@ function App() {
   // ==================== CRUD CLIENTS ====================
   const handleAddCustomer = (customerData) => {
     const newId = Math.max(...customers.map((c) => c.id), 0) + 1;
-    setCustomers([
-      ...customers,
-      {
-        id: newId,
-        orders: 0,
-        total: 0,
-        since: new Date().toISOString().split("T")[0],
-        ...customerData,
-      },
-    ]);
+    const newCustomer = {
+      id: newId,
+      orders: 0,
+      total: 0,
+      since: new Date().toISOString().split("T")[0],
+      ...customerData,
+    };
+    setCustomers([...customers, newCustomer]);
     setShowCustomerModal(false);
+    addToHistory("Ajout", "Client", newCustomer);
     showNotification("Client ajouté avec succès", "success");
   };
 
   const handleEditCustomer = (customerData) => {
-    setCustomers(
-      customers.map((c) =>
-        c.id === editingItem.id ? { ...c, ...customerData } : c,
-      ),
+    const updatedCustomers = customers.map((c) =>
+      c.id === editingItem.id ? { ...c, ...customerData } : c
     );
+    setCustomers(updatedCustomers);
     setShowCustomerModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Client", editingItem);
     showNotification("Client modifié avec succès", "success");
   };
 
   const handleDeleteCustomer = (id) => {
+    const customer = customers.find((c) => c.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce client ?")) {
       setCustomers(customers.filter((c) => c.id !== id));
+      addToHistory("Suppression", "Client", customer);
       showNotification("Client supprimé", "info");
     }
   };
 
   const handleViewCustomer = (customer) => {
+    addToHistory("Consultation", "Client", customer);
     alert(`
       CLIENT: ${customer.name}
       Email: ${customer.email}
@@ -690,46 +643,50 @@ function App() {
   // ==================== CRUD AVIS ====================
   const handleAddReview = (reviewData) => {
     const newId = Math.max(...reviews.map((r) => r.id), 0) + 1;
-    setReviews([
-      ...reviews,
-      {
-        id: newId,
-        date: new Date().toISOString().split("T")[0],
-        status: "en_attente",
-        helpful: 0,
-        ...reviewData,
-      },
-    ]);
+    const newReview = {
+      id: newId,
+      date: new Date().toISOString().split("T")[0],
+      status: "en_attente",
+      helpful: 0,
+      ...reviewData,
+    };
+    setReviews([...reviews, newReview]);
     setShowReviewModal(false);
+    addToHistory("Ajout", "Avis", newReview);
     showNotification("Avis ajouté avec succès", "success");
   };
 
   const handleEditReview = (reviewData) => {
-    setReviews(
-      reviews.map((r) =>
-        r.id === editingItem.id ? { ...r, ...reviewData } : r,
-      ),
+    const updatedReviews = reviews.map((r) =>
+      r.id === editingItem.id ? { ...r, ...reviewData } : r
     );
+    setReviews(updatedReviews);
     setShowReviewModal(false);
     setEditingItem(null);
+    addToHistory("Modification", "Avis", editingItem);
     showNotification("Avis modifié avec succès", "success");
   };
 
   const handleDeleteReview = (id) => {
+    const review = reviews.find((r) => r.id === id);
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet avis ?")) {
       setReviews(reviews.filter((r) => r.id !== id));
+      addToHistory("Suppression", "Avis", review);
       showNotification("Avis supprimé", "info");
     }
   };
 
   const handleApproveReview = (id) => {
+    const review = reviews.find((r) => r.id === id);
     setReviews(
-      reviews.map((r) => (r.id === id ? { ...r, status: "approuvé" } : r)),
+      reviews.map((r) => (r.id === id ? { ...r, status: "approuvé" } : r))
     );
+    addToHistory("Approbation", "Avis", review);
     showNotification("Avis approuvé", "success");
   };
 
   const handleViewReview = (review) => {
+    addToHistory("Consultation", "Avis", review);
     alert(`
       AVIS:
       Client: ${review.client}
@@ -742,67 +699,33 @@ function App() {
     `);
   };
 
-  // ==================== CRUD CONTACT ====================
-  const handleAddContact = (contactData) => {
-    setCompanyInfo({ ...companyInfo, ...contactData });
-    setShowContactModal(false);
-    showNotification("Informations de contact mises à jour", "success");
-  };
-
-  const handleEditContact = (contactData) => {
-    setCompanyInfo({ ...companyInfo, ...contactData });
-    setShowContactModal(false);
-    setEditingItem(null);
-    showNotification("Contact modifié avec succès", "success");
-  };
-
-  const handleViewContact = () => {
-    alert(`
-      INFORMATIONS DE CONTACT:
-      
-      Société: ${companyInfo.name}
-      Email: ${companyInfo.email}
-      Téléphone: ${companyInfo.phone}
-      Fax: ${companyInfo.fax}
-      Adresse: ${companyInfo.address}
-      Horaires: ${companyInfo.hours}
-      RC: ${companyInfo.rc}
-      MF: ${companyInfo.matriculeFiscal}
-      
-      Réseaux sociaux:
-      - Facebook: ${companyInfo.facebook}
-      - Instagram: ${companyInfo.instagram}
-      - LinkedIn: ${companyInfo.linkedin}
-    `);
-  };
-
   // ==================== FILTRES ====================
   const filteredProducts = products.filter(
     (p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.brand.toLowerCase().includes(searchTerm.toLowerCase()),
+      p.brand.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredOrders = orders.filter(
     (o) =>
       o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       o.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      o.phone.includes(searchTerm),
+      o.phone.includes(searchTerm)
   );
 
   const filteredInvoices = invoices.filter(
     (i) =>
       i.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       i.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      i.orderId.toLowerCase().includes(searchTerm.toLowerCase()),
+      i.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredPayments = payments.filter(
     (p) =>
       p.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.orderId.toLowerCase().includes(searchTerm.toLowerCase()),
+      p.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredCustomers = customers.filter(
@@ -810,14 +733,14 @@ function App() {
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.phone.includes(searchTerm) ||
-      c.city.toLowerCase().includes(searchTerm.toLowerCase()),
+      c.city.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredReviews = reviews.filter(
     (r) =>
       r.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.comment.toLowerCase().includes(searchTerm.toLowerCase()),
+      r.comment.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // ==================== RENDU ====================
@@ -829,6 +752,50 @@ function App() {
       {notification.show && (
         <div className={`notification notification-${notification.type}`}>
           {notification.message}
+        </div>
+      )}
+
+      {/* Historique Modal */}
+      {showHistory && (
+        <div className="modal" onClick={() => setShowHistory(false)}>
+          <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Historique des actions</h2>
+              <div>
+                <button className="btn-outline" onClick={clearHistory}>
+                  <i className="fas fa-trash"></i> Effacer
+                </button>
+                <button className="close" onClick={() => setShowHistory(false)}>
+                  &times;
+                </button>
+              </div>
+            </div>
+            <div className="history-list">
+              {history.length === 0 ? (
+                <p className="text-center">Aucune action enregistrée</p>
+              ) : (
+                history.map((entry) => (
+                  <div key={entry.id} className="history-item">
+                    <div className="history-icon">
+                      {entry.action === "Ajout" && <i className="fas fa-plus-circle text-success"></i>}
+                      {entry.action === "Modification" && <i className="fas fa-edit text-warning"></i>}
+                      {entry.action === "Suppression" && <i className="fas fa-trash text-danger"></i>}
+                      {entry.action === "Consultation" && <i className="fas fa-eye text-info"></i>}
+                      {entry.action === "Approbation" && <i className="fas fa-check-circle text-success"></i>}
+                    </div>
+                    <div className="history-content">
+                      <p>
+                        <strong>{entry.action}</strong> - {entry.type} : {entry.item}
+                      </p>
+                      <p className="history-meta">
+                        Par {entry.user} le {formatDate(entry.date)} à {new Date(entry.date).toLocaleTimeString("fr-FR")}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -851,8 +818,6 @@ function App() {
             { id: "payments", icon: "credit-card", label: "Paiements" },
             { id: "customers", icon: "users", label: "Clients" },
             { id: "reviews", icon: "star", label: "Avis" },
-            { id: "contact", icon: "envelope", label: "Contact" },
-            { id: "settings", icon: "cog", label: "Paramètres" },
           ].map((section) => (
             <div
               key={section.id}
@@ -871,6 +836,9 @@ function App() {
         <div className="sidebar-footer">
           <p>El Jezi Ghassen</p>
           <p className="admin-role">Administrateur</p>
+          <button className="history-btn" onClick={() => setShowHistory(true)}>
+            <i className="fas fa-history"></i> Historique
+          </button>
         </div>
       </div>
 
@@ -887,8 +855,6 @@ function App() {
               {currentSection === "payments" && "Gestion des Paiements"}
               {currentSection === "customers" && "Gestion des Clients"}
               {currentSection === "reviews" && "Gestion des Avis"}
-              {currentSection === "contact" && "Contact Société"}
-              {currentSection === "settings" && "Paramètres"}
             </h1>
             <p>El Jezi Ghassen, Admin</p>
           </div>
@@ -1014,31 +980,28 @@ function App() {
                     </p>
                     <p className="product-description">{product.description}</p>
 
-                    {/* WIDGETS PRODUITS */}
-                    <div className="product-widgets">
+                    {/* BOUTONS PRODUITS */}
+                    <div className="product-actions">
                       <button
-                        className="widget-btn widget-view"
+                        className="action-btn view"
                         onClick={() => handleViewProduct(product)}
                       >
-                        <i className="fas fa-eye"></i>
-                        <span>Consulter</span>
+                        <i className="fas fa-eye"></i> Consulter
                       </button>
                       <button
-                        className="widget-btn widget-edit"
+                        className="action-btn edit"
                         onClick={() => {
                           setEditingItem(product);
                           setShowProductModal(true);
                         }}
                       >
-                        <i className="fas fa-edit"></i>
-                        <span>Modifier</span>
+                        <i className="fas fa-edit"></i> Modifier
                       </button>
                       <button
-                        className="widget-btn widget-delete"
+                        className="action-btn delete"
                         onClick={() => handleDeleteProduct(product.id)}
                       >
-                        <i className="fas fa-trash"></i>
-                        <span>Supprimer</span>
+                        <i className="fas fa-trash"></i> Supprimer
                       </button>
                     </div>
                   </div>
@@ -1105,34 +1068,28 @@ function App() {
                           {getStatusText(order.status)}
                         </span>
                       </td>
-                      <td>
-                        {/* WIDGETS COMMANDES */}
-                        <div className="table-widgets">
-                          <button
-                            className="widget-sm widget-view"
-                            onClick={() => handleViewOrder(order)}
-                            title="Consulter"
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-edit"
-                            onClick={() => {
-                              setEditingItem(order);
-                              setShowOrderModal(true);
-                            }}
-                            title="Modifier"
-                          >
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-delete"
-                            onClick={() => handleDeleteOrder(order.id)}
-                            title="Supprimer"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
+                      <td className="actions-cell">
+                        <button
+                          className="action-btn view"
+                          onClick={() => handleViewOrder(order)}
+                        >
+                          <i className="fas fa-eye"></i> Consulter
+                        </button>
+                        <button
+                          className="action-btn edit"
+                          onClick={() => {
+                            setEditingItem(order);
+                            setShowOrderModal(true);
+                          }}
+                        >
+                          <i className="fas fa-edit"></i> Modifier
+                        </button>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => handleDeleteOrder(order.id)}
+                        >
+                          <i className="fas fa-trash"></i> Supprimer
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -1199,34 +1156,28 @@ function App() {
                           {getStatusText(invoice.status)}
                         </span>
                       </td>
-                      <td>
-                        {/* WIDGETS FACTURES */}
-                        <div className="table-widgets">
-                          <button
-                            className="widget-sm widget-view"
-                            onClick={() => handleViewInvoice(invoice)}
-                            title="Consulter"
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-edit"
-                            onClick={() => {
-                              setEditingItem(invoice);
-                              setShowInvoiceModal(true);
-                            }}
-                            title="Modifier"
-                          >
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-delete"
-                            onClick={() => handleDeleteInvoice(invoice.id)}
-                            title="Supprimer"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
+                      <td className="actions-cell">
+                        <button
+                          className="action-btn view"
+                          onClick={() => handleViewInvoice(invoice)}
+                        >
+                          <i className="fas fa-eye"></i> Consulter
+                        </button>
+                        <button
+                          className="action-btn edit"
+                          onClick={() => {
+                            setEditingItem(invoice);
+                            setShowInvoiceModal(true);
+                          }}
+                        >
+                          <i className="fas fa-edit"></i> Modifier
+                        </button>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => handleDeleteInvoice(invoice.id)}
+                        >
+                          <i className="fas fa-trash"></i> Supprimer
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -1293,34 +1244,28 @@ function App() {
                         </span>
                       </td>
                       <td>{formatDate(payment.date)}</td>
-                      <td>
-                        {/* WIDGETS PAIEMENTS */}
-                        <div className="table-widgets">
-                          <button
-                            className="widget-sm widget-view"
-                            onClick={() => handleViewPayment(payment)}
-                            title="Consulter"
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-edit"
-                            onClick={() => {
-                              setEditingItem(payment);
-                              setShowPaymentModal(true);
-                            }}
-                            title="Modifier"
-                          >
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button
-                            className="widget-sm widget-delete"
-                            onClick={() => handleDeletePayment(payment.id)}
-                            title="Supprimer"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
+                      <td className="actions-cell">
+                        <button
+                          className="action-btn view"
+                          onClick={() => handleViewPayment(payment)}
+                        >
+                          <i className="fas fa-eye"></i> Consulter
+                        </button>
+                        <button
+                          className="action-btn edit"
+                          onClick={() => {
+                            setEditingItem(payment);
+                            setShowPaymentModal(true);
+                          }}
+                        >
+                          <i className="fas fa-edit"></i> Modifier
+                        </button>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => handleDeletePayment(payment.id)}
+                        >
+                          <i className="fas fa-trash"></i> Supprimer
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -1400,31 +1345,28 @@ function App() {
                     </div>
                   </div>
 
-                  {/* WIDGETS CLIENTS */}
-                  <div className="customer-widgets">
+                  {/* BOUTONS CLIENTS */}
+                  <div className="customer-actions">
                     <button
-                      className="widget-btn widget-view"
+                      className="action-btn view"
                       onClick={() => handleViewCustomer(customer)}
                     >
-                      <i className="fas fa-eye"></i>
-                      <span>Consulter</span>
+                      <i className="fas fa-eye"></i> Consulter
                     </button>
                     <button
-                      className="widget-btn widget-edit"
+                      className="action-btn edit"
                       onClick={() => {
                         setEditingItem(customer);
                         setShowCustomerModal(true);
                       }}
                     >
-                      <i className="fas fa-edit"></i>
-                      <span>Modifier</span>
+                      <i className="fas fa-edit"></i> Modifier
                     </button>
                     <button
-                      className="widget-btn widget-delete"
+                      className="action-btn delete"
                       onClick={() => handleDeleteCustomer(customer.id)}
                     >
-                      <i className="fas fa-trash"></i>
-                      <span>Supprimer</span>
+                      <i className="fas fa-trash"></i> Supprimer
                     </button>
                   </div>
                 </div>
@@ -1497,245 +1439,40 @@ function App() {
                     </span>
                   </div>
 
-                  {/* WIDGETS AVIS */}
-                  <div className="review-widgets">
+                  {/* BOUTONS AVIS */}
+                  <div className="review-actions">
                     <button
-                      className="widget-btn widget-view"
+                      className="action-btn view"
                       onClick={() => handleViewReview(review)}
                     >
-                      <i className="fas fa-eye"></i>
-                      <span>Consulter</span>
+                      <i className="fas fa-eye"></i> Consulter
                     </button>
                     {review.status === "en_attente" && (
                       <button
-                        className="widget-btn widget-approve"
+                        className="action-btn approve"
                         onClick={() => handleApproveReview(review.id)}
                       >
-                        <i className="fas fa-check"></i>
-                        <span>Approuver</span>
+                        <i className="fas fa-check"></i> Approuver
                       </button>
                     )}
                     <button
-                      className="widget-btn widget-edit"
+                      className="action-btn edit"
                       onClick={() => {
                         setEditingItem(review);
                         setShowReviewModal(true);
                       }}
                     >
-                      <i className="fas fa-edit"></i>
-                      <span>Modifier</span>
+                      <i className="fas fa-edit"></i> Modifier
                     </button>
                     <button
-                      className="widget-btn widget-delete"
+                      className="action-btn delete"
                       onClick={() => handleDeleteReview(review.id)}
                     >
-                      <i className="fas fa-trash"></i>
-                      <span>Supprimer</span>
+                      <i className="fas fa-trash"></i> Supprimer
                     </button>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        )}
-
-        {/* CONTACT */}
-        {currentSection === "contact" && (
-          <div className="section">
-            <div className="section-header">
-              <h2>Contact Société</h2>
-              <div className="header-actions">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleViewContact()}
-                >
-                  <i className="fas fa-eye"></i> Voir
-                </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    setEditingItem(companyInfo);
-                    setShowContactModal(true);
-                  }}
-                >
-                  <i className="fas fa-edit"></i> Modifier
-                </button>
-              </div>
-            </div>
-
-            <div className="contact-container">
-              <div className="contact-info-grid">
-                <div className="contact-card">
-                  <i className="fas fa-store"></i>
-                  <h3>{companyInfo.name}</h3>
-                  <p>RC: {companyInfo.rc}</p>
-                  <p>MF: {companyInfo.matriculeFiscal}</p>
-                </div>
-
-                <div className="contact-card">
-                  <i className="fas fa-phone"></i>
-                  <h3>Téléphone</h3>
-                  <p>{companyInfo.phone}</p>
-                  <p>Fax: {companyInfo.fax}</p>
-                </div>
-
-                <div className="contact-card">
-                  <i className="fas fa-envelope"></i>
-                  <h3>Email</h3>
-                  <p>{companyInfo.email}</p>
-                </div>
-
-                <div className="contact-card">
-                  <i className="fas fa-map-marker-alt"></i>
-                  <h3>Adresse</h3>
-                  <p>{companyInfo.address}</p>
-                </div>
-
-                <div className="contact-card">
-                  <i className="fas fa-clock"></i>
-                  <h3>Horaires</h3>
-                  <p>{companyInfo.hours}</p>
-                </div>
-              </div>
-
-              <div className="contact-social-section">
-                <h3>Réseaux sociaux</h3>
-                <div className="social-media-grid">
-                  <a
-                    href={companyInfo.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-card facebook"
-                  >
-                    <i className="fab fa-facebook-f"></i>
-                    <span>Facebook</span>
-                  </a>
-                  <a
-                    href={companyInfo.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-card instagram"
-                  >
-                    <i className="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                  </a>
-                  <a
-                    href={companyInfo.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-card linkedin"
-                  >
-                    <i className="fab fa-linkedin-in"></i>
-                    <span>LinkedIn</span>
-                  </a>
-                </div>
-              </div>
-
-              <div className="contact-form-section">
-                <h3>Formulaire de contact</h3>
-                <form
-                  className="contact-form"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    showNotification("Message envoyé avec succès", "success");
-                    e.target.reset();
-                  }}
-                >
-                  <div className="form-row">
-                    <input type="text" placeholder="Votre nom" required />
-                    <input type="email" placeholder="Votre email" required />
-                  </div>
-                  <input type="text" placeholder="Sujet" required />
-                  <textarea
-                    rows="4"
-                    placeholder="Votre message..."
-                    required
-                  ></textarea>
-                  <button type="submit" className="btn btn-primary">
-                    Envoyer le message
-                  </button>
-                </form>
-              </div>
-
-              <div className="contact-map">
-                <h3>Notre emplacement</h3>
-                <iframe
-                  title="map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3191.803638702294!2d10.181667315290648!3d36.85840897993147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd35a8c6b8b8b9%3A0x5b8b8b8b8b8b8b8b!2sTunis!5e0!3m2!1sfr!2stn!4v1620000000000!5m2!1sfr!2stn"
-                  width="100%"
-                  height="300"
-                  style={{ border: 0, borderRadius: "12px" }}
-                  allowFullScreen=""
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* PARAMÈTRES */}
-        {currentSection === "settings" && (
-          <div className="settings-section">
-            <h2>Paramètres</h2>
-            <div className="settings-card">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setCompanyInfo({
-                    ...companyInfo,
-                    name: e.target.name.value,
-                    email: e.target.email.value,
-                    phone: e.target.phone.value,
-                    address: e.target.address.value,
-                    hours: e.target.hours.value,
-                  });
-                  showNotification("Paramètres sauvegardés", "success");
-                }}
-              >
-                <div className="form-group">
-                  <label>Nom du magasin</label>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={companyInfo.name}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    defaultValue={companyInfo.email}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Téléphone</label>
-                  <input
-                    type="text"
-                    name="phone"
-                    defaultValue={companyInfo.phone}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Adresse</label>
-                  <input
-                    type="text"
-                    name="address"
-                    defaultValue={companyInfo.address}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Horaires</label>
-                  <input
-                    type="text"
-                    name="hours"
-                    defaultValue={companyInfo.hours}
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                  Sauvegarder
-                </button>
-              </form>
             </div>
           </div>
         )}
@@ -2269,143 +2006,6 @@ function App() {
                   rows="3"
                   defaultValue={editingItem?.comment}
                   required
-                />
-              </div>
-              <button type="submit" className="btn btn-primary">
-                {editingItem ? "Modifier" : "Ajouter"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL CONTACT */}
-      {showContactModal && (
-        <div className="modal" onClick={() => setShowContactModal(false)}>
-          <div
-            className="modal-content modal-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header">
-              <h2>
-                {editingItem ? "Modifier" : "Ajouter"} les informations de
-                contact
-              </h2>
-              <button
-                className="close"
-                onClick={() => setShowContactModal(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = Object.fromEntries(formData.entries());
-
-                if (editingItem) {
-                  handleEditContact(data);
-                } else {
-                  handleAddContact(data);
-                }
-              }}
-            >
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Nom de la société</label>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={companyInfo.name}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    defaultValue={companyInfo.email}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Téléphone</label>
-                  <input
-                    type="text"
-                    name="phone"
-                    defaultValue={companyInfo.phone}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Fax</label>
-                  <input
-                    type="text"
-                    name="fax"
-                    defaultValue={companyInfo.fax}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Adresse</label>
-                <input
-                  type="text"
-                  name="address"
-                  defaultValue={companyInfo.address}
-                  required
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>RC</label>
-                  <input type="text" name="rc" defaultValue={companyInfo.rc} />
-                </div>
-                <div className="form-group">
-                  <label>Matricule Fiscal</label>
-                  <input
-                    type="text"
-                    name="matriculeFiscal"
-                    defaultValue={companyInfo.matriculeFiscal}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Horaires</label>
-                <input
-                  type="text"
-                  name="hours"
-                  defaultValue={companyInfo.hours}
-                  required
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Facebook</label>
-                  <input
-                    type="url"
-                    name="facebook"
-                    defaultValue={companyInfo.facebook}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Instagram</label>
-                  <input
-                    type="url"
-                    name="instagram"
-                    defaultValue={companyInfo.instagram}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>LinkedIn</label>
-                <input
-                  type="url"
-                  name="linkedin"
-                  defaultValue={companyInfo.linkedin}
                 />
               </div>
               <button type="submit" className="btn btn-primary">
