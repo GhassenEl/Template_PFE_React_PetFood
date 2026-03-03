@@ -14,6 +14,7 @@ function App() {
   });
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
 
   // États pour les modales
   const [showProductModal, setShowProductModal] = useState(false);
@@ -751,51 +752,18 @@ function App() {
       {/* Notification */}
       {notification.show && (
         <div className={`notification notification-${notification.type}`}>
-          {notification.message}
-        </div>
-      )}
-
-      {/* Historique Modal */}
-      {showHistory && (
-        <div className="modal" onClick={() => setShowHistory(false)}>
-          <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Historique des actions</h2>
-              <div>
-                <button className="btn-outline" onClick={clearHistory}>
-                  <i className="fas fa-trash"></i> Effacer
-                </button>
-                <button className="close" onClick={() => setShowHistory(false)}>
-                  &times;
-                </button>
-              </div>
-            </div>
-            <div className="history-list">
-              {history.length === 0 ? (
-                <p className="text-center">Aucune action enregistrée</p>
-              ) : (
-                history.map((entry) => (
-                  <div key={entry.id} className="history-item">
-                    <div className="history-icon">
-                      {entry.action === "Ajout" && <i className="fas fa-plus-circle text-success"></i>}
-                      {entry.action === "Modification" && <i className="fas fa-edit text-warning"></i>}
-                      {entry.action === "Suppression" && <i className="fas fa-trash text-danger"></i>}
-                      {entry.action === "Consultation" && <i className="fas fa-eye text-info"></i>}
-                      {entry.action === "Approbation" && <i className="fas fa-check-circle text-success"></i>}
-                    </div>
-                    <div className="history-content">
-                      <p>
-                        <strong>{entry.action}</strong> - {entry.type} : {entry.item}
-                      </p>
-                      <p className="history-meta">
-                        Par {entry.user} le {formatDate(entry.date)} à {new Date(entry.date).toLocaleTimeString("fr-FR")}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+          <div className="notification-icon">
+            {notification.type === "success" && <i className="fas fa-check-circle"></i>}
+            {notification.type === "error" && <i className="fas fa-exclamation-circle"></i>}
+            {notification.type === "info" && <i className="fas fa-info-circle"></i>}
+            {notification.type === "warning" && <i className="fas fa-exclamation-triangle"></i>}
           </div>
+          <div className="notification-content">
+            <p>{notification.message}</p>
+          </div>
+          <button className="notification-close" onClick={() => setNotification({ show: false, message: "", type: "" })}>
+            <i className="fas fa-times"></i>
+          </button>
         </div>
       )}
 
@@ -828,17 +796,65 @@ function App() {
               }}
             >
               <i className={`fas fa-${section.icon}`}></i>
-              {section.label}
+              <span className="nav-label">{section.label}</span>
+              {section.id === "dashboard" && unreadNotifications > 0 && (
+                <span className="nav-badge">{unreadNotifications}</span>
+              )}
             </div>
           ))}
         </nav>
 
+        {/* Historique dans la sidebar */}
+        <div className="sidebar-history">
+          <div className="sidebar-history-header">
+            <h3>
+              <i className="fas fa-history"></i> Historique récent
+            </h3>
+            {history.length > 0 && (
+              <button className="clear-history-btn" onClick={clearHistory} title="Effacer l'historique">
+                <i className="fas fa-trash"></i>
+              </button>
+            )}
+          </div>
+          <div className="sidebar-history-list">
+            {history.length === 0 ? (
+              <p className="history-empty">Aucune action récente</p>
+            ) : (
+              history.slice(0, 5).map((entry) => (
+                <div key={entry.id} className="sidebar-history-item">
+                  <div className={`history-icon-small ${entry.action.toLowerCase()}`}>
+                    {entry.action === "Ajout" && <i className="fas fa-plus-circle"></i>}
+                    {entry.action === "Modification" && <i className="fas fa-edit"></i>}
+                    {entry.action === "Suppression" && <i className="fas fa-trash"></i>}
+                    {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
+                    {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
+                  </div>
+                  <div className="history-info">
+                    <p className="history-action">
+                      <strong>{entry.action}</strong> - {entry.type}
+                    </p>
+                    <p className="history-item-name">{entry.item}</p>
+                    <p className="history-time">{new Date(entry.date).toLocaleTimeString("fr-FR")}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          {history.length > 5 && (
+            <button className="view-all-history" onClick={() => setShowHistory(true)}>
+              Voir tout ({history.length})
+            </button>
+          )}
+        </div>
+
         <div className="sidebar-footer">
-          <p>El Jezi Ghassen</p>
-          <p className="admin-role">Administrateur</p>
-          <button className="history-btn" onClick={() => setShowHistory(true)}>
-            <i className="fas fa-history"></i> Historique
-          </button>
+          <div className="user-info">
+            <div className="avatar">EG</div>
+            <div>
+              <p className="user-name">El Jezi Ghassen</p>
+              <p className="user-role">Administrateur</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -856,7 +872,9 @@ function App() {
               {currentSection === "customers" && "Gestion des Clients"}
               {currentSection === "reviews" && "Gestion des Avis"}
             </h1>
-            <p>El Jezi Ghassen, Admin</p>
+            <p className="header-date">
+              <i className="fas fa-calendar-alt"></i> {date} • <i className="fas fa-clock"></i> {time}
+            </p>
           </div>
 
           <div className="admin-info">
@@ -867,17 +885,17 @@ function App() {
               <i className={`fas fa-${isDarkMode ? "sun" : "moon"}`}></i>
             </button>
 
+            <button className="notification-btn">
+              <i className="fas fa-bell"></i>
+              {unreadNotifications > 0 && <span className="notification-badge">{unreadNotifications}</span>}
+            </button>
+
             <div className="profile">
               <div className="avatar">EG</div>
               <div>
                 <strong>El Jezi Ghassen</strong>
                 <p className="admin-role">ADMINISTRATEUR</p>
               </div>
-            </div>
-
-            <div className="date-time">
-              <div className="date">{date}</div>
-              <div className="time">{time}</div>
             </div>
           </div>
         </div>
@@ -919,6 +937,41 @@ function App() {
                   {formatCurrency(stats.revenue)}
                 </div>
                 <div className="stat-label">CA Total</div>
+              </div>
+            </div>
+
+            {/* Graphique simple des ventes */}
+            <div className="chart-container">
+              <h3>Ventes des 7 derniers jours</h3>
+              <div className="simple-chart">
+                <div className="bar" style={{height: '40px'}}>
+                  <span className="bar-label">Lun</span>
+                  <span className="bar-value">450</span>
+                </div>
+                <div className="bar" style={{height: '65px'}}>
+                  <span className="bar-label">Mar</span>
+                  <span className="bar-value">780</span>
+                </div>
+                <div className="bar" style={{height: '55px'}}>
+                  <span className="bar-label">Mer</span>
+                  <span className="bar-value">620</span>
+                </div>
+                <div className="bar" style={{height: '80px'}}>
+                  <span className="bar-label">Jeu</span>
+                  <span className="bar-value">950</span>
+                </div>
+                <div className="bar" style={{height: '70px'}}>
+                  <span className="bar-label">Ven</span>
+                  <span className="bar-value">840</span>
+                </div>
+                <div className="bar" style={{height: '90px'}}>
+                  <span className="bar-label">Sam</span>
+                  <span className="bar-value">1100</span>
+                </div>
+                <div className="bar" style={{height: '60px'}}>
+                  <span className="bar-label">Dim</span>
+                  <span className="bar-value">720</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1477,6 +1530,50 @@ function App() {
           </div>
         )}
       </div>
+
+      {/* MODAL HISTORIQUE COMPLET */}
+      {showHistory && (
+        <div className="modal" onClick={() => setShowHistory(false)}>
+          <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Historique complet des actions</h2>
+              <div>
+                <button className="btn-outline" onClick={clearHistory}>
+                  <i className="fas fa-trash"></i> Effacer tout
+                </button>
+                <button className="close" onClick={() => setShowHistory(false)}>
+                  &times;
+                </button>
+              </div>
+            </div>
+            <div className="history-list-full">
+              {history.length === 0 ? (
+                <p className="text-center">Aucune action enregistrée</p>
+              ) : (
+                history.map((entry) => (
+                  <div key={entry.id} className="history-item-full">
+                    <div className={`history-icon ${entry.action.toLowerCase()}`}>
+                      {entry.action === "Ajout" && <i className="fas fa-plus-circle"></i>}
+                      {entry.action === "Modification" && <i className="fas fa-edit"></i>}
+                      {entry.action === "Suppression" && <i className="fas fa-trash"></i>}
+                      {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
+                      {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
+                    </div>
+                    <div className="history-content">
+                      <p>
+                        <strong>{entry.action}</strong> - {entry.type} : {entry.item}
+                      </p>
+                      <p className="history-meta">
+                        Par {entry.user} le {formatDate(entry.date)} à {new Date(entry.date).toLocaleTimeString("fr-FR")}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL PRODUIT */}
       {showProductModal && (
