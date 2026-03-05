@@ -4,7 +4,6 @@ import "./app.css";
 function App() {
   // ==================== ÉTAT GLOBAL ====================
   const [currentSection, setCurrentSection] = useState("dashboard");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [notification, setNotification] = useState({
@@ -14,7 +13,7 @@ function App() {
   });
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
-  const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
 
   // États pour les modales
   const [showProductModal, setShowProductModal] = useState(false);
@@ -23,6 +22,8 @@ function App() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showVetModal, setShowVetModal] = useState(false);
+  const [showVaccineModal, setShowVaccineModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
   // ==================== DONNÉES PRODUITS ====================
@@ -230,6 +231,267 @@ function App() {
     },
   ]);
 
+  // ==================== DONNÉES VISITES VÉTÉRINAIRES ====================
+  const [vetVisits, setVetVisits] = useState([
+    {
+      id: 1,
+      petName: "Rex",
+      petType: "Chien",
+      ownerName: "Mehdi Ben Ahmed",
+      date: "2026-03-15",
+      time: "10:30",
+      reason: "Vaccin annuel",
+      vetName: "Dr. Karim Mansour",
+      status: "confirmé",
+      notes: "Rappel vaccin CHPPiL",
+    },
+    {
+      id: 2,
+      petName: "Mimi",
+      petType: "Chat",
+      ownerName: "Sarra Trabelsi",
+      date: "2026-03-18",
+      time: "14:00",
+      reason: "Consultation",
+      vetName: "Dr. Leila Ben Salem",
+      status: "en_attente",
+      notes: "Problème de pelage",
+    },
+    {
+      id: 3,
+      petName: "Max",
+      petType: "Chien",
+      ownerName: "Youssef Jaziri",
+      date: "2026-03-10",
+      time: "09:15",
+      reason: "Suivi",
+      vetName: "Dr. Karim Mansour",
+      status: "terminé",
+      notes: "Contrôle poids OK",
+    },
+  ]);
+
+  // ==================== DONNÉES CONSEILS VACCINS ====================
+  const [vaccineAdvice, setVaccineAdvice] = useState([
+    {
+      id: 1,
+      title: "Calendrier vaccinal chiot",
+      category: "Chien",
+      summary: "Les vaccins essentiels pour votre chiot",
+      content: "À 8 semaines : primo-vaccination (CHPPiL). À 12 semaines : rappel. À 16 semaines : rappel et rage. Annuel : rappel.",
+      author: "Dr. Karim Mansour",
+      date: "2026-02-15",
+      likes: 45,
+      views: 234,
+    },
+    {
+      id: 2,
+      title: "Vaccins indispensables pour chat",
+      category: "Chat",
+      summary: "Protégez votre félin avec les bons vaccins",
+      content: "Les vaccins core : typhus, coryza, leucose. Rappel annuel recommandé pour une protection optimale.",
+      author: "Dr. Leila Ben Salem",
+      date: "2026-02-20",
+      likes: 38,
+      views: 189,
+    },
+    {
+      id: 3,
+      title: "Préparation avant la vaccination",
+      category: "Conseils",
+      summary: "Comment préparer votre animal pour sa visite vaccinale",
+      content: "Jeûne de 4h, vermifugation 15 jours avant, carnet de santé à jour. Signaler tout changement de comportement.",
+      author: "Dr. Karim Mansour",
+      date: "2026-02-25",
+      likes: 27,
+      views: 156,
+    },
+    {
+      id: 4,
+      title: "Effets secondaires des vaccins",
+      category: "Informations",
+      summary: "Ce qu'il faut savoir sur les réactions post-vaccinales",
+      content: "Léger abattement, perte d'appétit possible. Surveiller 24-48h. Consulter si fièvre élevée ou vomissements.",
+      author: "Dr. Leila Ben Salem",
+      date: "2026-03-01",
+      likes: 52,
+      views: 278,
+    },
+  ]);
+
+  // ==================== NOTIFICATIONS EN TEMPS RÉEL ====================
+  const [realtimeNotifications, setRealtimeNotifications] = useState([
+    {
+      id: 1,
+      type: "order",
+      title: "Nouvelle commande #CMD004",
+      message: "Commande de 189 DT par Mehdi Ben Ahmed",
+      time: new Date(Date.now() - 5 * 60000).toISOString(), // 5 minutes ago
+      read: false,
+      icon: "shopping-cart",
+      color: "#4CAF50",
+      action: "Voir la commande",
+    },
+    {
+      id: 2,
+      type: "stock",
+      title: "Stock faible : Croquettes",
+      message: "Il ne reste que 3 unités de Croquettes Royal Canin",
+      time: new Date(Date.now() - 15 * 60000).toISOString(), // 15 minutes ago
+      read: false,
+      icon: "exclamation-triangle",
+      color: "#FF9800",
+      action: "Réapprovisionner",
+    },
+    {
+      id: 3,
+      type: "review",
+      title: "Nouvel avis client",
+      message: "Fatma a laissé un avis 5★ sur les Pâtées Gourmet",
+      time: new Date(Date.now() - 120 * 60000).toISOString(), // 2 hours ago
+      read: true,
+      icon: "star",
+      color: "#FFC107",
+      action: "Voir l'avis",
+    },
+    {
+      id: 4,
+      type: "payment",
+      title: "Paiement reçu",
+      message: "Paiement de 145 DT validé pour la commande #CMD002",
+      time: new Date(Date.now() - 180 * 60000).toISOString(), // 3 hours ago
+      read: true,
+      icon: "credit-card",
+      color: "#2196F3",
+      action: "Voir le paiement",
+    },
+    {
+      id: 5,
+      type: "vet",
+      title: "Rappel rendez-vous",
+      message: "Rendez-vous pour Rex demain à 10h30",
+      time: new Date(Date.now() - 240 * 60000).toISOString(), // 4 hours ago
+      read: false,
+      icon: "clinic-medical",
+      color: "#9C27B0",
+      action: "Voir détails",
+    },
+    {
+      id: 6,
+      type: "vaccine",
+      title: "Nouveau conseil vaccin",
+      message: "Article publié : 'Calendrier vaccinal chiot'",
+      time: new Date(Date.now() - 1440 * 60000).toISOString(), // 1 day ago
+      read: false,
+      icon: "syringe",
+      color: "#00BCD4",
+      action: "Lire l'article",
+    },
+  ]);
+
+  // Simuler l'arrivée de nouvelles notifications en temps réel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Simuler une nouvelle commande toutes les 45 secondes
+      const randomAmount = Math.floor(Math.random() * 200 + 50);
+      const randomId = Math.floor(Math.random() * 1000);
+      const clients = ["Mehdi Ben Ahmed", "Sarra Trabelsi", "Youssef Jaziri", "Amira Khelif", "Karim Bouazizi"];
+      const randomClient = clients[Math.floor(Math.random() * clients.length)];
+      
+      const newOrderNotification = {
+        id: Date.now(),
+        type: "order",
+        title: "🛒 Nouvelle commande en cours",
+        message: `Commande #CMD${randomId} de ${randomAmount} DT par ${randomClient}`,
+        time: new Date().toISOString(),
+        read: false,
+        icon: "shopping-cart",
+        color: "#4CAF50",
+        action: "Voir la commande",
+      };
+      
+      setRealtimeNotifications(prev => [newOrderNotification, ...prev].slice(0, 20));
+      
+      // Afficher une notification toast
+      showNotification(`🛒 Nouvelle commande de ${randomAmount} DT reçue !`, "success");
+      
+      // Faire sonner la cloche (effet visuel)
+      const bell = document.querySelector('.notification-bell');
+      if (bell) {
+        bell.classList.add('ringing');
+        setTimeout(() => bell.classList.remove('ringing'), 1000);
+      }
+    }, 45000); // Toutes les 45 secondes
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Vérifier les stocks faibles toutes les 30 secondes
+  useEffect(() => {
+    const stockInterval = setInterval(() => {
+      const lowStockProducts = products.filter(p => p.stock < 10);
+      lowStockProducts.forEach(product => {
+        const existingNotification = realtimeNotifications.find(
+          n => n.type === "stock" && n.message.includes(product.name)
+        );
+        
+        if (!existingNotification) {
+          const lowStockNotification = {
+            id: Date.now() + product.id,
+            type: "stock",
+            title: "⚠️ Alerte stock faible",
+            message: `${product.name} - Stock: ${product.stock} unités`,
+            time: new Date().toISOString(),
+            read: false,
+            icon: "exclamation-triangle",
+            color: "#FF9800",
+            action: "Réapprovisionner",
+          };
+          
+          setRealtimeNotifications(prev => [lowStockNotification, ...prev].slice(0, 20));
+          showNotification(`⚠️ Stock faible : ${product.name}`, "warning");
+          
+          // Faire sonner la cloche
+          const bell = document.querySelector('.notification-bell');
+          if (bell) {
+            bell.classList.add('ringing');
+            setTimeout(() => bell.classList.remove('ringing'), 1000);
+          }
+        }
+      });
+    }, 30000); // Toutes les 30 secondes
+
+    return () => clearInterval(stockInterval);
+  }, [products, realtimeNotifications]);
+
+  // Simuler un nouvel avis toutes les 2 minutes
+  useEffect(() => {
+    const reviewInterval = setInterval(() => {
+      const reviewers = ["Ahmed Ben Ali", "Fatma Said", "Nadia Khelifi", "Sami Trabelsi", "Leila Mansour"];
+      const products_list = ["Croquettes Royal Canin", "Pâtée Gourmet", "Litière Naturelle", "Brosse Démêlante"];
+      const randomReviewer = reviewers[Math.floor(Math.random() * reviewers.length)];
+      const randomProduct = products_list[Math.floor(Math.random() * products_list.length)];
+      const randomRating = Math.floor(Math.random() * 2) + 4; // 4 ou 5 étoiles
+      
+      const newReviewNotification = {
+        id: Date.now(),
+        type: "review",
+        title: "⭐ Nouvel avis client",
+        message: `${randomReviewer} a laissé un avis ${randomRating}★ sur ${randomProduct}`,
+        time: new Date().toISOString(),
+        read: false,
+        icon: "star",
+        color: "#FFC107",
+        action: "Voir l'avis",
+      };
+      
+      setRealtimeNotifications(prev => [newReviewNotification, ...prev].slice(0, 20));
+      showNotification(`⭐ Nouvel avis ${randomRating}★ reçu !`, "info");
+    }, 120000); // Toutes les 2 minutes
+
+    return () => clearInterval(reviewInterval);
+  }, []);
+
   // ==================== STATISTIQUES ====================
   const [stats, setStats] = useState({
     products: 0,
@@ -238,11 +500,13 @@ function App() {
     revenue: 0,
     pendingOrders: 0,
     monthlyRevenue: 0,
+    upcomingVetVisits: 0,
+    vaccineArticles: 0,
   });
 
   useEffect(() => {
     calculateStats();
-  }, [products, orders, customers, payments]);
+  }, [products, orders, customers, payments, vetVisits, vaccineAdvice]);
 
   const calculateStats = () => {
     const now = new Date();
@@ -269,33 +533,19 @@ function App() {
           );
         })
         .reduce((sum, p) => sum + p.amount, 0),
+      upcomingVetVisits: vetVisits.filter(v => v.status === "confirmé" || v.status === "en_attente").length,
+      vaccineArticles: vaccineAdvice.length,
     });
   };
 
-  // ==================== THÈME SOMBRE ====================
+  // ==================== DATE ET HEURE ====================
   useEffect(() => {
-    const savedTheme = localStorage.getItem("petfood-theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      document.body.classList.add("dark-mode");
-    }
-
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 60000);
 
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark-mode");
-      localStorage.setItem("petfood-theme", "dark");
-    } else {
-      document.body.classList.remove("dark-mode");
-      localStorage.setItem("petfood-theme", "light");
-    }
-  }, [isDarkMode]);
 
   // ==================== FONCTIONS UTILITAIRES ====================
   const formatDate = (date) => {
@@ -318,6 +568,21 @@ function App() {
     };
   };
 
+  const formatRelativeTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "À l'instant";
+    if (diffMins < 60) return `Il y a ${diffMins} min`;
+    if (diffHours < 24) return `Il y a ${diffHours} h`;
+    if (diffDays === 1) return "Hier";
+    return `Il y a ${diffDays} jours`;
+  };
+
   const formatCurrency = (amount) => {
     return amount.toLocaleString() + " DT";
   };
@@ -332,6 +597,8 @@ function App() {
       remboursé: "Remboursé",
       approuvé: "Approuvé",
       payée: "Payée",
+      confirmé: "Confirmé",
+      terminé: "Terminé",
     };
     return map[status] || status;
   };
@@ -342,10 +609,12 @@ function App() {
       validé: "success",
       approuvé: "success",
       payée: "success",
+      terminé: "success",
       encours: "warning",
       en_attente: "warning",
       attente: "danger",
       remboursé: "info",
+      confirmé: "primary",
     };
     return map[status] || "default";
   };
@@ -363,7 +632,7 @@ function App() {
       id: Date.now(),
       action,
       type,
-      item: item.name || item.client || item.id,
+      item: item.name || item.client || item.title || item.petName || item.id,
       date: new Date().toISOString(),
       user: "El Jezi Ghassen",
     };
@@ -373,6 +642,53 @@ function App() {
   const clearHistory = () => {
     setHistory([]);
     showNotification("Historique effacé", "info");
+  };
+
+  const markNotificationAsRead = (id) => {
+    setRealtimeNotifications(
+      realtimeNotifications.map((notif) =>
+        notif.id === id ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  const markAllAsRead = () => {
+    setRealtimeNotifications(
+      realtimeNotifications.map((notif) => ({ ...notif, read: true }))
+    );
+    showNotification("Toutes les notifications marquées comme lues", "success");
+  };
+
+  const handleNotificationAction = (notification) => {
+    markNotificationAsRead(notification.id);
+    
+    // Rediriger vers la section appropriée
+    switch(notification.type) {
+      case "order":
+        setCurrentSection("orders");
+        break;
+      case "stock":
+        setCurrentSection("products");
+        break;
+      case "review":
+        setCurrentSection("reviews");
+        break;
+      case "payment":
+        setCurrentSection("payments");
+        break;
+      case "vet":
+        setCurrentSection("vet");
+        break;
+      case "vaccine":
+        setCurrentSection("vaccines");
+        break;
+      default:
+        break;
+    }
+    
+    setSearchTerm("");
+    setShowNotificationsPanel(false);
+    showNotification(`Navigation vers ${notification.type}`, "info");
   };
 
   // ==================== CRUD PRODUITS ====================
@@ -700,6 +1016,164 @@ function App() {
     `);
   };
 
+  // ==================== CRUD VISITES VÉTÉRINAIRES ====================
+  const handleAddVetVisit = (visitData) => {
+    const newId = Math.max(...vetVisits.map((v) => v.id), 0) + 1;
+    const newVisit = {
+      id: newId,
+      ...visitData,
+      status: "en_attente",
+    };
+    setVetVisits([...vetVisits, newVisit]);
+    setShowVetModal(false);
+    addToHistory("Ajout", "Visite vétérinaire", newVisit);
+    showNotification("Rendez-vous vétérinaire ajouté avec succès", "success");
+    
+    // Ajouter une notification en temps réel
+    setRealtimeNotifications([
+      {
+        id: Date.now(),
+        type: "vet",
+        title: "Nouveau rendez-vous vétérinaire",
+        message: `Rendez-vous pour ${newVisit.petName} le ${formatDate(newVisit.date)}`,
+        time: new Date().toISOString(),
+        read: false,
+        icon: "clinic-medical",
+        color: "#9C27B0",
+        action: "Voir détails",
+      },
+      ...realtimeNotifications
+    ]);
+  };
+
+  const handleEditVetVisit = (visitData) => {
+    const updatedVisits = vetVisits.map((v) =>
+      v.id === editingItem.id ? { ...v, ...visitData } : v
+    );
+    setVetVisits(updatedVisits);
+    setShowVetModal(false);
+    setEditingItem(null);
+    addToHistory("Modification", "Visite vétérinaire", editingItem);
+    showNotification("Rendez-vous modifié avec succès", "success");
+  };
+
+  const handleDeleteVetVisit = (id) => {
+    const visit = vetVisits.find((v) => v.id === id);
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce rendez-vous ?")) {
+      setVetVisits(vetVisits.filter((v) => v.id !== id));
+      addToHistory("Suppression", "Visite vétérinaire", visit);
+      showNotification("Rendez-vous supprimé", "info");
+    }
+  };
+
+  const handleViewVetVisit = (visit) => {
+    addToHistory("Consultation", "Visite vétérinaire", visit);
+    alert(`
+      RENDEZ-VOUS VÉTÉRINAIRE
+      Animal: ${visit.petName} (${visit.petType})
+      Propriétaire: ${visit.ownerName}
+      Date: ${formatDate(visit.date)} à ${visit.time}
+      Vétérinaire: ${visit.vetName}
+      Motif: ${visit.reason}
+      Statut: ${getStatusText(visit.status)}
+      
+      Notes: ${visit.notes || "Aucune note"}
+    `);
+  };
+
+  const handleUpdateVetStatus = (id, newStatus) => {
+    const visit = vetVisits.find(v => v.id === id);
+    setVetVisits(
+      vetVisits.map((v) => (v.id === id ? { ...v, status: newStatus } : v))
+    );
+    addToHistory("Changement de statut", "Visite vétérinaire", visit);
+    showNotification(`Statut mis à jour: ${getStatusText(newStatus)}`, "success");
+  };
+
+  // ==================== CRUD CONSEILS VACCINS ====================
+  const handleAddVaccineAdvice = (adviceData) => {
+    const newId = Math.max(...vaccineAdvice.map((v) => v.id), 0) + 1;
+    const newAdvice = {
+      id: newId,
+      date: new Date().toISOString().split("T")[0],
+      likes: 0,
+      views: 0,
+      ...adviceData,
+    };
+    setVaccineAdvice([...vaccineAdvice, newAdvice]);
+    setShowVaccineModal(false);
+    addToHistory("Ajout", "Conseil vaccin", newAdvice);
+    showNotification("Conseil ajouté avec succès", "success");
+    
+    // Ajouter une notification en temps réel
+    setRealtimeNotifications([
+      {
+        id: Date.now(),
+        type: "vaccine",
+        title: "Nouveau conseil vaccin",
+        message: `Article publié : '${newAdvice.title}'`,
+        time: new Date().toISOString(),
+        read: false,
+        icon: "syringe",
+        color: "#00BCD4",
+        action: "Lire l'article",
+      },
+      ...realtimeNotifications
+    ]);
+  };
+
+  const handleEditVaccineAdvice = (adviceData) => {
+    const updatedAdvice = vaccineAdvice.map((v) =>
+      v.id === editingItem.id ? { ...v, ...adviceData } : v
+    );
+    setVaccineAdvice(updatedAdvice);
+    setShowVaccineModal(false);
+    setEditingItem(null);
+    addToHistory("Modification", "Conseil vaccin", editingItem);
+    showNotification("Conseil modifié avec succès", "success");
+  };
+
+  const handleDeleteVaccineAdvice = (id) => {
+    const advice = vaccineAdvice.find((v) => v.id === id);
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce conseil ?")) {
+      setVaccineAdvice(vaccineAdvice.filter((v) => v.id !== id));
+      addToHistory("Suppression", "Conseil vaccin", advice);
+      showNotification("Conseil supprimé", "info");
+    }
+  };
+
+  const handleViewVaccineAdvice = (advice) => {
+    // Incrémenter les vues
+    setVaccineAdvice(
+      vaccineAdvice.map((v) =>
+        v.id === advice.id ? { ...v, views: v.views + 1 } : v
+      )
+    );
+    
+    addToHistory("Consultation", "Conseil vaccin", advice);
+    alert(`
+      ${advice.title}
+      
+      ${advice.summary}
+      
+      ${advice.content}
+      
+      Catégorie: ${advice.category}
+      Auteur: ${advice.author}
+      Publié le: ${formatDate(advice.date)}
+      👍 ${advice.likes} · 👁️ ${advice.views + 1}
+    `);
+  };
+
+  const handleLikeVaccineAdvice = (id) => {
+    setVaccineAdvice(
+      vaccineAdvice.map((v) =>
+        v.id === id ? { ...v, likes: v.likes + 1 } : v
+      )
+    );
+    showNotification("Merci pour votre like !", "success");
+  };
+
   // ==================== FILTRES ====================
   const filteredProducts = products.filter(
     (p) =>
@@ -744,12 +1218,36 @@ function App() {
       r.comment.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredVetVisits = vetVisits.filter(
+    (v) =>
+      v.petName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.vetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.reason.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredVaccineAdvice = vaccineAdvice.filter(
+    (a) =>
+      a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredNotifications = realtimeNotifications.filter(
+    (n) =>
+      n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      n.message.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // ==================== RENDU ====================
   const { date, time } = formatDateTime();
+  const unreadCount = realtimeNotifications.filter(n => !n.read).length;
 
   return (
     <div className="app-container">
-      {/* Notification */}
+      {/* Notification flottante */}
       {notification.show && (
         <div className={`notification notification-${notification.type}`}>
           <div className="notification-icon">
@@ -786,6 +1284,8 @@ function App() {
             { id: "payments", icon: "credit-card", label: "Paiements" },
             { id: "customers", icon: "users", label: "Clients" },
             { id: "reviews", icon: "star", label: "Avis" },
+            { id: "vet", icon: "clinic-medical", label: "Suivi Vétérinaire" },
+            { id: "vaccines", icon: "syringe", label: "Conseils Vaccins" },
           ].map((section) => (
             <div
               key={section.id}
@@ -797,9 +1297,6 @@ function App() {
             >
               <i className={`fas fa-${section.icon}`}></i>
               <span className="nav-label">{section.label}</span>
-              {section.id === "dashboard" && unreadNotifications > 0 && (
-                <span className="nav-badge">{unreadNotifications}</span>
-              )}
             </div>
           ))}
         </nav>
@@ -828,6 +1325,7 @@ function App() {
                     {entry.action === "Suppression" && <i className="fas fa-trash"></i>}
                     {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
                     {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
+                    {entry.action === "Changement de statut" && <i className="fas fa-sync-alt"></i>}
                   </div>
                   <div className="history-info">
                     <p className="history-action">
@@ -860,7 +1358,7 @@ function App() {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Header */}
+        {/* Header avec VÉRITABLE ICÔNE DE NOTIFICATION */}
         <div className="header">
           <div>
             <h1 className="page-title">
@@ -871,6 +1369,8 @@ function App() {
               {currentSection === "payments" && "Gestion des Paiements"}
               {currentSection === "customers" && "Gestion des Clients"}
               {currentSection === "reviews" && "Gestion des Avis"}
+              {currentSection === "vet" && "Suivi Vétérinaire"}
+              {currentSection === "vaccines" && "Conseils Vaccins"}
             </h1>
             <p className="header-date">
               <i className="fas fa-calendar-alt"></i> {date} • <i className="fas fa-clock"></i> {time}
@@ -878,17 +1378,34 @@ function App() {
           </div>
 
           <div className="admin-info">
-            <button
-              className="theme-btn"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-            >
-              <i className={`fas fa-${isDarkMode ? "sun" : "moon"}`}></i>
-            </button>
-
-            <button className="notification-btn">
-              <i className="fas fa-bell"></i>
-              {unreadNotifications > 0 && <span className="notification-badge">{unreadNotifications}</span>}
-            </button>
+            {/* VÉRITABLE ICÔNE DE NOTIFICATION AVEC ANIMATION */}
+            <div className="notification-widget">
+              <button 
+                className={`notification-bell ${unreadCount > 0 ? 'has-notifications' : ''}`}
+                onClick={() => setShowNotificationsPanel(!showNotificationsPanel)}
+                aria-label="Notifications"
+              >
+                <i className="fas fa-bell"></i>
+                {unreadCount > 0 && (
+                  <>
+                    <span className="notification-count">{unreadCount}</span>
+                    <span className="notification-pulse"></span>
+                  </>
+                )}
+              </button>
+              
+              {/* Indicateur LED de nouvelle notification */}
+              {unreadCount > 0 && !showNotificationsPanel && (
+                <div className="notification-led"></div>
+              )}
+              
+              {/* Tooltip avec le nombre de notifications */}
+              {unreadCount > 0 && !showNotificationsPanel && (
+                <div className="notification-tooltip">
+                  {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''} notification{unreadCount > 1 ? 's' : ''}
+                </div>
+              )}
+            </div>
 
             <div className="profile">
               <div className="avatar">EG</div>
@@ -900,7 +1417,61 @@ function App() {
           </div>
         </div>
 
-        {/* DASHBOARD */}
+        {/* Panneau de notifications contextuel */}
+        {showNotificationsPanel && (
+          <div className="notifications-panel">
+            <div className="notifications-panel-header">
+              <h3>
+                <i className="fas fa-bell"></i> Notifications en temps réel
+                {unreadCount > 0 && (
+                  <span className="notifications-count">{unreadCount} non lues</span>
+                )}
+              </h3>
+              <div className="notifications-actions">
+                <button className="notifications-mark-read" onClick={markAllAsRead}>
+                  <i className="fas fa-check-double"></i> Tout marquer
+                </button>
+                <button className="notifications-close" onClick={() => setShowNotificationsPanel(false)}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div className="notifications-panel-body">
+              {filteredNotifications.length === 0 ? (
+                <p className="notifications-empty">Aucune notification</p>
+              ) : (
+                filteredNotifications.map((notif) => (
+                  <div
+                    key={notif.id}
+                    className={`notification-item ${notif.read ? "read" : "unread"}`}
+                    onClick={() => markNotificationAsRead(notif.id)}
+                  >
+                    <div className="notification-item-icon" style={{ backgroundColor: notif.color + '20', color: notif.color }}>
+                      <i className={`fas fa-${notif.icon}`}></i>
+                    </div>
+                    <div className="notification-item-content">
+                      <h4>{notif.title}</h4>
+                      <p>{notif.message}</p>
+                      <span className="notification-item-time">{formatRelativeTime(notif.time)}</span>
+                    </div>
+                    {!notif.read && <span className="notification-dot"></span>}
+                    <button 
+                      className="notification-action-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNotificationAction(notif);
+                      }}
+                    >
+                      {notif.action}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* DASHBOARD AVEC NOTIFICATIONS EN TEMPS RÉEL */}
         {currentSection === "dashboard" && (
           <div className="dashboard">
             <div className="stats-grid">
@@ -938,9 +1509,57 @@ function App() {
                 </div>
                 <div className="stat-label">CA Total</div>
               </div>
+              <div className="stat-card">
+                <i className="fas fa-clinic-medical"></i>
+                <div className="stat-value">{stats.upcomingVetVisits}</div>
+                <div className="stat-label">Rendez-vous à venir</div>
+              </div>
+              <div className="stat-card">
+                <i className="fas fa-syringe"></i>
+                <div className="stat-value">{stats.vaccineArticles}</div>
+                <div className="stat-label">Conseils vaccins</div>
+              </div>
             </div>
 
-            {/* Graphique simple des ventes */}
+            {/* SECTION NOTIFICATIONS EN TEMPS RÉEL DANS LE DASHBOARD */}
+            <div className="realtime-notifications-section">
+              <div className="section-header">
+                <h3>
+                  <i className="fas fa-bell" style={{ color: '#2196F3' }}></i> 
+                  Activité en temps réel
+                  {unreadCount > 0 && (
+                    <span className="realtime-badge">{unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}</span>
+                  )}
+                </h3>
+                <button className="btn-link" onClick={() => setShowNotificationsPanel(true)}>
+                  Voir toutes les notifications
+                </button>
+              </div>
+              
+              <div className="realtime-feed">
+                {realtimeNotifications.slice(0, 5).map((notif) => (
+                  <div 
+                    key={notif.id} 
+                    className={`realtime-item ${!notif.read ? 'realtime-item-unread' : ''}`}
+                    onClick={() => handleNotificationAction(notif)}
+                  >
+                    <div className="realtime-icon" style={{ backgroundColor: notif.color + '20', color: notif.color }}>
+                      <i className={`fas fa-${notif.icon}`}></i>
+                    </div>
+                    <div className="realtime-content">
+                      <div className="realtime-header">
+                        <h4>{notif.title}</h4>
+                        <span className="realtime-time">{formatRelativeTime(notif.time)}</span>
+                      </div>
+                      <p className="realtime-message">{notif.message}</p>
+                      {!notif.read && <span className="realtime-unread-dot"></span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Graphique des ventes */}
             <div className="chart-container">
               <h3>Ventes des 7 derniers jours</h3>
               <div className="simple-chart">
@@ -1013,8 +1632,9 @@ function App() {
                       alt={product.name}
                       className="product-card-image"
                     />
-                    <span className="product-stock-badge">
+                    <span className={`product-stock-badge ${product.stock < 10 ? 'low-stock' : ''}`}>
                       {product.stock} en stock
+                      {product.stock < 10 && <i className="fas fa-exclamation-triangle" style={{marginLeft: '5px'}}></i>}
                     </span>
                   </div>
                   <div className="product-card-content">
@@ -1033,7 +1653,6 @@ function App() {
                     </p>
                     <p className="product-description">{product.description}</p>
 
-                    {/* BOUTONS PRODUITS */}
                     <div className="product-actions">
                       <button
                         className="action-btn view"
@@ -1398,7 +2017,6 @@ function App() {
                     </div>
                   </div>
 
-                  {/* BOUTONS CLIENTS */}
                   <div className="customer-actions">
                     <button
                       className="action-btn view"
@@ -1492,7 +2110,6 @@ function App() {
                     </span>
                   </div>
 
-                  {/* BOUTONS AVIS */}
                   <div className="review-actions">
                     <button
                       className="action-btn view"
@@ -1520,6 +2137,209 @@ function App() {
                     <button
                       className="action-btn delete"
                       onClick={() => handleDeleteReview(review.id)}
+                    >
+                      <i className="fas fa-trash"></i> Supprimer
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SUIVI VÉTÉRINAIRE */}
+        {currentSection === "vet" && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Suivi Vétérinaire</h2>
+              <div className="header-actions">
+                <div className="search-box">
+                  <i className="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Rechercher un rendez-vous..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowVetModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouveau rendez-vous
+                </button>
+              </div>
+            </div>
+
+            <div className="vet-visits-grid">
+              {filteredVetVisits.map((visit) => (
+                <div key={visit.id} className={`vet-card vet-${visit.status}`}>
+                  <div className="vet-header">
+                    <div className="vet-pet-info">
+                      <h3>{visit.petName}</h3>
+                      <span className="vet-pet-type">{visit.petType}</span>
+                    </div>
+                    <span className={`vet-status status-${getStatusClass(visit.status)}`}>
+                      {getStatusText(visit.status)}
+                    </span>
+                  </div>
+                  
+                  <div className="vet-details">
+                    <p className="vet-owner">
+                      <i className="fas fa-user"></i> {visit.ownerName}
+                    </p>
+                    <p className="vet-datetime">
+                      <i className="fas fa-calendar-alt"></i> {formatDate(visit.date)} à {visit.time}
+                    </p>
+                    <p className="vet-reason">
+                      <i className="fas fa-stethoscope"></i> {visit.reason}
+                    </p>
+                    <p className="vet-doctor">
+                      <i className="fas fa-user-md"></i> {visit.vetName}
+                    </p>
+                    {visit.notes && (
+                      <p className="vet-notes">
+                        <i className="fas fa-notes-medical"></i> {visit.notes}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="vet-actions">
+                    <button
+                      className="action-btn view"
+                      onClick={() => handleViewVetVisit(visit)}
+                    >
+                      <i className="fas fa-eye"></i> Consulter
+                    </button>
+                    
+                    {visit.status === "en_attente" && (
+                      <button
+                        className="action-btn approve"
+                        onClick={() => handleUpdateVetStatus(visit.id, "confirmé")}
+                      >
+                        <i className="fas fa-check"></i> Confirmer
+                      </button>
+                    )}
+                    
+                    {visit.status === "confirmé" && (
+                      <button
+                        className="action-btn success"
+                        onClick={() => handleUpdateVetStatus(visit.id, "terminé")}
+                      >
+                        <i className="fas fa-flag-checkered"></i> Terminer
+                      </button>
+                    )}
+                    
+                    <button
+                      className="action-btn edit"
+                      onClick={() => {
+                        setEditingItem(visit);
+                        setShowVetModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i> Modifier
+                    </button>
+                    
+                    <button
+                      className="action-btn delete"
+                      onClick={() => handleDeleteVetVisit(visit.id)}
+                    >
+                      <i className="fas fa-trash"></i> Supprimer
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CONSEILS VACCINS */}
+        {currentSection === "vaccines" && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Conseils Vaccins</h2>
+              <div className="header-actions">
+                <div className="search-box">
+                  <i className="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Rechercher un conseil..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setShowVaccineModal(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i> Nouveau conseil
+                </button>
+              </div>
+            </div>
+
+            <div className="vaccine-grid">
+              {filteredVaccineAdvice.map((advice) => (
+                <div key={advice.id} className="vaccine-card">
+                  <div className="vaccine-category-badge">
+                    {advice.category}
+                  </div>
+                  
+                  <h3 className="vaccine-title">{advice.title}</h3>
+                  
+                  <p className="vaccine-summary">{advice.summary}</p>
+                  
+                  <div className="vaccine-meta">
+                    <span className="vaccine-author">
+                      <i className="fas fa-user-md"></i> {advice.author}
+                    </span>
+                    <span className="vaccine-date">
+                      <i className="fas fa-calendar-alt"></i> {formatDate(advice.date)}
+                    </span>
+                  </div>
+                  
+                  <div className="vaccine-stats">
+                    <span className="vaccine-likes">
+                      <i className="fas fa-heart"></i> {advice.likes}
+                    </span>
+                    <span className="vaccine-views">
+                      <i className="fas fa-eye"></i> {advice.views}
+                    </span>
+                  </div>
+
+                  <div className="vaccine-actions">
+                    <button
+                      className="action-btn view"
+                      onClick={() => handleViewVaccineAdvice(advice)}
+                    >
+                      <i className="fas fa-eye"></i> Lire
+                    </button>
+                    
+                    <button
+                      className="action-btn like"
+                      onClick={() => handleLikeVaccineAdvice(advice.id)}
+                    >
+                      <i className="fas fa-thumbs-up"></i> J'aime
+                    </button>
+                    
+                    <button
+                      className="action-btn edit"
+                      onClick={() => {
+                        setEditingItem(advice);
+                        setShowVaccineModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i> Modifier
+                    </button>
+                    
+                    <button
+                      className="action-btn delete"
+                      onClick={() => handleDeleteVaccineAdvice(advice.id)}
                     >
                       <i className="fas fa-trash"></i> Supprimer
                     </button>
@@ -1558,6 +2378,7 @@ function App() {
                       {entry.action === "Suppression" && <i className="fas fa-trash"></i>}
                       {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
                       {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
+                      {entry.action === "Changement de statut" && <i className="fas fa-sync-alt"></i>}
                     </div>
                     <div className="history-content">
                       <p>
@@ -1782,7 +2603,6 @@ function App() {
                 e.preventDefault();
                 const formData = new FormData(e.target);
                 const data = Object.fromEntries(formData.entries());
-                data.amount = parseFloat(data.amount);
                 data.subtotal = parseFloat(data.subtotal);
                 data.tax = parseFloat(data.tax);
                 data.total = parseFloat(data.total);
@@ -2104,6 +2924,205 @@ function App() {
                   defaultValue={editingItem?.comment}
                   required
                 />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL VISITE VÉTÉRINAIRE */}
+      {showVetModal && (
+        <div className="modal" onClick={() => setShowVetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un rendez-vous vétérinaire</h2>
+              <button
+                className="close"
+                onClick={() => setShowVetModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                if (editingItem) {
+                  handleEditVetVisit(data);
+                } else {
+                  handleAddVetVisit(data);
+                }
+              }}
+            >
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nom de l'animal</label>
+                  <input
+                    type="text"
+                    name="petName"
+                    defaultValue={editingItem?.petName}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Type</label>
+                  <select
+                    name="petType"
+                    defaultValue={editingItem?.petType || "Chien"}
+                  >
+                    <option value="Chien">Chien</option>
+                    <option value="Chat">Chat</option>
+                    <option value="Oiseau">Oiseau</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Propriétaire</label>
+                <input
+                  type="text"
+                  name="ownerName"
+                  defaultValue={editingItem?.ownerName}
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    defaultValue={editingItem?.date}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Heure</label>
+                  <input
+                    type="time"
+                    name="time"
+                    defaultValue={editingItem?.time}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Motif</label>
+                <input
+                  type="text"
+                  name="reason"
+                  defaultValue={editingItem?.reason}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Vétérinaire</label>
+                <select
+                  name="vetName"
+                  defaultValue={editingItem?.vetName || "Dr. Karim Mansour"}
+                >
+                  <option value="Dr. Karim Mansour">Dr. Karim Mansour</option>
+                  <option value="Dr. Leila Ben Salem">Dr. Leila Ben Salem</option>
+                  <option value="Dr. Mohamed Karray">Dr. Mohamed Karray</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Notes</label>
+                <textarea
+                  name="notes"
+                  rows="3"
+                  defaultValue={editingItem?.notes}
+                  placeholder="Informations complémentaires..."
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                {editingItem ? "Modifier" : "Ajouter"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL CONSEIL VACCIN */}
+      {showVaccineModal && (
+        <div className="modal" onClick={() => setShowVaccineModal(false)}>
+          <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingItem ? "Modifier" : "Ajouter"} un conseil vaccin</h2>
+              <button
+                className="close"
+                onClick={() => setShowVaccineModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                if (editingItem) {
+                  handleEditVaccineAdvice(data);
+                } else {
+                  handleAddVaccineAdvice(data);
+                }
+              }}
+            >
+              <div className="form-group">
+                <label>Titre</label>
+                <input
+                  type="text"
+                  name="title"
+                  defaultValue={editingItem?.title}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Catégorie</label>
+                <select
+                  name="category"
+                  defaultValue={editingItem?.category || "Chien"}
+                >
+                  <option value="Chien">Chien</option>
+                  <option value="Chat">Chat</option>
+                  <option value="Conseils">Conseils</option>
+                  <option value="Informations">Informations</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Résumé</label>
+                <input
+                  type="text"
+                  name="summary"
+                  defaultValue={editingItem?.summary}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Contenu détaillé</label>
+                <textarea
+                  name="content"
+                  rows="5"
+                  defaultValue={editingItem?.content}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Auteur</label>
+                <select
+                  name="author"
+                  defaultValue={editingItem?.author || "Dr. Karim Mansour"}
+                >
+                  <option value="Dr. Karim Mansour">Dr. Karim Mansour</option>
+                  <option value="Dr. Leila Ben Salem">Dr. Leila Ben Salem</option>
+                  <option value="Dr. Mohamed Karray">Dr. Mohamed Karray</option>
+                </select>
               </div>
               <button type="submit" className="btn btn-primary">
                 {editingItem ? "Modifier" : "Ajouter"}
