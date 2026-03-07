@@ -13,7 +13,6 @@ function App() {
   });
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
-  const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
 
   // États pour les modales
   const [showProductModal, setShowProductModal] = useState(false);
@@ -25,6 +24,15 @@ function App() {
   const [showVetModal, setShowVetModal] = useState(false);
   const [showVaccineModal, setShowVaccineModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+
+  // État pour le formulaire de contact
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
 
   // ==================== DONNÉES PRODUITS ====================
   const [products, setProducts] = useState([
@@ -231,7 +239,7 @@ function App() {
     },
   ]);
 
-  // ==================== DONNÉES VISITES VÉTÉRINAIRES ====================
+  // ==================== DONNÉES SUIVI VÉTÉRINAIRE ====================
   const [vetVisits, setVetVisits] = useState([
     {
       id: 1,
@@ -283,6 +291,7 @@ function App() {
       date: "2026-02-15",
       likes: 45,
       views: 234,
+      image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop",
     },
     {
       id: 2,
@@ -294,6 +303,7 @@ function App() {
       date: "2026-02-20",
       likes: 38,
       views: 189,
+      image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=300&fit=crop",
     },
     {
       id: 3,
@@ -305,6 +315,7 @@ function App() {
       date: "2026-02-25",
       likes: 27,
       views: 156,
+      image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=300&fit=crop",
     },
     {
       id: 4,
@@ -316,181 +327,29 @@ function App() {
       date: "2026-03-01",
       likes: 52,
       views: 278,
+      image: "https://images.unsplash.com/photo-1583336663277-620dc5a1d9d3?w=400&h=300&fit=crop",
     },
   ]);
 
-  // ==================== NOTIFICATIONS EN TEMPS RÉEL ====================
-  const [realtimeNotifications, setRealtimeNotifications] = useState([
-    {
-      id: 1,
-      type: "order",
-      title: "Nouvelle commande #CMD004",
-      message: "Commande de 189 DT par Mehdi Ben Ahmed",
-      time: new Date(Date.now() - 5 * 60000).toISOString(), // 5 minutes ago
-      read: false,
-      icon: "shopping-cart",
-      color: "#4CAF50",
-      action: "Voir la commande",
+  // ==================== INFORMATIONS DE CONTACT ====================
+  const [contactInfo, setContactInfo] = useState({
+    address: "23 Rue de Carthage, Tunis 1000, Tunisie",
+    phone: "+216 71 123 456",
+    email: "contact@petfoodtn.com",
+    whatsapp: "+216 98 765 432",
+    coordinates: {
+      lat: 36.8065,
+      lng: 10.1815,
     },
-    {
-      id: 2,
-      type: "stock",
-      title: "Stock faible : Croquettes",
-      message: "Il ne reste que 3 unités de Croquettes Royal Canin",
-      time: new Date(Date.now() - 15 * 60000).toISOString(), // 15 minutes ago
-      read: false,
-      icon: "exclamation-triangle",
-      color: "#FF9800",
-      action: "Réapprovisionner",
+    socialMedia: {
+      facebook: "https://facebook.com/petfoodtn",
+      instagram: "https://instagram.com/petfoodtn",
+      twitter: "https://twitter.com/petfoodtn",
+      linkedin: "https://linkedin.com/company/petfoodtn",
+      youtube: "https://youtube.com/petfoodtn",
+      tiktok: "https://tiktok.com/@petfoodtn",
     },
-    {
-      id: 3,
-      type: "review",
-      title: "Nouvel avis client",
-      message: "Fatma a laissé un avis 5★ sur les Pâtées Gourmet",
-      time: new Date(Date.now() - 120 * 60000).toISOString(), // 2 hours ago
-      read: true,
-      icon: "star",
-      color: "#FFC107",
-      action: "Voir l'avis",
-    },
-    {
-      id: 4,
-      type: "payment",
-      title: "Paiement reçu",
-      message: "Paiement de 145 DT validé pour la commande #CMD002",
-      time: new Date(Date.now() - 180 * 60000).toISOString(), // 3 hours ago
-      read: true,
-      icon: "credit-card",
-      color: "#2196F3",
-      action: "Voir le paiement",
-    },
-    {
-      id: 5,
-      type: "vet",
-      title: "Rappel rendez-vous",
-      message: "Rendez-vous pour Rex demain à 10h30",
-      time: new Date(Date.now() - 240 * 60000).toISOString(), // 4 hours ago
-      read: false,
-      icon: "clinic-medical",
-      color: "#9C27B0",
-      action: "Voir détails",
-    },
-    {
-      id: 6,
-      type: "vaccine",
-      title: "Nouveau conseil vaccin",
-      message: "Article publié : 'Calendrier vaccinal chiot'",
-      time: new Date(Date.now() - 1440 * 60000).toISOString(), // 1 day ago
-      read: false,
-      icon: "syringe",
-      color: "#00BCD4",
-      action: "Lire l'article",
-    },
-  ]);
-
-  // Simuler l'arrivée de nouvelles notifications en temps réel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Simuler une nouvelle commande toutes les 45 secondes
-      const randomAmount = Math.floor(Math.random() * 200 + 50);
-      const randomId = Math.floor(Math.random() * 1000);
-      const clients = ["Mehdi Ben Ahmed", "Sarra Trabelsi", "Youssef Jaziri", "Amira Khelif", "Karim Bouazizi"];
-      const randomClient = clients[Math.floor(Math.random() * clients.length)];
-      
-      const newOrderNotification = {
-        id: Date.now(),
-        type: "order",
-        title: "🛒 Nouvelle commande en cours",
-        message: `Commande #CMD${randomId} de ${randomAmount} DT par ${randomClient}`,
-        time: new Date().toISOString(),
-        read: false,
-        icon: "shopping-cart",
-        color: "#4CAF50",
-        action: "Voir la commande",
-      };
-      
-      setRealtimeNotifications(prev => [newOrderNotification, ...prev].slice(0, 20));
-      
-      // Afficher une notification toast
-      showNotification(`🛒 Nouvelle commande de ${randomAmount} DT reçue !`, "success");
-      
-      // Faire sonner la cloche (effet visuel)
-      const bell = document.querySelector('.notification-bell');
-      if (bell) {
-        bell.classList.add('ringing');
-        setTimeout(() => bell.classList.remove('ringing'), 1000);
-      }
-    }, 45000); // Toutes les 45 secondes
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Vérifier les stocks faibles toutes les 30 secondes
-  useEffect(() => {
-    const stockInterval = setInterval(() => {
-      const lowStockProducts = products.filter(p => p.stock < 10);
-      lowStockProducts.forEach(product => {
-        const existingNotification = realtimeNotifications.find(
-          n => n.type === "stock" && n.message.includes(product.name)
-        );
-        
-        if (!existingNotification) {
-          const lowStockNotification = {
-            id: Date.now() + product.id,
-            type: "stock",
-            title: "⚠️ Alerte stock faible",
-            message: `${product.name} - Stock: ${product.stock} unités`,
-            time: new Date().toISOString(),
-            read: false,
-            icon: "exclamation-triangle",
-            color: "#FF9800",
-            action: "Réapprovisionner",
-          };
-          
-          setRealtimeNotifications(prev => [lowStockNotification, ...prev].slice(0, 20));
-          showNotification(`⚠️ Stock faible : ${product.name}`, "warning");
-          
-          // Faire sonner la cloche
-          const bell = document.querySelector('.notification-bell');
-          if (bell) {
-            bell.classList.add('ringing');
-            setTimeout(() => bell.classList.remove('ringing'), 1000);
-          }
-        }
-      });
-    }, 30000); // Toutes les 30 secondes
-
-    return () => clearInterval(stockInterval);
-  }, [products, realtimeNotifications]);
-
-  // Simuler un nouvel avis toutes les 2 minutes
-  useEffect(() => {
-    const reviewInterval = setInterval(() => {
-      const reviewers = ["Ahmed Ben Ali", "Fatma Said", "Nadia Khelifi", "Sami Trabelsi", "Leila Mansour"];
-      const products_list = ["Croquettes Royal Canin", "Pâtée Gourmet", "Litière Naturelle", "Brosse Démêlante"];
-      const randomReviewer = reviewers[Math.floor(Math.random() * reviewers.length)];
-      const randomProduct = products_list[Math.floor(Math.random() * products_list.length)];
-      const randomRating = Math.floor(Math.random() * 2) + 4; // 4 ou 5 étoiles
-      
-      const newReviewNotification = {
-        id: Date.now(),
-        type: "review",
-        title: "⭐ Nouvel avis client",
-        message: `${randomReviewer} a laissé un avis ${randomRating}★ sur ${randomProduct}`,
-        time: new Date().toISOString(),
-        read: false,
-        icon: "star",
-        color: "#FFC107",
-        action: "Voir l'avis",
-      };
-      
-      setRealtimeNotifications(prev => [newReviewNotification, ...prev].slice(0, 20));
-      showNotification(`⭐ Nouvel avis ${randomRating}★ reçu !`, "info");
-    }, 120000); // Toutes les 2 minutes
-
-    return () => clearInterval(reviewInterval);
-  }, []);
+  });
 
   // ==================== STATISTIQUES ====================
   const [stats, setStats] = useState({
@@ -568,21 +427,6 @@ function App() {
     };
   };
 
-  const formatRelativeTime = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return "À l'instant";
-    if (diffMins < 60) return `Il y a ${diffMins} min`;
-    if (diffHours < 24) return `Il y a ${diffHours} h`;
-    if (diffDays === 1) return "Hier";
-    return `Il y a ${diffDays} jours`;
-  };
-
   const formatCurrency = (amount) => {
     return amount.toLocaleString() + " DT";
   };
@@ -644,51 +488,33 @@ function App() {
     showNotification("Historique effacé", "info");
   };
 
-  const markNotificationAsRead = (id) => {
-    setRealtimeNotifications(
-      realtimeNotifications.map((notif) =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
+  // Fonction pour gérer la soumission du formulaire de contact
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    
+    addToHistory("Message envoyé", "Contact", contactForm.name);
+    showNotification("Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.", "success");
+    
+    setContactForm({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
+    });
   };
 
-  const markAllAsRead = () => {
-    setRealtimeNotifications(
-      realtimeNotifications.map((notif) => ({ ...notif, read: true }))
-    );
-    showNotification("Toutes les notifications marquées comme lues", "success");
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setContactForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleNotificationAction = (notification) => {
-    markNotificationAsRead(notification.id);
-    
-    // Rediriger vers la section appropriée
-    switch(notification.type) {
-      case "order":
-        setCurrentSection("orders");
-        break;
-      case "stock":
-        setCurrentSection("products");
-        break;
-      case "review":
-        setCurrentSection("reviews");
-        break;
-      case "payment":
-        setCurrentSection("payments");
-        break;
-      case "vet":
-        setCurrentSection("vet");
-        break;
-      case "vaccine":
-        setCurrentSection("vaccines");
-        break;
-      default:
-        break;
-    }
-    
-    setSearchTerm("");
-    setShowNotificationsPanel(false);
-    showNotification(`Navigation vers ${notification.type}`, "info");
+  const openGoogleMaps = () => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${contactInfo.coordinates.lat},${contactInfo.coordinates.lng}`;
+    window.open(url, '_blank');
   };
 
   // ==================== CRUD PRODUITS ====================
@@ -1016,7 +842,7 @@ function App() {
     `);
   };
 
-  // ==================== CRUD VISITES VÉTÉRINAIRES ====================
+  // ==================== CRUD SUIVI VÉTÉRINAIRE ====================
   const handleAddVetVisit = (visitData) => {
     const newId = Math.max(...vetVisits.map((v) => v.id), 0) + 1;
     const newVisit = {
@@ -1028,22 +854,6 @@ function App() {
     setShowVetModal(false);
     addToHistory("Ajout", "Visite vétérinaire", newVisit);
     showNotification("Rendez-vous vétérinaire ajouté avec succès", "success");
-    
-    // Ajouter une notification en temps réel
-    setRealtimeNotifications([
-      {
-        id: Date.now(),
-        type: "vet",
-        title: "Nouveau rendez-vous vétérinaire",
-        message: `Rendez-vous pour ${newVisit.petName} le ${formatDate(newVisit.date)}`,
-        time: new Date().toISOString(),
-        read: false,
-        icon: "clinic-medical",
-        color: "#9C27B0",
-        action: "Voir détails",
-      },
-      ...realtimeNotifications
-    ]);
   };
 
   const handleEditVetVisit = (visitData) => {
@@ -1104,22 +914,6 @@ function App() {
     setShowVaccineModal(false);
     addToHistory("Ajout", "Conseil vaccin", newAdvice);
     showNotification("Conseil ajouté avec succès", "success");
-    
-    // Ajouter une notification en temps réel
-    setRealtimeNotifications([
-      {
-        id: Date.now(),
-        type: "vaccine",
-        title: "Nouveau conseil vaccin",
-        message: `Article publié : '${newAdvice.title}'`,
-        time: new Date().toISOString(),
-        read: false,
-        icon: "syringe",
-        color: "#00BCD4",
-        action: "Lire l'article",
-      },
-      ...realtimeNotifications
-    ]);
   };
 
   const handleEditVaccineAdvice = (adviceData) => {
@@ -1143,7 +937,6 @@ function App() {
   };
 
   const handleViewVaccineAdvice = (advice) => {
-    // Incrémenter les vues
     setVaccineAdvice(
       vaccineAdvice.map((v) =>
         v.id === advice.id ? { ...v, views: v.views + 1 } : v
@@ -1235,15 +1028,8 @@ function App() {
       a.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredNotifications = realtimeNotifications.filter(
-    (n) =>
-      n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      n.message.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   // ==================== RENDU ====================
   const { date, time } = formatDateTime();
-  const unreadCount = realtimeNotifications.filter(n => !n.read).length;
 
   return (
     <div className="app-container">
@@ -1286,6 +1072,7 @@ function App() {
             { id: "reviews", icon: "star", label: "Avis" },
             { id: "vet", icon: "clinic-medical", label: "Suivi Vétérinaire" },
             { id: "vaccines", icon: "syringe", label: "Conseils Vaccins" },
+            { id: "contact", icon: "envelope", label: "Contact" },
           ].map((section) => (
             <div
               key={section.id}
@@ -1326,6 +1113,7 @@ function App() {
                     {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
                     {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
                     {entry.action === "Changement de statut" && <i className="fas fa-sync-alt"></i>}
+                    {entry.action === "Message envoyé" && <i className="fas fa-paper-plane"></i>}
                   </div>
                   <div className="history-info">
                     <p className="history-action">
@@ -1358,7 +1146,7 @@ function App() {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Header avec VÉRITABLE ICÔNE DE NOTIFICATION */}
+        {/* Header */}
         <div className="header">
           <div>
             <h1 className="page-title">
@@ -1371,6 +1159,7 @@ function App() {
               {currentSection === "reviews" && "Gestion des Avis"}
               {currentSection === "vet" && "Suivi Vétérinaire"}
               {currentSection === "vaccines" && "Conseils Vaccins"}
+              {currentSection === "contact" && "Contact"}
             </h1>
             <p className="header-date">
               <i className="fas fa-calendar-alt"></i> {date} • <i className="fas fa-clock"></i> {time}
@@ -1378,100 +1167,17 @@ function App() {
           </div>
 
           <div className="admin-info">
-            {/* VÉRITABLE ICÔNE DE NOTIFICATION AVEC ANIMATION */}
-            <div className="notification-widget">
-              <button 
-                className={`notification-bell ${unreadCount > 0 ? 'has-notifications' : ''}`}
-                onClick={() => setShowNotificationsPanel(!showNotificationsPanel)}
-                aria-label="Notifications"
-              >
-                <i className="fas fa-bell"></i>
-                {unreadCount > 0 && (
-                  <>
-                    <span className="notification-count">{unreadCount}</span>
-                    <span className="notification-pulse"></span>
-                  </>
-                )}
-              </button>
-              
-              {/* Indicateur LED de nouvelle notification */}
-              {unreadCount > 0 && !showNotificationsPanel && (
-                <div className="notification-led"></div>
-              )}
-              
-              {/* Tooltip avec le nombre de notifications */}
-              {unreadCount > 0 && !showNotificationsPanel && (
-                <div className="notification-tooltip">
-                  {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''} notification{unreadCount > 1 ? 's' : ''}
-                </div>
-              )}
-            </div>
-
             <div className="profile">
               <div className="avatar">EG</div>
               <div>
                 <strong>El Jezi Ghassen</strong>
-                <p className="admin-role">ADMINISTRATEUR</p>
+                <p className="admin-role">Administrateur</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Panneau de notifications contextuel */}
-        {showNotificationsPanel && (
-          <div className="notifications-panel">
-            <div className="notifications-panel-header">
-              <h3>
-                <i className="fas fa-bell"></i> Notifications en temps réel
-                {unreadCount > 0 && (
-                  <span className="notifications-count">{unreadCount} non lues</span>
-                )}
-              </h3>
-              <div className="notifications-actions">
-                <button className="notifications-mark-read" onClick={markAllAsRead}>
-                  <i className="fas fa-check-double"></i> Tout marquer
-                </button>
-                <button className="notifications-close" onClick={() => setShowNotificationsPanel(false)}>
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-            <div className="notifications-panel-body">
-              {filteredNotifications.length === 0 ? (
-                <p className="notifications-empty">Aucune notification</p>
-              ) : (
-                filteredNotifications.map((notif) => (
-                  <div
-                    key={notif.id}
-                    className={`notification-item ${notif.read ? "read" : "unread"}`}
-                    onClick={() => markNotificationAsRead(notif.id)}
-                  >
-                    <div className="notification-item-icon" style={{ backgroundColor: notif.color + '20', color: notif.color }}>
-                      <i className={`fas fa-${notif.icon}`}></i>
-                    </div>
-                    <div className="notification-item-content">
-                      <h4>{notif.title}</h4>
-                      <p>{notif.message}</p>
-                      <span className="notification-item-time">{formatRelativeTime(notif.time)}</span>
-                    </div>
-                    {!notif.read && <span className="notification-dot"></span>}
-                    <button 
-                      className="notification-action-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleNotificationAction(notif);
-                      }}
-                    >
-                      {notif.action}
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* DASHBOARD AVEC NOTIFICATIONS EN TEMPS RÉEL */}
+        {/* DASHBOARD */}
         {currentSection === "dashboard" && (
           <div className="dashboard">
             <div className="stats-grid">
@@ -1518,44 +1224,6 @@ function App() {
                 <i className="fas fa-syringe"></i>
                 <div className="stat-value">{stats.vaccineArticles}</div>
                 <div className="stat-label">Conseils vaccins</div>
-              </div>
-            </div>
-
-            {/* SECTION NOTIFICATIONS EN TEMPS RÉEL DANS LE DASHBOARD */}
-            <div className="realtime-notifications-section">
-              <div className="section-header">
-                <h3>
-                  <i className="fas fa-bell" style={{ color: '#2196F3' }}></i> 
-                  Activité en temps réel
-                  {unreadCount > 0 && (
-                    <span className="realtime-badge">{unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}</span>
-                  )}
-                </h3>
-                <button className="btn-link" onClick={() => setShowNotificationsPanel(true)}>
-                  Voir toutes les notifications
-                </button>
-              </div>
-              
-              <div className="realtime-feed">
-                {realtimeNotifications.slice(0, 5).map((notif) => (
-                  <div 
-                    key={notif.id} 
-                    className={`realtime-item ${!notif.read ? 'realtime-item-unread' : ''}`}
-                    onClick={() => handleNotificationAction(notif)}
-                  >
-                    <div className="realtime-icon" style={{ backgroundColor: notif.color + '20', color: notif.color }}>
-                      <i className={`fas fa-${notif.icon}`}></i>
-                    </div>
-                    <div className="realtime-content">
-                      <div className="realtime-header">
-                        <h4>{notif.title}</h4>
-                        <span className="realtime-time">{formatRelativeTime(notif.time)}</span>
-                      </div>
-                      <p className="realtime-message">{notif.message}</p>
-                      {!notif.read && <span className="realtime-unread-dot"></span>}
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
 
@@ -2286,66 +1954,270 @@ function App() {
             <div className="vaccine-grid">
               {filteredVaccineAdvice.map((advice) => (
                 <div key={advice.id} className="vaccine-card">
-                  <div className="vaccine-category-badge">
-                    {advice.category}
+                  <div className="vaccine-image-container">
+                    <img src={advice.image} alt={advice.title} className="vaccine-image" />
+                    <div className="vaccine-category-badge">
+                      {advice.category}
+                    </div>
                   </div>
                   
-                  <h3 className="vaccine-title">{advice.title}</h3>
-                  
-                  <p className="vaccine-summary">{advice.summary}</p>
-                  
-                  <div className="vaccine-meta">
-                    <span className="vaccine-author">
-                      <i className="fas fa-user-md"></i> {advice.author}
-                    </span>
-                    <span className="vaccine-date">
-                      <i className="fas fa-calendar-alt"></i> {formatDate(advice.date)}
-                    </span>
-                  </div>
-                  
-                  <div className="vaccine-stats">
-                    <span className="vaccine-likes">
-                      <i className="fas fa-heart"></i> {advice.likes}
-                    </span>
-                    <span className="vaccine-views">
-                      <i className="fas fa-eye"></i> {advice.views}
-                    </span>
-                  </div>
+                  <div className="vaccine-card-content">
+                    <h3 className="vaccine-title">{advice.title}</h3>
+                    
+                    <p className="vaccine-summary">{advice.summary}</p>
+                    
+                    <div className="vaccine-meta">
+                      <span className="vaccine-author">
+                        <i className="fas fa-user-md"></i> {advice.author}
+                      </span>
+                      <span className="vaccine-date">
+                        <i className="fas fa-calendar-alt"></i> {formatDate(advice.date)}
+                      </span>
+                    </div>
+                    
+                    <div className="vaccine-stats">
+                      <span className="vaccine-likes" onClick={() => handleLikeVaccineAdvice(advice.id)}>
+                        <i className="fas fa-heart"></i> {advice.likes}
+                      </span>
+                      <span className="vaccine-views">
+                        <i className="fas fa-eye"></i> {advice.views}
+                      </span>
+                    </div>
 
-                  <div className="vaccine-actions">
-                    <button
-                      className="action-btn view"
-                      onClick={() => handleViewVaccineAdvice(advice)}
-                    >
-                      <i className="fas fa-eye"></i> Lire
-                    </button>
-                    
-                    <button
-                      className="action-btn like"
-                      onClick={() => handleLikeVaccineAdvice(advice.id)}
-                    >
-                      <i className="fas fa-thumbs-up"></i> J'aime
-                    </button>
-                    
-                    <button
-                      className="action-btn edit"
-                      onClick={() => {
-                        setEditingItem(advice);
-                        setShowVaccineModal(true);
-                      }}
-                    >
-                      <i className="fas fa-edit"></i> Modifier
-                    </button>
-                    
-                    <button
-                      className="action-btn delete"
-                      onClick={() => handleDeleteVaccineAdvice(advice.id)}
-                    >
-                      <i className="fas fa-trash"></i> Supprimer
-                    </button>
+                    <div className="vaccine-actions">
+                      <button
+                        className="action-btn view"
+                        onClick={() => handleViewVaccineAdvice(advice)}
+                      >
+                        <i className="fas fa-eye"></i> Lire
+                      </button>
+                      
+                      <button
+                        className="action-btn edit"
+                        onClick={() => {
+                          setEditingItem(advice);
+                          setShowVaccineModal(true);
+                        }}
+                      >
+                        <i className="fas fa-edit"></i> Modifier
+                      </button>
+                      
+                      <button
+                        className="action-btn delete"
+                        onClick={() => handleDeleteVaccineAdvice(advice.id)}
+                      >
+                        <i className="fas fa-trash"></i> Supprimer
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* CONTACT - FORMULAIRE PROFESSIONNEL AVEC RÉSEAUX SOCIAUX */}
+        {currentSection === "contact" && (
+          <div className="contact-section-pro">
+            <div className="contact-container">
+              {/* En-tête */}
+              <div className="contact-header">
+                <h2>Contactez-nous</h2>
+                <p>Notre équipe est à votre écoute pour répondre à toutes vos questions</p>
+              </div>
+
+              <div className="contact-grid">
+                {/* Formulaire de contact */}
+                <div className="contact-form-wrapper">
+                  <div className="form-card">
+                    <div className="form-card-header">
+                      <i className="fas fa-paper-plane"></i>
+                      <h3>Envoyez-nous un message</h3>
+                    </div>
+                    
+                    <form onSubmit={handleContactSubmit} className="contact-form">
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="name">
+                            Nom complet <span className="required">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={contactForm.name}
+                            onChange={handleContactChange}
+                            placeholder="Jean Dupont"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="form-group">
+                          <label htmlFor="email">
+                            Email <span className="required">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={contactForm.email}
+                            onChange={handleContactChange}
+                            placeholder="jean@exemple.com"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="phone">
+                            Téléphone
+                          </label>
+                          <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={contactForm.phone}
+                            onChange={handleContactChange}
+                            placeholder="+216 00 000 000"
+                          />
+                        </div>
+                        
+                        <div className="form-group">
+                          <label htmlFor="subject">
+                            Sujet <span className="required">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="subject"
+                            name="subject"
+                            value={contactForm.subject}
+                            onChange={handleContactChange}
+                            placeholder="Sujet de votre message"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="form-group full-width">
+                        <label htmlFor="message">
+                          Message <span className="required">*</span>
+                        </label>
+                        <textarea
+                          id="message"
+                          name="message"
+                          value={contactForm.message}
+                          onChange={handleContactChange}
+                          placeholder="Bonjour, je souhaiterais avoir plus d'informations sur..."
+                          rows="5"
+                          required
+                        ></textarea>
+                      </div>
+                      
+                      <div className="form-footer">
+                        <div className="checkbox-wrapper">
+                          <input type="checkbox" id="newsletter" />
+                          <label htmlFor="newsletter">
+                            J'accepte de recevoir la newsletter PetFood TN
+                          </label>
+                        </div>
+                        
+                        <button type="submit" className="submit-btn">
+                          <span>Envoyer</span>
+                          <i className="fas fa-arrow-right"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                {/* Carte et informations avec réseaux sociaux */}
+                <div className="contact-info-wrapper">
+                  <div className="map-card">
+                    <div className="map-container">
+                      <iframe
+                        title="Google Maps - PetFood TN"
+                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${contactInfo.coordinates.lat},${contactInfo.coordinates.lng}`}
+                        width="100%"
+                        height="200"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                    
+                    <div className="contact-details">
+                      <h4>
+                        <i className="fas fa-store"></i>
+                        PetFood TN
+                      </h4>
+                      
+                      <div className="info-lines">
+                        <div className="info-line">
+                          <i className="fas fa-map-marker-alt"></i>
+                          <span>{contactInfo.address}</span>
+                        </div>
+                        
+                        <div className="info-line">
+                          <i className="fas fa-phone-alt"></i>
+                          <a href={`tel:${contactInfo.phone}`}>{contactInfo.phone}</a>
+                        </div>
+                        
+                        <div className="info-line">
+                          <i className="fas fa-envelope"></i>
+                          <a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a>
+                        </div>
+                        
+                        <div className="info-line">
+                          <i className="fab fa-whatsapp"></i>
+                          <a href={`https://wa.me/${contactInfo.whatsapp.replace(/[^0-9]/g, '')}`} 
+                             target="_blank" 
+                             rel="noopener noreferrer">
+                            {contactInfo.whatsapp}
+                          </a>
+                        </div>
+                      </div>
+                      
+                      <button className="directions-btn" onClick={openGoogleMaps}>
+                        <i className="fas fa-directions"></i>
+                        Obtenir l'itinéraire
+                      </button>
+
+                      {/* Réseaux sociaux verticaux */}
+                      <div className="social-section">
+                        <h5>Suivez-nous</h5>
+                        <div className="social-links-vertical">
+                          <a href={contactInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="social-link-vertical facebook">
+                            <i className="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                          </a>
+                          <a href={contactInfo.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="social-link-vertical instagram">
+                            <i className="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                          </a>
+                          <a href={contactInfo.socialMedia.twitter} target="_blank" rel="noopener noreferrer" className="social-link-vertical twitter">
+                            <i className="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                          </a>
+                          <a href={contactInfo.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" className="social-link-vertical linkedin">
+                            <i className="fab fa-linkedin-in"></i>
+                            <span>LinkedIn</span>
+                          </a>
+                          <a href={contactInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer" className="social-link-vertical youtube">
+                            <i className="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                          </a>
+                          <a href={contactInfo.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="social-link-vertical tiktok">
+                            <i className="fab fa-tiktok"></i>
+                            <span>TikTok</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -2379,6 +2251,7 @@ function App() {
                       {entry.action === "Consultation" && <i className="fas fa-eye"></i>}
                       {entry.action === "Approbation" && <i className="fas fa-check-circle"></i>}
                       {entry.action === "Changement de statut" && <i className="fas fa-sync-alt"></i>}
+                      {entry.action === "Message envoyé" && <i className="fas fa-paper-plane"></i>}
                     </div>
                     <div className="history-content">
                       <p>
@@ -2603,6 +2476,7 @@ function App() {
                 e.preventDefault();
                 const formData = new FormData(e.target);
                 const data = Object.fromEntries(formData.entries());
+                data.amount = parseFloat(data.amount);
                 data.subtotal = parseFloat(data.subtotal);
                 data.tax = parseFloat(data.tax);
                 data.total = parseFloat(data.total);
@@ -2933,7 +2807,7 @@ function App() {
         </div>
       )}
 
-      {/* MODAL VISITE VÉTÉRINAIRE */}
+      {/* MODAL SUIVI VÉTÉRINAIRE */}
       {showVetModal && (
         <div className="modal" onClick={() => setShowVetModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -3110,6 +2984,15 @@ function App() {
                   name="content"
                   rows="5"
                   defaultValue={editingItem?.content}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Image URL</label>
+                <input
+                  type="url"
+                  name="image"
+                  defaultValue={editingItem?.image}
                   required
                 />
               </div>
